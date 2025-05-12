@@ -1,0 +1,12 @@
+/.git
+/frontend/node_modules
+/backend/.idea
+/backend/global.json
+/frontend/.vscode
+/.idea
+/backend/backend/appsettings.json
+/backend/backend/Properties
+/backend/backend/obj
+/backend/backend/bin
+/backend/backend/Data/Migrations
+/backend/backend/Migrations
