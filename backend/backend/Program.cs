@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using backend.Areas.Blog.Services;
 using backend.Areas.Communication.Services;
 using backend.Areas.Ecommerce.Services;
@@ -108,7 +109,7 @@ public class Program
         {
             options.AddPolicy("CorsPolicy", policy =>
             {
-                policy.WithOrigins("http://127.0.0.1:63366/PDLvmJXo-7k=/")
+                policy.WithOrigins("http://localhost:4200")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                 // (Optional: restrict origins in production)
@@ -151,11 +152,12 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         
-        builder.Services.AddControllers().AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-            options.JsonSerializerOptions.WriteIndented = true;
-        });
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            });
         
         var app = builder.Build();
         if (app.Environment.IsDevelopment())

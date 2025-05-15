@@ -1,1 +1,140 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  background-color: #343434 !important;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.card-header {
+  background-color: #343434 !important;
+  color: white;
+  opacity: 1;
+}
+
+.custom-bg-dark {
+  background-color: #343434 !important;
+  opacity: 1 !important;
+}
+
+/*FONTS*/
+/*Ubuntu fonts*/
+
+.ubuntu-light {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.ubuntu-regular {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ubuntu-medium {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.ubuntu-bold {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.ubuntu-light-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.ubuntu-regular-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.ubuntu-medium-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.ubuntu-bold-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/*END Ubuntu*/
+
+/*Inter fonts*/
+
+.inter-normal {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.inter-bold {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+/*END Inter*/
+/*END FONTS*/
+.fa-solid.fa-address-card,
+.fa-solid.fa-pen-to-square,
+.fa-solid.fa-trash {
+  color: white;
+  font-size: 10px;
+}
+#datatable-search > tbody > tr:nth-child(1n) > div > td:nth-child(1n) {
+  font-size: 12px;
+}
+
+/*Sidenav*/
+.sidenav-header,
+.sidenav {
+  color: white !important;
+}
+#pages > ul > li:nth-child(1) > ul > li:nth-child(1n) > a:nth-child(1n),
+#authentication > ul > li:nth-child(1n) > a:nth-child(1n),
+#pages > ul > li:nth-child(1n) > ul > li:nth-child(1n) > a:nth-child(1n),
+#pages > ul > li:nth-child(1n) > a:nth-child(1n),
+#sidenav-collapse-main > ul > li:nth-child(1n) > a:nth-child(1n) {
+  color: white !important;
+}
+
+.sidenav {
+  background-color: #343434 !important;
+  font-family: "Ubuntu", sans-serif;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  transition: width 0.3s;
+  overflow: hidden;
+  color: white;
+}
+
+.sidenav-collapsed {
+  width: 100px;
+}
+
+.sidenav-expanded {
+  width: 200px;
+}
+
+.content-area {
+  transition: margin-left 0.3s;
+}
+.list-none {
+  list-style-type: none !important;
+}
+/*END Sidenav*/
+
