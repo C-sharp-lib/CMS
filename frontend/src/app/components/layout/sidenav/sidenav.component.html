@@ -1,0 +1,49 @@
+<div class="d-flex">
+  <!-- Sidebar -->
+  <div [ngClass]="{'sidenav-collapsed': !isExpanded, 'sidenav-expanded': isExpanded}" class="sidenav custom-bg-dark text-white text-white">
+    <button class="btn btn-sm btn-outline-light m-2 py-1 px-2" (click)="toggleSidebar()">
+      <i class="bi bi-list"></i> <!-- Bootstrap icon -->
+    </button>
+
+<!--    <ul class="nav flex-column">
+      <li class="nav-item" *ngFor="let item of menuItems">
+        <a class="nav-link text-white d-flex align-items-center" routerLink="">
+          <i [class]="item.icon"></i>
+          <span *ngIf="isExpanded" class="ms-2">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>-->
+
+    <ng-container *ngFor="let item of menuItems">
+<ul class="nav flex-column">
+      <!-- Simple link (no dropdown) -->
+      <li *ngIf="!item.children" class="list-none">
+        <a class="nav-link" [routerLink]="dropdowns[item.key].path" routerLinkActive="active">
+          <i class="{{ item.icon }} me-2"></i> <span *ngIf="isExpanded" class="ms-2">{{ item.label }}</span>
+        </a>
+      </li>
+
+      <!-- Dropdown link -->
+      <li *ngIf="item.children" class="list-none">
+        <a class="text-white nav-link d-flex justify-content-between align-items-center list-none" (click)="toggleDropdown(item.key)">
+          <span><i class="{{ item.icon }} me-2"></i> <span *ngIf="isExpanded" class="ms-2">{{ item.label }}</span></span>
+          <i [ngClass]="{'bi-chevron-down': !dropdowns[item.key], 'bi-chevron-up': dropdowns[item.key]}" class="bi text-gradient text-warning" *ngIf="(((isExpanded === true) && (dropdowns[item.key]) ? 'bi-chevron-up' : '') || ((isExpanded === true) && !(dropdowns[item.key])) ? 'bi-chevron-down' : '')"></i>
+        </a>
+        <ul class="nav flex-column ps-4 list-none" *ngIf="dropdowns[item.key]">
+          <li *ngFor="let child of item.children" class="list-none">
+            <a class="nav-link list-none" [routerLink]="child.path" routerLinkActive="active">
+              <span *ngIf="isExpanded" class="ms-2 text-gradient text-warning">{{ child.label }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    </ng-container>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-grow-1 p-3 content-area">
+    <h3>Main Content</h3>
+    <p>This content shifts when sidebar expands.</p>
+  </div>
+</div>

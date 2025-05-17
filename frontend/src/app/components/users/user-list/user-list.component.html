@@ -1,0 +1,62 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-8 offset-md-2">
+      <div class="spinner-border text-primary" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+
+    </div>
+  </div>
+  <div class="row mt-3 mb-3">
+    <div class="col-12 col-md-12">
+      <div class="card shadow-lg bg-gradient-primary">
+        <div class="card-header">
+          <h3 class="inter-bold text-white">All Users</h3>
+        </div>
+        <div class="card-body p-3">
+          <div class="table-responsive">
+            <table class="table table-flush" id="datatable-search">
+              <thead class="ubuntu-bold bg-gradient-primary text-white">
+              <tr>
+                <th class="text-white ubuntu-bold">ID</th>
+                <th class="text-white ubuntu-bold">Name</th>
+                <th class="text-white ubuntu-bold">Email</th>
+                <th class="text-white ubuntu-bold">Username</th>
+                <th class="text-white ubuntu-bold">Phone Number</th>
+                <th class="text-white ubuntu-bold">Address</th>
+                <th class="text-white ubuntu-bold">Date of Birth</th>
+                <th class="text-white ubuntu-bold">Roles</th>
+                <th class="text-white ubuntu-bold">Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let user of users">
+                <td class="text-white inter-normal">{{user.id}}</td>
+                <td class="text-white inter-normal">{{user.name}}</td>
+                <td class="text-white inter-normal">{{user.email}}</td>
+                <td class="text-white inter-normal">{{user.userName}}</td>
+                <td class="text-white inter-normal">{{user.phoneNumber == null ? 'No phone number added' : user.phoneNumber}}</td>
+                <td class="text-white inter-normal">
+                  {{user.address}}, {{user.city}}, {{user.state}}, {{user.zipCode}}.
+                </td>
+                <td class="text-white inter-normal">{{user.dateOfBirth | date: 'shortDate'}}</td>
+                <div *ngIf="user.userRoles.length > 0">
+                    <td class="text-white inter-normal" *ngFor="let role of user.userRoles">{{role.role.name}}</td>
+                </div>
+                <td class="text-white inter-normal">
+                  <div class="btn-group-sm btn-rounded btn-sm">
+                    <a routerLink="{{user.id}}" class="btn btn-sm bg-gradient-info table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View User Profile"><i class="fa-solid fa-address-card"></i></a>
+                    <a routerLink="update/{{user.id}}" class="btn btn-sm bg-gradient-warning table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update User"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a routerLink="delete/{{user.id}}" class="btn btn-sm bg-gradient-danger table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete User"><i class="fa-solid fa-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+</div>

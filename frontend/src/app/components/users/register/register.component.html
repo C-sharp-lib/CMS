@@ -1,0 +1,178 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-8 offset-md-2">
+      <div class="card shadow-lg custom-bg-dark-gradient">
+        <div class="card-header custom-bg-dark-gradient" style="display: flex; justify-content: space-between; align-items: center">
+          <h1 class="ubuntu-bold text-gradient text-warning">Sign Up</h1>
+          <div class="btn-group">
+            <a routerLink="/users/login" class="btn btn-primary px-2 py-2 text-white ubuntu-bold">Sign In</a>
+          </div>
+        </div>
+        <div class="card-body p-3">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="row m-2">
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="name" class="text-gradient text-primary ubuntu-bold">Name</label>
+                  <input type="text" id="name" formControlName="name" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
+                  <div *ngIf="submitted && f['name'].errors" class="text-danger text-xxs">
+                    Name is required.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="email" class="text-gradient text-primary ubuntu-bold">Email</label>
+                  <input type="email" id="email" formControlName="email" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
+                  <div *ngIf="submitted && f['email'].errors" class="text-danger text-xxs">
+                    Email is required.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="userName" class="text-gradient text-primary ubuntu-bold">Username</label>
+                  <input type="text" id="userName" formControlName="userName" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
+                  <div *ngIf="submitted && f['userName'].errors" class="text-danger text-xxs">
+                    Username is required.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="dateOfBirth" class="text-gradient text-primary ubuntu-bold">Date of Birth</label>
+                  <input type="date" id="dateOfBirth" formControlName="dateOfBirth" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
+                  <div *ngIf="submitted && f['dateOfBirth'].errors" class="text-danger text-xxs">
+                    Date of Birth is required.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="row m-2">
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="address" class="text-gradient text-primary ubuntu-bold">Address</label>
+                  <input type="text" id="address" formControlName="address" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
+                  <div *ngIf="submitted && f['address'].errors" class="text-danger text-xxs">
+                    Address is required.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="city" class="text-gradient text-primary ubuntu-bold">City</label>
+                  <input type="text" id="city" formControlName="city" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
+                  <div *ngIf="submitted && f['city'].errors" class="text-danger text-xxs">
+                    City is required.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="state" class="text-gradient text-primary ubuntu-bold">State</label>
+                  <select formControlName="state" id="state" class="form-control form-control-sm  color-background custom-bg-dark-gradient text-white inter-bold">
+                    <option value="">-- Select State --</option>
+                    <option value="AL">Alabama</option>
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
+                  </select>
+                  <div *ngIf="submitted && f['state'].errors" class="text-danger text-xxs">
+                    State is required.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="form-group">
+                  <label for="zipCode" class="text-gradient text-primary ubuntu-bold">Zip Code</label>
+                  <input type="text" id="zipCode" formControlName="zipCode" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
+                  <div *ngIf="submitted && f['zipCode'].errors" class="text-danger text-xxs">
+                    Zip Code is required.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row m-2">
+              <div class="col-12 col-md-6">
+                <div class="form-group password-container">
+                  <label for="password"
+                         class="text-gradient text-primary ubuntu-bold">Password</label>
+                  <input id="password" formControlName="password" type="password" autocomplete="true"
+                         class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
+                  <i class="fa-solid fa-eye-slash text-danger" id="togglePassword"></i>
+                  <div *ngIf="submitted && f['password'].errors" class="text-danger text-xxs">
+                    Password is required.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group password-container">
+                  <label for="confirmPassword"
+                         class="text-gradient text-primary ubuntu-bold">Confirm Password</label>
+                  <input id="confirmPassword" formControlName="confirmPassword" type="password" autocomplete="true"
+                         class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
+                  <i class="fa-solid fa-eye-slash text-danger" id="toggleConfirmPassword"></i>
+                  <div *ngIf="submitted && f['confirmPassword'].errors" class="text-danger text-xxs">
+                    Confirm Password is required.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary d-block w-100 mt-3 mb-3">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

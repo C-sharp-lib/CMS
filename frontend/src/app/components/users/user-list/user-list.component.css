@@ -1,0 +1,21 @@
+.card {
+  border: 2px solid white;
+  height: auto;
+}
+.card .card-header {
+  background-color: #343434;
+  color: white;
+  font-weight: bold;
+}
+.card-body > div > ul > li.role-name,
+.card-body > p:nth-child(1n) {
+  font-weight: bold;
+  font-size: 12px;
+  font-family: "Inter", sans-serif;
+}
+table > tbody > tr > td {
+  font-size: 12px;
+}
+table > thead > tr > th {
+  font-size: 14px;
+}
