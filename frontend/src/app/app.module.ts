@@ -9,11 +9,14 @@ import * as fromJobs from './components/jobs/index';
 import * as fromBlog from './components/blog/index';
 import * as fromPages from './components/pages/index';
 import * as fromServices from './services/index';
+import {ReactiveFormsModule} from "@angular/forms";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastrModule} from "ngx-toastr";
 
 
 
 export const routes: Routes = [
-  {path: '', component: fromPages.HomeComponent, children: [
+  {path: '', children: [
       {path: '', component: fromPages.HomeComponent, pathMatch: 'full'},
       {path: 'about', component: fromPages.AboutComponent},
       {path: 'contact', component: fromPages.ContactComponent},
@@ -22,15 +25,15 @@ export const routes: Routes = [
       {path:'faq', component: fromPages.FaqComponent},
     ]},
 
-  {path: 'users', component: fromUsers.UserListComponent, children: [
-      {path: '', component: fromUsers.UserListComponent, pathMatch: 'full'},
-      {path:'register', component: fromUsers.RegisterComponent},
-      {path:'login', component: fromUsers.LoginComponent},
+  {path: 'users', children: [
+      {path: '', component: fromUsers.UserListComponent},
+      {path:'register-page', component: fromUsers.RegisterComponent},
+      {path:'login-page', component: fromUsers.LoginComponent},
       {path: ':id', component: fromUsers.UserDetailComponent},
       {path: 'update/:id', component: fromUsers.UserUpdateComponent},
     ]},
-  {path:'jobs', component: fromJobs.JobListComponent, children: [
-      {path: '', component: fromJobs.JobListComponent, pathMatch: 'full'},
+  {path:'jobs', children: [
+      {path: '', component: fromJobs.JobListComponent},
       {path:':id', component: fromJobs.JobDetailComponent},
       {path:'create', component: fromJobs.JobCreateComponent},
       {path:'update/:id', component: fromJobs.JobUpdateComponent},
@@ -48,7 +51,23 @@ export const routes: Routes = [
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-top-center',
+      preventDuplicates: false,
+      progressBar: true,
+      progressAnimation: 'increasing',
+      closeButton: true,
+      iconClasses: {
+        error: 'toast-error',
+        success: 'toast-success',
+        info: 'toast-info',
+        warning: 'toast-warning',
+      }
+    })
   ],
   exports: [RouterModule],
   providers: [...fromServices.services],
