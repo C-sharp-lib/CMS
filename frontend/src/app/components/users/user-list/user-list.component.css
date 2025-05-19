@@ -19,3 +19,11 @@ table > tbody > tr > td {
 table > thead > tr > th {
   font-size: 14px;
 }
+#user-list-section {
+  position: relative;
+  top: 0;
+  transition: top 0.3s ease;
+}
+#user-list-section.active {
+  top: -100px;
+}

@@ -67,9 +67,9 @@ namespace backend.Areas.Main.Controllers;
                 var contacts = await _contactRepository.AddContactAsync(contact);
                 return Ok(contacts);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new {message = ex.Message});
             }
         }
 
@@ -79,7 +79,7 @@ namespace backend.Areas.Main.Controllers;
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new {message = ModelState});
             }
 
             try
@@ -90,17 +90,17 @@ namespace backend.Areas.Main.Controllers;
             catch (DbUpdateConcurrencyException ex)
             {
                 _logger.LogInformation($"Updating Contact with id {id} failed", ex);
-                return BadRequest($"Failed to update Contact with id - DbUpdateConcurrencyException {id}");
+                return BadRequest(new {message = $"Failed to update Contact with id - DbUpdateConcurrencyException {id}"});
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogInformation($"Updating Contact with id {id} failed", ex);
-                return BadRequest($"Failed to update Contact with id - DbUpdateException {id}");
+                return BadRequest(new {message = $"Failed to update Contact with id - DbUpdateException {id}"});
             }
             catch (Exception ex)
             {
                 _logger.LogInformation($"Updating Contact with id {id} failed", ex);
-                return BadRequest($"Failed to update Contact with id - Exception {id}");
+                return BadRequest(new {message = $"Failed to update Contact with id - Exception {id}"});
             }
         }
 

@@ -27,7 +27,8 @@
               "src/assets/css/nucleo-icons.css",
               "src/assets/css/nucleo-svg.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-              "src/assets/css/argon-dashboard.css"
+              "src/assets/css/argon-dashboard.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "src/assets/js/core/popper.min.js",

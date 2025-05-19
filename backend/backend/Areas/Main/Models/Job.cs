@@ -17,13 +17,9 @@ public class Job
 
     [StringLength(500)]
     public string? Description { get; set; }
-
-    [Required]
-    [StringLength(100)]
+    
     public Status Status { get; set; }
-
-    [Required]
-    [StringLength(50)]
+    
     public Priority Priority { get; set; }
 
     public DateTime ScheduledDate { get; set; }
@@ -53,3 +49,4 @@ public class Job
     public IEnumerable<JobNotes>? JobNotes { get; set; }
     public IEnumerable<JobTask>? JobTasks { get; set; }
 }
+

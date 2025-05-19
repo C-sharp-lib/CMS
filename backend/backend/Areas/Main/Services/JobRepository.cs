@@ -1,5 +1,8 @@
 using backend.Areas.Main.Models;
+using backend.Areas.Main.Models.Enums;
+using backend.Areas.Main.Models.ViewModels;
 using backend.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Areas.Main.Services;
@@ -24,30 +27,59 @@ public class JobRepository : IJobRepository
 
     public async Task<Job?> GetJobByIdAsync(int id)
     {
-        return await _context.Jobs
+        var job = await _context.Jobs
             .Include(j => j.Contact)
             .Include(j => j.AssignedUser)
             .Include(j => j.CreatedByUser)
             .FirstOrDefaultAsync(j => j.Id == id);
-    }
+        if (job == null)
+        {
+            throw new NullReferenceException("Job not found");
+        }
 
-    public async Task<Job> CreateJobAsync(Job job)
-    {
-        _context.Jobs.Add(job);
-        await _context.SaveChangesAsync();
         return job;
     }
 
-    public async Task<Job?> UpdateJobAsync(int id, Job updatedJob)
+    public async Task CreateJobAsync([FromBody] AddJobViewModel model)
     {
-        var existingJob = await _context.Jobs.FindAsync(id);
-        if (existingJob == null)
-            return null;
-
-        // Map updated fields
-        _context.Entry(existingJob).CurrentValues.SetValues(updatedJob);
+        var job = new Job
+        {
+            Title = model.Title,
+            AssignedUserId = model.AssignedUserId,
+            ActualCost = model.ActualCost,
+            CreatedByUserId = model.CreatedByUserId,
+            ContactId = model.ContactId,
+            CompletionDate = model.CompletionDate,
+            DateCreated = model.DateCreated,
+            Priority = model.Priority,
+            Status = model.Status,
+            Description = model.Description,
+            ScheduledDate = model.ScheduledDate,
+            EstimatedCost = model.EstimatedCost,
+            Notes = model.Notes,
+        };
+        _context.Jobs.Add(job);
         await _context.SaveChangesAsync();
-        return existingJob;
+    }
+
+    public async Task UpdateJobAsync(int id, [FromBody] UpdateJobViewModel model)
+    {
+        var job = await GetJobByIdAsync(id);
+        if (job != null)
+        {
+            job.Title = model.Title;
+            job.Description = model.Description;
+            job.ActualCost = model.ActualCost;
+            job.Priority = model.Priority;
+            job.Status = model.Status;
+            job.Notes = model.Notes;
+            job.ScheduledDate = model.ScheduledDate;
+            job.CompletionDate = model.CompletionDate;
+            job.DateUpdated = model.DateUpdated;
+            job.EstimatedCost = model.EstimatedCost;
+        }
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task<bool> DeleteJobAsync(int id)

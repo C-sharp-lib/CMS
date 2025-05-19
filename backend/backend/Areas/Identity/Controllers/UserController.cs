@@ -62,21 +62,36 @@ public class UserController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
     {
-        var result = await _userRepository.RegisterAsync(model);
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
+        try
+        {
+            var result = await _userRepository.RegisterAsync(model);
+            if (!result.Succeeded)
+                return BadRequest(new {error = $"{result.Errors}"});
         
-        return Ok("User registered successfully");
+            return Ok(new {message = "User registered successfully"});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {error = $"An error occured while registering: {ex.Message}"});
+        }
+        
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginViewModel model)
     {
-        var token = await _userRepository.LoginAsync(model);
-        if (token == null)
-            return Unauthorized();
+        try
+        {
+            var token = await _userRepository.LoginAsync(model);
+            if (token == null)
+                return Unauthorized();
 
-        return Ok(new { token });
+            return Ok(new { token });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {error = $"An error occured while login: {ex.Message}"});
+        }
     }
     
     [HttpGet]
@@ -104,10 +119,10 @@ public class UserController : ControllerBase
             var result = await _userRepository.UpdateUserAsync(model);
             if (!result.Succeeded)
             {
-                return BadRequest(result.Errors);
+                return BadRequest(new {error = $"{result.Errors}"});
             }
 
-            return Ok("User updated successfully");
+            return Ok(new {message = "User updated successfully"});
         }
         catch (DbUpdateConcurrencyException ex)
         {
@@ -127,8 +142,8 @@ public class UserController : ControllerBase
     {
         var result = await _userRepository.DeleteUserAsync(id);
         if (!result.Succeeded)
-            return BadRequest(result.Errors);
+            return BadRequest(new {error = $"{result.Errors}"});
 
-        return Ok("User deleted successfully");
+        return Ok(new {message = "User deleted successfully"});
     }
 }

@@ -1,22 +1,15 @@
+<section id="user-list-section">
 <div class="container">
   <div class="row">
-    <div class="col-12 col-md-8 offset-md-2">
-      <div class="spinner-border text-primary" role="status" *ngIf="isLoading">
-        <span class="sr-only">Loading...</span>
-      </div>
-
-    </div>
-  </div>
-  <div class="row mt-3 mb-3">
     <div class="col-12 col-md-12">
-      <div class="card shadow-lg bg-gradient-primary">
-        <div class="card-header">
+      <div class="card shadow-lg custom-bg-dark-gradient">
+        <div class="card-header custom-bg-dark-gradient">
           <h3 class="inter-bold text-white">All Users</h3>
         </div>
         <div class="card-body p-3">
           <div class="table-responsive">
             <table class="table table-flush" id="datatable-search">
-              <thead class="ubuntu-bold bg-gradient-primary text-white">
+              <thead class="ubuntu-bold custom-bg-dark-gradient text-white">
               <tr>
                 <th class="text-white ubuntu-bold">ID</th>
                 <th class="text-white ubuntu-bold">Name</th>
@@ -30,7 +23,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let user of users">
+              <tr *ngFor="let user of paginatedUsers">
                 <td class="text-white inter-normal">{{user.id}}</td>
                 <td class="text-white inter-normal">{{user.name}}</td>
                 <td class="text-white inter-normal">{{user.email}}</td>
@@ -40,10 +33,12 @@
                   {{user.address}}, {{user.city}}, {{user.state}}, {{user.zipCode}}.
                 </td>
                 <td class="text-white inter-normal">{{user.dateOfBirth | date: 'shortDate'}}</td>
-                <div *ngIf="user.userRoles.length > 0">
-                    <td class="text-white inter-normal" *ngFor="let role of user.userRoles">{{role.role.name}}</td>
-                </div>
-                <td class="text-white inter-normal">
+                <td class="text-white inter-normal text-xxs">
+                  <div *ngFor="let role of user.userRoles">
+                  {{role.role.name}}
+                  </div>
+                </td>
+                <td class="text-white inter-normal" colspan="2">
                   <div class="btn-group-sm btn-rounded btn-sm">
                     <a routerLink="{{user.id}}" class="btn btn-sm bg-gradient-info table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View User Profile"><i class="fa-solid fa-address-card"></i></a>
                     <a routerLink="update/{{user.id}}" class="btn btn-sm bg-gradient-warning table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update User"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -54,9 +49,39 @@
               </tbody>
             </table>
           </div>
+          <div class="card-footer">
+            <!-- Pagination Controls -->
+            <nav>
+              <ul class="pagination pagination-primary justify-content-center">
+                <li class="page-item custom-bg-dark-gradient-50" [class.disabled]="currentPage === 1">
+                  <button class="page-link custom-bg-dark-gradient-50 text-gradient text-warning custom-bg-dark-gradient" (click)="prevPage()">
+                    <i class="bi bi-arrow-left-circle text-gradient text-warning"></i>
+                  </button>
+                </li>
+
+                <li
+                  *ngFor="let page of totalPagesArray"
+                  class="page-item custom-bg-dark-gradient-50 text-white"
+                  [class.active]="page === currentPage"
+                >
+                  <button class="page-link text-white custom-bg-dark-gradient-50" (click)="getToPage(page)">
+                    {{ page }}
+                  </button>
+                </li>
+
+                <li class="page-item custom-bg-dark-gradient-50 text-gradient text-warning" [class.disabled]="currentPage === totalPages">
+                  <button class="page-link custom-bg-dark-gradient-50" (click)="nextPage()">
+                    <i class="bi bi-arrow-right-circle text-gradient text-warning"></i>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
+
       </div>
     </div>
     </div>
 
 </div>
+</section>

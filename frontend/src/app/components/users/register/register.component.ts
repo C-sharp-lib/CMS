@@ -12,70 +12,56 @@ import {Router} from "@angular/router";
 })
 export class RegisterComponent implements AfterViewInit {
   registerForm: FormGroup;
-  submitted = false;
-  errorMessage = '';
-  successMessage = '';
+  errorMessage: string = '';
+  successMessage: string = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private userService: UsersService,
-    private router: Router,
-    private toast: ToasterService
-  ) {
-    this.registerForm = this.fb.nonNullable.group({
-      name: ['', Validators.required],
-      userName: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      dateOfBirth: ['', [Validators.required]],
+  constructor(private _userService: UsersService, private fb: FormBuilder, private router: Router, private toast: ToasterService) {
+    this.registerForm = this.fb.group({
+      name: ['', [Validators.required]],
       address: ['', [Validators.required]],
       city: ['', [Validators.required]],
       state: ['', [Validators.required]],
       zipCode: ['', [Validators.required]],
+      dateOfBirth: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      userName: ['', [Validators.required, Validators.minLength(5)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
-    });
+    })
   }
 
-  get f() { return this.registerForm.controls; }
-
-  onSubmit() {
-    this.submitted = true;
-
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
-      this.toast.showErrorToast('The form is invalid', 'The content in this form is invalid and should be changed.');
-      return;
+  onSubmit(): void {
+    if(!this.registerForm.invalid) {
+      const newUser: { password: any; confirmPassword: any; id: undefined, email: any, name: any, userName: any, dateOfBirth: any,
+        address: any, city: any, state: any, zipCode: any} = {
+        id: undefined,
+        name: this.registerForm.value.name,
+        userName: this.registerForm.value.userName,
+        email: this.registerForm.value.email,
+        dateOfBirth: this.registerForm.value.dateOfBirth,
+        address: this.registerForm.value.address,
+        city: this.registerForm.value.city,
+        state: this.registerForm.value.state,
+        zipCode: this.registerForm.value.zipCode,
+        password: this.registerForm.value.password,
+        confirmPassword: this.registerForm.value.confirmPassword
+      };
+      this._userService.register(newUser).subscribe({
+        next: (response) => {
+          console.log('User registered successfully', response);
+          this.toast.showSuccessToast('Successfully registered, sending you to the login screen.', 'User registered successfully');
+          this.registerForm.reset();
+          this.router.navigate(['users/login-page']);
+        },
+        error: (error) => {
+          this.errorMessage = error.message;
+          this.toast.showErrorToast(`${this.errorMessage}`, 'Error Occurred');
+        }
+      });
     }
-    const formData = this.registerForm.value;
-    if(formData.password !== formData.confirmPassword) {
-      this.toast.showErrorToast('Passwords do not match', 'The passwords do not match, make them match and then submit again.');
-      return;
-    }
-    const userData = {
-      name: formData.name,
-      userName: formData.userName,
-      email: formData.email,
-      dateOfBirth: formData.dateOfBirth,
-      address: formData.address,
-      city: formData.city,
-      state: formData.state,
-      zipCode: formData.zipCode,
-      password: formData.password,
-      confirmPassword: formData.confirmPassword,
-    };
-
-    this.userService.register(userData).subscribe({
-      next: () => {
-        this.toast.showSuccessToast('User registered successfully', 'Successfully registered, sending you to the login screen.');
-        this.registerForm.reset();
-        this.router.navigate(['users/login-page']).then(r => this.router.navigate(['users/login-page']));
-      },
-      error: (err) => {
-        this.errorMessage = err.message;
-        this.toast.showErrorToast('Error Occurred', `${this.errorMessage}`);
-      }
-    });
   }
+
+
 
   ngAfterViewInit(): void {
     const togglePassword = document.getElementById('togglePassword');
@@ -119,5 +105,4 @@ export class RegisterComponent implements AfterViewInit {
       })
     }
   }
-
 }

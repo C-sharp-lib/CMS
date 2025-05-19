@@ -45,22 +45,39 @@ public class JobController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Job>> UpdateJob(int id, Job job)
+    public async Task<ActionResult<Job>> UpdateJob(int id, [FromBody] UpdateJobViewModel model)
     {
-        var jobToUpdate = await _jobRepository.GetJobByIdAsync(id);
-        if (jobToUpdate == null)
+        try
         {
-            return NotFound("Job not found");
+            await _jobRepository.UpdateJobAsync(id, model);
+            return Ok(new {message = "Job updated"});
         }
-
-        return Ok(await _jobRepository.UpdateJobAsync(id, jobToUpdate));
+        catch (DbUpdateConcurrencyException ex)
+        {
+            return BadRequest(new {message = "DbConcurrencyUpdateException: " +ex.Message});
+        }
+        catch (DbUpdateException ex)
+        {
+            return BadRequest(new {message = "DbUpdateException: " +ex.Message});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = ex.Message});
+        }
     }
 
     [HttpPost]
-    public async Task<ActionResult<Job>> CreateJob(Job job)
+    public async Task<ActionResult<Job>> CreateJob([FromBody] AddJobViewModel model )
     {
-        var jobToCreate = await _jobRepository.CreateJobAsync(job);
-        return Ok(jobToCreate);
+        try
+        {
+            await _jobRepository.CreateJobAsync(model);
+            return Ok(new {message = "Job created"});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = ex.Message});
+        }
     }
 
     [HttpDelete("{id}")]
@@ -69,7 +86,7 @@ public class JobController : ControllerBase
         var jobToDelete = await _jobRepository.GetJobByIdAsync(id);
         if (jobToDelete == null)
         {
-            return NotFound("Job not found");
+            return NotFound(new {message = "Job not found"});
         }
         return Ok(await _jobRepository.DeleteJobAsync(id));
     }

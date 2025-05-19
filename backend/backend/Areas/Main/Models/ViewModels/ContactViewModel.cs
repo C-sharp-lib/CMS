@@ -54,7 +54,7 @@ public class AddContactViewModel
     public string? ImageUrl { get; set; }
 }
 
-public class UpdateContactViewModel : Contact
+public class UpdateContactViewModel
 {
     [StringLength(100)]
     public string FirstName { get; set; }
