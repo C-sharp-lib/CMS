@@ -34,8 +34,8 @@ export const routes: Routes = [
     ]},
   {path:'jobs', children: [
       {path: '', component: fromJobs.JobListComponent},
-      {path:':id', component: fromJobs.JobDetailComponent},
       {path:'create', component: fromJobs.JobCreateComponent},
+      {path:':id', component: fromJobs.JobDetailComponent},
       {path:'update/:id', component: fromJobs.JobUpdateComponent},
     ]},
 ];

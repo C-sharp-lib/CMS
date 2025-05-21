@@ -10,9 +10,12 @@ import {jwtDecode} from 'jwt-decode';
   providedIn: 'root'
 })
 export class UsersService {
+  private currentUser: User | null = null;
   user: any;
   private baseUrl = `${environment.apiUrl}/Identity/User`;
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    this.currentUser = JSON.parse(localStorage.getItem("currentUser") || 'null');
+  }
 
   register(user: {name: string, email: string, userName: string,
     address: string, city: string, state: string, zipCode: string,
@@ -63,5 +66,15 @@ export class UsersService {
 
   deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+
+  getCurrentUser(): User | null {
+    return this.currentUser;
+  }
+
+  setCurrentUser(user: User): void {
+    this.currentUser = user;
+    localStorage.setItem('currentUser', JSON.stringify(user));
   }
 }

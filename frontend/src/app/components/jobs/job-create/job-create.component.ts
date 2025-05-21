@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Job, Priority, Status} from "../../../models/job";
+import {JobsService, UsersService} from "../../../services";
+import {Router} from "@angular/router";
+import {User} from "../../../models/user";
 
 @Component({
   selector: 'app-job-create',
@@ -6,10 +11,75 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./job-create.component.css']
 })
 export class JobCreateComponent implements OnInit {
+  jobForm: FormGroup;
+  users: User[] = [];
 
-  constructor() { }
+  status: Status[] = ['Pending', 'Approved', 'Rejected', 'Completed', 'Cancelled'];
+  priority: Priority[] = ['Low', 'Normal', 'High', 'Urgent'];
+
+  constructor(
+    private fb: FormBuilder,
+    private jobService: JobsService,
+    private router: Router,
+    private userService: UsersService,
+    private renderer: Renderer2,
+    private el: ElementRef
+  ) {}
 
   ngOnInit(): void {
+    this.initializeForm();
+    this.fetchUsers();
+    this.newSectionUp();
   }
 
+  initializeForm(): void {
+    this.jobForm = this.fb.group({
+      title: ['', Validators.required],
+      description: [''],
+      status: ['Pending', Validators.required],
+      priority: ['Low', Validators.required],
+      scheduledDate: ['', Validators.required],
+      completionDate: [''],
+      estimatedCost: [0, [Validators.required, Validators.min(0)]],
+      actualCost: [''],
+      notes: [''],
+      assignedUserId: ['', Validators.required],
+    });
+  }
+  fetchUsers(): void {
+    this.userService.getUsers().subscribe({
+      next: (data) => {
+        this.users = data;
+      },
+      error: (err) => {
+        console.error("Error fetching users: ", err);
+      }
+    })
+  }
+  onSubmit(): void {
+    if (this.jobForm.invalid) {
+      this.jobForm.markAllAsTouched();
+      return;
+    }
+
+    const formValues = this.jobForm.value;
+
+    const newJob: Job = {
+      ...formValues,
+      id: 0,
+      dateCreated: new Date(),
+      dateUpdated: undefined,
+      createdByUserId: this.userService.getCurrentUser().id,
+      assignedUser: undefined
+    };
+
+    this.jobService.createJob(newJob).subscribe({
+      next: () => this.router.navigate(['/jobs']),
+      error: err => console.error('Job creation failed', err)
+    });
+  }
+  newSectionUp() {
+    const section = this.el.nativeElement.querySelector('#job-create-section');
+    this.renderer.addClass(section, 'active');
+  }
 }

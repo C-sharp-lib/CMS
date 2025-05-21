@@ -1,0 +1,9 @@
+#job-update-section {
+  position: relative;
+  top: 0;
+  transition: top 0.3s ease;
+}
+#job-update-section.active {
+  top: -100px;
+  margin-bottom: 100px;
+}

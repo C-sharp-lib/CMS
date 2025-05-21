@@ -24,5 +24,5 @@ export interface Job {
 }
 
 // Enum representations
-export type Status = 'Pending' | 'InProgress' | 'Completed' | 'Cancelled';
-export type Priority = 'Low' | 'Medium' | 'High' | 'Urgent';
+export type Status =  'Pending' | 'Approved' | 'Rejected' | 'Completed' | 'Cancelled';
+export type Priority = 'Low' | 'Normal' | 'High' | 'Urgent';
