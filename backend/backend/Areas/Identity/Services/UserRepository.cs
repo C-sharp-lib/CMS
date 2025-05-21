@@ -106,9 +106,9 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<IdentityResult> UpdateUserAsync(UpdateUserViewModel model)
+    public async Task<IdentityResult> UpdateUserAsync(string id, [FromBody] UpdateUserViewModel model)
     {
-        var existingUser = await _userManager.FindByIdAsync(model.Id);
+        var existingUser = await _userManager.FindByIdAsync(id);
         if (existingUser == null)
             return IdentityResult.Failed(new IdentityError { Description = "User not found." });
         existingUser.Name = model.Name;
@@ -117,6 +117,7 @@ public class UserRepository : IUserRepository
         existingUser.PhoneNumber = model.PhoneNumber;
         existingUser.Address = model.Address;
         existingUser.City = model.City;
+        existingUser.Description = model.Description;
         existingUser.State = model.State;
         existingUser.ZipCode = model.ZipCode;
         existingUser.DateOfBirth = model.DateOfBirth;

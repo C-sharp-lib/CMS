@@ -70,6 +70,8 @@ export class JobUpdateComponent implements OnInit {
     });
   }
 
+
+
   newSectionUp() {
     const section = this.el.nativeElement.querySelector('#job-update-section');
     this.renderer.addClass(section, 'active');

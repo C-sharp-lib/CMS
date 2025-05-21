@@ -12,9 +12,7 @@ import * as fromServices from './services/index';
 import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
-
-
-
+import { MainNavComponent } from './components/layout/main-nav/main-nav.component';
 export const routes: Routes = [
   {path: '', children: [
       {path: '', component: fromPages.HomeComponent, pathMatch: 'full'},
@@ -47,6 +45,7 @@ export const routes: Routes = [
     ...fromBlog.components,
     ...fromLayout.components,
     ...fromPages.components,
+    MainNavComponent,
   ],
   imports: [
     BrowserModule,

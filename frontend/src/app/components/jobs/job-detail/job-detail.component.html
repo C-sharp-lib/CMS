@@ -1,1 +1,29 @@
-<p>job-detail works!</p>
+<section id="job-detail-section" *ngIf="!isLoading && job">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-7">
+        <div class="card shadow-xl custom-bg-dark-gradient">
+          <div class="card-body p-3">
+            <h3 class="text-white inter-normal">{{job.title}}</h3>
+            <p class="text-white inter-normal">{{statusMap[job.status]}}</p>
+            <p class="text-white inter-normal">{{priorityMap[job.priority]}}</p>
+            <h4 class="inter-normal text-gradient text-warning">Assigned User</h4>
+            <p class="lead inter-normal text-white">{{job.assignedUser.userName}}</p>
+            <h4 class="inter-normal text-gradient text-success">Created By User</h4>
+            <p class="lead inter-normal text-white">{{job.createdByUser.userName}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-5">
+        <div class="card shadow-xl custom-bg-dark-gradient">
+          <div class="card-body p-3">
+            <h4 class="text-primary text-gradient ubuntu-bold">Description</h4>
+            <p class="text-white inter-normal">{{job.description}}</p>
+            <h4 class="text-primary text-gradient ubuntu-bold">Notes</h4>
+            <p class="text-white inter-normal">{{job.notes}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

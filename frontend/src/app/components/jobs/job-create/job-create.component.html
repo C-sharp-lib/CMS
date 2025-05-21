@@ -19,7 +19,6 @@
                   <div class="form-group">
                     <label for="status" class="text-gradient text-primary ubuntu-bold">Status</label>
                     <select formControlName="status" id="status" class="form-control form-control-sm color-background custom-bg-dark-gradient bg-dark text-white inter-bold">
-                      <option value="">Select A Status</option>
                       <option value="1">Pending</option>
                       <option value="2">Approved</option>
                       <option value="3">Rejected</option>
@@ -32,7 +31,6 @@
                   <div class="form-group">
                     <label for="priority" class="text-gradient text-primary ubuntu-bold">Priority</label>
                     <select formControlName="priority" id="priority" class="form-control form-control-sm color-background custom-bg-dark-gradient bg-dark text-white inter-bold">
-                      <option value="">Select A Priority</option>
                       <option value="1">Low</option>
                       <option value="2">Normal</option>
                       <option value="3">High</option>
@@ -56,25 +54,18 @@
                 </div>
               </div>
               <div class="row m-2">
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label for="scheduledDate" class="text-gradient text-primary ubuntu-bold">Scheduled Date</label>
-                    <input type="text" id="scheduledDate" formControlName="scheduledDate" class="form-control datepicker form-control-sm color-background custom-bg-dark-gradient text-white inter-bold" onfocus="focused(this)" onfocusout="defocused(this)">
+                    <input type="date" id="scheduledDate" formControlName="scheduledDate" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold">
                   </div>
                 </div>
-                <div class="col-12 col-md-4">
-                  <div class="form-group">
-                    <label for="completionDate" class="text-gradient text-primary ubuntu-bold">Completion Date</label>
-                    <input type="text" id="completionDate" formControlName="completionDate" class="form-control datepicker form-control-sm color-background custom-bg-dark-gradient text-white inter-bold" onfocus="focused(this)" onfocusout="defocused(this)">
-                  </div>
-                </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label for="assignedUserId" class="text-gradient text-primary ubuntu-bold">Assigned User</label>
                     <select formControlName="assignedUserId" id="assignedUserId" class="form-control form-control-sm color-background custom-bg-dark-gradient bg-dark text-white inter-bold">
-                      <option value="" selected disabled>Select A User</option>
                       <div *ngFor="let user of users">
-                        <option [value]="user.id">{{user.userName}}</option>
+                        <option value="{{user.id}}">{{user.userName}}</option>
                       </div>
                     </select>
                   </div>

@@ -60,7 +60,7 @@ export class UsersService {
     return this.http.get<User>(`${this.baseUrl}/${id}`);
   }
 
-  updateUserById(id: string, user: Partial<User>): Observable<User> {
+  updateUserById(id: string, user: User): Observable<User> {
     return this.http.put<User>(`${this.baseUrl}/${id}`, user);
   }
 

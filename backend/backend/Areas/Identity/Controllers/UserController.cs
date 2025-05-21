@@ -3,6 +3,7 @@ using backend.Areas.Identity.Models;
 using backend.Areas.Identity.Models.ViewModels;
 using backend.Areas.Identity.Services;
 using backend.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +61,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+    public async Task<ActionResult> Register([FromBody] RegisterViewModel model)
     {
         try
         {
@@ -78,7 +79,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+    public async Task<ActionResult> Login([FromBody] LoginViewModel model)
     {
         try
         {
@@ -95,14 +96,14 @@ public class UserController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetAllUsers()
+    public async Task<ActionResult> GetAllUsers()
     {
         var users = await _userRepository.GetAllUsersAsync();
         return Ok(users);
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetUser(string id)
+    public async Task<ActionResult> GetUser(string id)
     {
         var user = await _userRepository.GetUserByIdAsync(id);
         if (user == null)
@@ -111,12 +112,12 @@ public class UserController : ControllerBase
         return Ok(user);
     }
     
-    [HttpPut]
-    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserViewModel model)
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateUser(string id, [FromBody] UpdateUserViewModel model)
     {
         try
         {
-            var result = await _userRepository.UpdateUserAsync(model);
+            var result = await _userRepository.UpdateUserAsync(id, model);
             if (!result.Succeeded)
             {
                 return BadRequest(new {error = $"{result.Errors}"});
@@ -126,19 +127,19 @@ public class UserController : ControllerBase
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            throw new Exception("Failed to update user - DbUpdateConcurrencyException: " + ex.Message);
+            return BadRequest(new { message = "Failed to update user - DbUpdateConcurrencyException: " + ex.Message });
         }
         catch (DbUpdateException ex)
         {
-            throw new Exception("Failed to update user - DbUpdateException: " + ex.Message);
+            return BadRequest(new { message = "Failed to update user - DbUpdateException: " + ex.Message });
         }
         catch (Exception ex)
         {
-            throw new Exception("Failed to update user - Exception: " + ex.Message);
+            return BadRequest(new { message = "Failed to update user - Exception: " + ex.Message });
         }
     }
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(string id)
+    public async Task<ActionResult> DeleteUser(string id)
     {
         var result = await _userRepository.DeleteUserAsync(id);
         if (!result.Succeeded)

@@ -30,20 +30,21 @@ export class JobCreateComponent implements OnInit {
     this.initializeForm();
     this.fetchUsers();
     this.newSectionUp();
+    this.getCurrentUser();
   }
 
   initializeForm(): void {
     this.jobForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
-      status: ['Pending', Validators.required],
-      priority: ['Low', Validators.required],
+      status: ['', Validators.required],
+      priority: ['', Validators.required],
       scheduledDate: ['', Validators.required],
       completionDate: [''],
       estimatedCost: [0, [Validators.required, Validators.min(0)]],
       actualCost: [''],
       notes: [''],
-      assignedUserId: ['', Validators.required],
+      assignedUserId: [''],
     });
   }
   fetchUsers(): void {
@@ -66,11 +67,9 @@ export class JobCreateComponent implements OnInit {
 
     const newJob: Job = {
       ...formValues,
-      id: 0,
       dateCreated: new Date(),
       dateUpdated: undefined,
-      createdByUserId: this.userService.getCurrentUser().id,
-      assignedUser: undefined
+      createdByUserId: this.getCurrentUser(),
     };
 
     this.jobService.createJob(newJob).subscribe({
@@ -78,8 +77,13 @@ export class JobCreateComponent implements OnInit {
       error: err => console.error('Job creation failed', err)
     });
   }
+  getCurrentUser(): User {
+    console.log(this.userService.getCurrentUser());
+    return this.userService.getCurrentUser();
+  }
   newSectionUp() {
     const section = this.el.nativeElement.querySelector('#job-create-section');
     this.renderer.addClass(section, 'active');
   }
+
 }

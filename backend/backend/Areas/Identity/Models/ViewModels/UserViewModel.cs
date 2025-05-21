@@ -52,6 +52,6 @@ public class UpdateUserViewModel : IdentityUser
     [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
     [DataType(DataType.Date)]
     public DateTime DateOfBirth { get; set; }
-
-    public DateTime DateCreated { get; set; }
+    public string PhoneNumber { get; set; }
+    
 }

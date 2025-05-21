@@ -1,6 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {UsersService} from "../../../services";
+import {ToasterService, UsersService} from "../../../services";
 import {User} from "../../../models/user";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-user-list',
@@ -15,7 +16,7 @@ export class UserListComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 10;
   totalPages: number = 0;
-  constructor(private userService: UsersService, private renderer: Renderer2, private el: ElementRef) { }
+  constructor(private userService: UsersService, private renderer: Renderer2, private el: ElementRef, private route: ActivatedRoute, private toast: ToasterService) { }
 
   ngOnInit() {
     this.fetchUsers();
@@ -68,6 +69,22 @@ export class UserListComponent implements OnInit {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.updatePaginatedUsers();
+    }
+  }
+  deleteUser(userId: string, event: Event): void {
+    event.preventDefault();
+
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.userService.deleteUser(userId).subscribe({
+        next: () => {
+          this.toast.showSuccessToast(`Deleted user with the id: ${userId}`, 'Deleted User');
+          this.fetchUsers();
+          this.users = this.users.filter(user => user.id !== userId);
+        },
+        error: err => {
+          this.toast.showErrorToast(`${err.message.toString()}`, 'Error deleting user');
+        }
+      });
     }
   }
   newSectionUp() {
