@@ -19,4 +19,5 @@ export interface User {
   createdJobs?: Job[];
   assignedJobs?: Job[];
   comments?: Comment[];
+  jobs?: Job[];
 }

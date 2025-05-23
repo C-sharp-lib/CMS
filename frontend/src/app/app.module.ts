@@ -8,11 +8,11 @@ import * as fromUsers from './components/users/index';
 import * as fromJobs from './components/jobs/index';
 import * as fromBlog from './components/blog/index';
 import * as fromPages from './components/pages/index';
+import * as fromContacts from './components/contacts/index';
 import * as fromServices from './services/index';
 import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
-import { MainNavComponent } from './components/layout/main-nav/main-nav.component';
 export const routes: Routes = [
   {path: '', children: [
       {path: '', component: fromPages.HomeComponent, pathMatch: 'full'},
@@ -36,6 +36,12 @@ export const routes: Routes = [
       {path:':id', component: fromJobs.JobDetailComponent},
       {path:'update/:id', component: fromJobs.JobUpdateComponent},
     ]},
+  {path:'contacts', children: [
+      {path: '', component: fromContacts.ContactListComponent},
+      {path:'create', component: fromContacts.ContactCreateComponent},
+      {path:':id', component: fromContacts.ContactDetailComponent},
+      {path:'update/:id', component: fromContacts.ContactUpdateComponent},
+    ]},
 ];
 @NgModule({
   declarations: [
@@ -45,7 +51,7 @@ export const routes: Routes = [
     ...fromBlog.components,
     ...fromLayout.components,
     ...fromPages.components,
-    MainNavComponent,
+    ...fromContacts.components,
   ],
   imports: [
     BrowserModule,

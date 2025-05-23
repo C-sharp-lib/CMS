@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Job, Priority, Status} from "../../../models/job";
-import {JobsService, UsersService} from "../../../services";
+import {JobsService, ToasterService, UsersService} from "../../../services";
 import {Router} from "@angular/router";
 import {User} from "../../../models/user";
 
@@ -23,7 +23,8 @@ export class JobCreateComponent implements OnInit {
     private router: Router,
     private userService: UsersService,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private toast: ToasterService
   ) {}
 
   ngOnInit(): void {
@@ -43,8 +44,9 @@ export class JobCreateComponent implements OnInit {
       completionDate: [''],
       estimatedCost: [0, [Validators.required, Validators.min(0)]],
       actualCost: [''],
+      createdByUserId: ['', Validators.required],
       notes: [''],
-      assignedUserId: [''],
+      assignedUserId: ['', Validators.required],
     });
   }
   fetchUsers(): void {
@@ -68,13 +70,19 @@ export class JobCreateComponent implements OnInit {
     const newJob: Job = {
       ...formValues,
       dateCreated: new Date(),
-      dateUpdated: undefined,
       createdByUserId: this.getCurrentUser(),
     };
 
     this.jobService.createJob(newJob).subscribe({
-      next: () => this.router.navigate(['/jobs']),
-      error: err => console.error('Job creation failed', err)
+      next: () => {
+        this.toast.showSuccessToast('Job created successfully', 'Job Created');
+        this.jobForm.reset();
+        this.router.navigate(['/jobs']);
+      },
+      error: (err) => {
+        console.error('Job creation failed', err.message);
+        this.toast.showErrorToast(`${err.message.toString()}`, 'Error creating job');
+      }
     });
   }
   getCurrentUser(): User {

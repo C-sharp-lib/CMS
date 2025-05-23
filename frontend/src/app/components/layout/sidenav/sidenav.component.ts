@@ -29,6 +29,10 @@ export class SidenavComponent implements OnInit {
       {label: 'All Jobs', path: 'jobs', icon: 'bi bi-card-checklist'},
         {label: 'Add Job', path: 'jobs/create', icon: 'bi bi-building-add'}
       ]},
+    {icon: 'bi bi-telephone', label: 'Contacts', key: 'contacts', children: [
+        {label: 'All Contacts', path: 'contacts', icon: 'bi bi-card-checklist'},
+        {label: 'Add Contact', path: 'contacts/create', icon: 'bi bi-building-add'}
+      ]},
   ];
   constructor() { }
 

@@ -21,10 +21,10 @@ export class JobsService {
     return this.http.get<Job>(`${this.baseUrl}/${id}`);
   }
 
-  updateJobById(id: number, job: Partial<Job>): Observable<Job> {
+  updateJobById(id: number, job: Job): Observable<Job> {
     return this.http.put<Job>(`${this.baseUrl}/${id}`, job);
   }
-  createJob(job: Job): Observable<Job> {
+  createJob(job: Partial<Job>): Observable<Job> {
     return this.http.post<Job>(this.baseUrl, job);
   }
   deleteJob(id: number): Observable<void> {
