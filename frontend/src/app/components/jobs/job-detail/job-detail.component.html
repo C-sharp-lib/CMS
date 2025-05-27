@@ -18,9 +18,9 @@
         <div class="card shadow-xl custom-bg-dark-gradient">
           <div class="card-body p-3">
             <h4 class="text-primary text-gradient ubuntu-bold">Description</h4>
-            <p class="text-white inter-normal">{{job.description}}</p>
+            <p class="text-white inter-normal" [innerHTML]="job?.description | safeHtml"></p>
             <h4 class="text-primary text-gradient ubuntu-bold">Notes</h4>
-            <p class="text-white inter-normal">{{job.notes}}</p>
+            <p class="text-white inter-normal" [innerHTML]="job?.notes | safeHtml"></p>
           </div>
         </div>
       </div>

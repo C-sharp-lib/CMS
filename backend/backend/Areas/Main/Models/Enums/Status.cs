@@ -3,11 +3,11 @@ namespace backend.Areas.Main.Models.Enums;
 public enum Status
 {
     // Pending, In Progress, Completed, Cancelled
-    Pending,
-    Approved,
-    Rejected,
-    Completed,
-    Cancelled,
+    Pending = 1,
+    Approved = 2,
+    Rejected = 3,
+    Completed = 4,
+    Cancelled = 5,
 }
 public static class JobStatusExtensions
 {

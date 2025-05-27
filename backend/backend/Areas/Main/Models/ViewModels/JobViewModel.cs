@@ -9,11 +9,7 @@ namespace backend.Areas.Main.Models.ViewModels;
 
 public class AddJobViewModel
 {
-    [Required]
-    [StringLength(150)]
     public string Title { get; set; }
-
-    [StringLength(500)]
     public string? Description { get; set; }
     
     public Status Status { get; set; }
@@ -21,8 +17,7 @@ public class AddJobViewModel
     public Priority Priority { get; set; }
 
     public DateTime ScheduledDate { get; set; }
-
-    public DateTime? CompletionDate { get; set; }
+    
 
     [Column(TypeName = "decimal(18,2)")]
     public decimal EstimatedCost { get; set; }
@@ -32,19 +27,16 @@ public class AddJobViewModel
 
     public string? Notes { get; set; }
 
-    public DateTime DateCreated { get; set; } = DateTime.Now;
+    public DateTime DateCreated { get; set; }
     public int ContactId { get; set; }
-    public string? AssignedUserId { get; set; }
-    public string? CreatedByUserId { get; set; }
+    public string AssignedUserId { get; set; }
+    public string CreatedByUserId { get; set; }
 }
 
 public class UpdateJobViewModel
 {
-    [Required]
-    [StringLength(150)]
     public string Title { get; set; }
-
-    [StringLength(500)]
+    
     public string? Description { get; set; }
     
     public Status Status { get; set; }

@@ -16,7 +16,7 @@
       </li>
     </ul>-->
 
-    <ng-container *ngFor="let item of menuItems">
+    <ng-container *ngFor="let item of filteredMenuItems">
 <ul class="nav flex-column">
       <!-- Simple link (no dropdown) -->
       <li *ngIf="!item.children" class="list-none">

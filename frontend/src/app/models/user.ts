@@ -1,5 +1,7 @@
 import {UserRole} from "./userRoles";
 import {Job} from "./job";
+import {Contact} from "./contact";
+import {Campaign} from "./campaign";
 
 export interface User {
   id?: string;
@@ -17,7 +19,8 @@ export interface User {
 
   userRoles?: UserRole[];
   createdJobs?: Job[];
-  assignedJobs?: Job[];
   comments?: Comment[];
-  jobs?: Job[];
+  assignedJobs?: Job[];
+  contacts?: Contact[];
+  campaigns?: Campaign[];
 }

@@ -11,33 +11,25 @@
             <table class="table table-flush" id="datatable-search">
               <thead class="ubuntu-bold custom-bg-dark-gradient text-white">
               <tr>
-                <th class="text-white ubuntu-bold">ID</th>
                 <th class="text-white ubuntu-bold">Name</th>
                 <th class="text-white ubuntu-bold">Email</th>
-                <th class="text-white ubuntu-bold">Username</th>
                 <th class="text-white ubuntu-bold">Phone Number</th>
-                <th class="text-white ubuntu-bold">Address</th>
-                <th class="text-white ubuntu-bold">Date of Birth</th>
                 <th class="text-white ubuntu-bold">Roles</th>
+                <th class="text-white ubuntu-bold">Date Created</th>
                 <th class="text-white ubuntu-bold">Actions</th>
               </tr>
               </thead>
               <tbody>
               <tr *ngFor="let user of paginatedUsers">
-                <td class="text-white inter-normal">{{user.id}}</td>
                 <td class="text-white inter-normal">{{user.name}}</td>
                 <td class="text-white inter-normal">{{user.email}}</td>
-                <td class="text-white inter-normal">{{user.userName}}</td>
                 <td class="text-white inter-normal">{{user.phoneNumber == null ? 'No phone number added' : user.phoneNumber}}</td>
-                <td class="text-white inter-normal">
-                  {{user.address}}, {{user.city}}, {{user.state}}, {{user.zipCode}}.
-                </td>
-                <td class="text-white inter-normal">{{user.dateOfBirth | date: 'shortDate'}}</td>
                 <td class="text-white inter-normal text-xxs">
                   <div *ngFor="let role of user.userRoles">
                   {{role.role.name}}
                   </div>
                 </td>
+                <td class="text-white inter-normal">{{user.dateCreated | date: 'short'}}</td>
                 <td class="text-white inter-normal" colspan="2">
                   <div class="btn-group-sm btn-rounded btn-sm">
                     <a routerLink="{{user.id}}" class="btn btn-sm bg-gradient-info table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View User Profile"><i class="fa-solid fa-address-card"></i></a>

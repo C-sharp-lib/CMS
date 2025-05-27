@@ -98,6 +98,9 @@ public class UserRepository : IUserRepository
         var user =  await _context.Users
             .Include(x => x.UserRoles)!
             .ThenInclude(xu => xu.Role)
+            .Include(j => j.AssignedJobs)
+            .Include(c => c.Contacts)!
+            .ThenInclude(c => c.Jobs)
             .FirstOrDefaultAsync(xc => xc.Id == userId);
         if (user == null)
         {

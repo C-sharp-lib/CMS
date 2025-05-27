@@ -17,6 +17,22 @@
           </div>
           <div class="col-auto m-auto">
             <div class="dropdown">
+              <a class="text-white cursor-pointer" type="button" id="dropdownMenuAccount" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-lock"></i>
+              </a>
+              <ul class="dropdown-menu custom-bg-dark-gradient" aria-labelledby="dropdownMenuAccount">
+                <div *ngIf="!isLoggedIn()">
+                  <li class="dropdown-item text-info text-gradient ubuntu-bold"><a routerLink="/account">Login</a></li>
+                  <li class="dropdown-item text-info text-gradient ubuntu-bold"><a routerLink="/account/register-page">Register</a></li>
+                </div>
+                <div *ngIf="isLoggedIn()">
+                  <li class="dropdown-item text-warning text-gradient ubuntu-bold"><a href="#" (click)="logoutUser()">Logout</a></li>
+                </div>
+              </ul>
+            </div>
+          </div>
+          <div class="col-auto m-auto">
+            <div class="dropdown">
               <a class="text-white cursor-pointer" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-bell"></i>
               </a>

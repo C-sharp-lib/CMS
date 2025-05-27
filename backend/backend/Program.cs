@@ -109,9 +109,12 @@ public class Program
         {
             options.AddPolicy("CorsPolicy", policy =>
             {
+                policy.AllowCredentials();
+                
                 policy.WithOrigins("http://localhost:4200")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
+                
                 // (Optional: restrict origins in production)
             });
         });

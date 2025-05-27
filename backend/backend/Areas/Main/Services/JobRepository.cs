@@ -25,7 +25,7 @@ public class JobRepository : IJobRepository
             .ToListAsync();
     }
 
-    public async Task<Job?> GetJobByIdAsync(int id)
+    public async Task<Job> GetJobByIdAsync(int id)
     {
         var job = await _context.Jobs
             .Include(j => j.Contact)
@@ -40,7 +40,7 @@ public class JobRepository : IJobRepository
         return job;
     }
 
-    public async Task CreateJobAsync([FromBody] AddJobViewModel model)
+    public async Task<Job> CreateJobAsync([FromBody] AddJobViewModel model)
     {
         var job = new Job
         {
@@ -49,24 +49,22 @@ public class JobRepository : IJobRepository
             ActualCost = model.ActualCost,
             CreatedByUserId = model.CreatedByUserId,
             ContactId = model.ContactId,
-            CompletionDate = model.CompletionDate,
             DateCreated = model.DateCreated,
             Priority = model.Priority,
             Status = model.Status,
             Description = model.Description,
             ScheduledDate = model.ScheduledDate,
             EstimatedCost = model.EstimatedCost,
-            Notes = model.Notes,
+            Notes = model.Notes
         };
         _context.Jobs.Add(job);
         await _context.SaveChangesAsync();
+        return job;
     }
 
-    public async Task UpdateJobAsync(int id, [FromBody] UpdateJobViewModel model)
+    public async Task<Job> UpdateJobAsync(int id, [FromBody] UpdateJobViewModel model)
     {
         var job = await GetJobByIdAsync(id);
-        if (job != null)
-        {
             job.Title = model.Title;
             job.Description = model.Description;
             job.ActualCost = model.ActualCost;
@@ -77,9 +75,10 @@ public class JobRepository : IJobRepository
             job.CompletionDate = model.CompletionDate;
             job.DateUpdated = model.DateUpdated;
             job.EstimatedCost = model.EstimatedCost;
-        }
 
+        _context.Jobs.Update(job);
         await _context.SaveChangesAsync();
+        return job;
     }
 
     public async Task<bool> DeleteJobAsync(int id)

@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, Renderer2} from '@angular/
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ToasterService, UsersService} from "../../../services";
 import {Router} from "@angular/router";
+import {MenuService} from "../../../services/menu.service";
 
 @Component({
   selector: 'app-login',
@@ -15,9 +16,11 @@ export class LoginComponent implements AfterViewInit, OnInit {
   rememberMe: boolean = true;
   errorMessage: string = '';
   successMessage: string = '';
+  user: any | null;
 
   constructor(private fb: FormBuilder, private _userService: UsersService, private router: Router,
-              private toast: ToasterService, private renderer: Renderer2, private el: ElementRef) {
+              private toast: ToasterService, private renderer: Renderer2, private el: ElementRef,
+              private menuService: MenuService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -33,11 +36,15 @@ ngOnInit() {
       const credentials = this.loginForm.value;
       this._userService.login(credentials).subscribe({
         next: (response) => {
+          this._userService.saveToken(response.token);
           localStorage.setItem('token', response.token);
+          this.user = this._userService.getDecodedToken();
+          console.log(this.user);
           this.successMessage = 'User logged in successfully.';
           this.toast.showSuccessToast(this.successMessage, 'Successfully logged in!');
           this.loginForm.reset();
-          this.router.navigate(['users']);
+          this.menuService.refreshMenu();
+          this.router.navigate(['/users']);
         },
         error: (error) => {
           this.errorMessage = 'Login failed. Please check your credentials.' + error.message;

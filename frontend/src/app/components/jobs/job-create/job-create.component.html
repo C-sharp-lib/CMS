@@ -15,29 +15,29 @@
                 <div class="col-12 col-md-4">
                   <div class="form-group">
                     <label for="title" class="text-gradient text-primary ubuntu-bold">Title</label>
-                    <input id="title" formControlName="title" type="text" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold border-primary">
+                    <input id="title" formControlName="title" type="text" class="form-control color-background custom-bg-dark-gradient text-white inter-bold border-primary">
                   </div>
                 </div>
                 <div class="col-12 col-md-4">
                   <div class="form-group">
                     <label for="status" class="text-gradient text-primary ubuntu-bold">Status</label>
-                    <select formControlName="status" id="status" class="form-control form-control-sm color-background custom-bg-dark-gradient bg-dark text-white inter-bold border-primary">
-                      <option value="1">Pending</option>
-                      <option value="2">Approved</option>
-                      <option value="3">Rejected</option>
-                      <option value="4">Completed</option>
-                      <option value="5">Cancelled</option>
+                    <select formControlName="status" id="status" class="form-control color-background custom-bg-dark-gradient bg-dark text-white inter-bold border-primary">
+                      <option [value]="1">Pending</option>
+                      <option [value]="2">Approved</option>
+                      <option [value]="3">Rejected</option>
+                      <option [value]="4">Completed</option>
+                      <option [value]="5">Cancelled</option>
                     </select>
                   </div>
                 </div>
                 <div class="col-12 col-md-4">
                   <div class="form-group">
                     <label for="priority" class="text-gradient text-primary ubuntu-bold">Priority</label>
-                    <select formControlName="priority" id="priority" class="form-control form-control-sm color-background custom-bg-dark-gradient bg-dark text-white inter-bold border-primary">
-                      <option value="1">Low</option>
-                      <option value="2">Normal</option>
-                      <option value="3">High</option>
-                      <option value="4">Critical</option>
+                    <select formControlName="priority" id="priority" class="form-control color-background custom-bg-dark-gradient bg-dark text-white inter-bold border-primary">
+                      <option [value]="1">Low</option>
+                      <option [value]="2">Normal</option>
+                      <option [value]="3">High</option>
+                      <option [value]="4">Critical</option>
                     </select>
                   </div>
                 </div>
@@ -46,13 +46,13 @@
                 <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label for="estimatedCost" class="text-gradient text-primary ubuntu-bold">Estimated Cost</label>
-                    <input type="number" id="estimatedCost" formControlName="estimatedCost" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold border-primary">
+                    <input type="number" id="estimatedCost" formControlName="estimatedCost" class="form-control color-background custom-bg-dark-gradient text-white inter-bold border-primary">
                   </div>
                 </div>
                 <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label for="actualCost" class="text-gradient text-primary ubuntu-bold">Actual Cost</label>
-                    <input type="number" id="actualCost" formControlName="actualCost" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold border-primary">
+                    <input type="number" id="actualCost" formControlName="actualCost" class="form-control color-background custom-bg-dark-gradient text-white inter-bold border-primary">
                   </div>
                 </div>
               </div>
@@ -60,25 +60,25 @@
                 <div class="col-12 col-md-4">
                   <div class="form-group">
                     <label for="scheduledDate" class="text-gradient text-primary ubuntu-bold">Scheduled Date</label>
-                    <input type="date" id="scheduledDate" formControlName="scheduledDate" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold border-primary">
+                    <input type="date" id="scheduledDate" formControlName="scheduledDate" class="form-control color-background custom-bg-dark-gradient text-white inter-bold border-primary">
                   </div>
                 </div>
                 <div class="col-12 col-md-4">
                   <div class="form-group">
                     <label for="assignedUserId" class="text-gradient text-primary ubuntu-bold">Assigned User</label>
-                    <select formControlName="assignedUserId" id="assignedUserId" class="form-control form-control-sm color-background custom-bg-dark-gradient bg-dark text-white inter-bold border-primary">
+                    <select formControlName="assignedUserId" id="assignedUserId" class="form-control color-background custom-bg-dark-gradient bg-dark text-white inter-bold border-primary">
                       <div *ngFor="let user of users">
-                        <option value="{{user.id}}">{{user.userName}}</option>
+                        <option [value]="user?.id">{{user?.userName}}</option>
                       </div>
                     </select>
                   </div>
                 </div>
                 <div class="col-12 col-md-4">
                   <div class="form-group">
-                    <label for="createdByUserId" class="text-gradient text-primary ubuntu-bold">Created By User</label>
-                    <select formControlName="createdByUserId" id="createdByUserId" class="form-control form-control-sm color-background custom-bg-dark-gradient bg-dark text-white inter-bold border-primary">
-                      <div *ngFor="let user of users">
-                        <option value="{{user.id}}">{{user.userName}}</option>
+                    <label for="contactId" class="text-gradient text-primary ubuntu-bold">Contact</label>
+                    <select formControlName="contactId" id="contactId" class="form-control color-background custom-bg-dark-gradient bg-dark text-white inter-bold border-primary">
+                      <div *ngFor="let contact of contacts">
+                        <option [value]="contact?.id">{{contact?.firstName}} {{contact?.lastName}}</option>
                       </div>
                     </select>
                   </div>
@@ -88,13 +88,13 @@
                 <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label for="description" class="text-gradient text-primary ubuntu-bold">Description</label>
-                    <textarea id="description" formControlName="description" cols="10" rows="5" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold border-primary"></textarea>
+                    <quill-editor formControlName="description" id="description" class="dark-quill" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
                   </div>
                 </div>
                 <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label for="notes" class="text-gradient text-primary ubuntu-bold">Notes</label>
-                    <textarea id="notes" formControlName="notes" cols="10" rows="5" class="form-control form-control-sm color-background custom-bg-dark-gradient text-white inter-bold border-primary"></textarea>
+                    <quill-editor formControlName="notes" id="notes" class="dark-quill" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
                   </div>
                 </div>
               </div>

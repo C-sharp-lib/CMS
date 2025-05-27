@@ -3,6 +3,8 @@ import {BlogService} from "./blog.service";
 import {AuthService} from "./auth.service";
 import {JobsService} from "./jobs.service";
 import {ToasterService} from "./toaster.service";
+import {ContactService} from "./contact.service";
+import {MenuService} from "./menu.service";
 
 
 export const services: any[] = [
@@ -11,6 +13,8 @@ export const services: any[] = [
   BlogService,
   JobsService,
   ToasterService,
+  ContactService,
+  MenuService,
 ];
 
 export * from './users.service';
@@ -18,3 +22,5 @@ export * from './auth.service';
 export * from './blog.service';
 export * from './jobs.service';
 export * from './toaster.service';
+export * from './contact.service';
+export * from './menu.service';

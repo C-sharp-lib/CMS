@@ -1,0 +1,6 @@
+#navigation > ul > div > div:nth-child(2) > div > ul:before {
+  display: none;
+}
+#navigation > ul > div > div:nth-child(2) > div > ul.dropdown-menu.show{
+  margin: 0 !important;
+}

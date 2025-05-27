@@ -1,4 +1,7 @@
 import {User} from "./user";
+import {Contact} from "./contact";
+import {JobNotes} from "./note";
+import {JobTasks, Tasks} from "./tasks";
 
 
 export interface Job {
@@ -14,13 +17,15 @@ export interface Job {
   notes?: string;
   dateCreated: Date;
   dateUpdated?: Date;
-
+  contactId: number;
+  contact: Contact;
   assignedUserId?: string;
-  assignedUser?: User;
-
+  assignedUser: User;
   createdByUserId?: string;
-  createdByUser?: User;
-
+  createdByUser: User;
+  jobNotes?: JobNotes[];
+  jobTasks?: JobTasks[];
+  tasks?: Tasks[];
 }
 
 // Enum representations

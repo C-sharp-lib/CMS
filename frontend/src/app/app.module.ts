@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { AppComponent } from './app.component';
 import {RouterModule, Routes} from "@angular/router";
 import * as fromLayout from './components/layout/index';
@@ -13,6 +13,12 @@ import * as fromServices from './services/index';
 import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
+import { TruncatePipe } from './utils/pipes/truncate.pipe';
+import {QuillModule} from "ngx-quill";
+import {authGuard} from "./utils/guards/auth.guard";
+import {AuthInterceptor} from "./utils/interceptors/auth.interceptor";
+import { SafeHtmlPipe } from './utils/pipes/safe-html.pipe';
+
 export const routes: Routes = [
   {path: '', children: [
       {path: '', component: fromPages.HomeComponent, pathMatch: 'full'},
@@ -22,21 +28,22 @@ export const routes: Routes = [
       {path:'terms-and-conditions', component: fromPages.TermsAndConditionsComponent},
       {path:'faq', component: fromPages.FaqComponent},
     ]},
-
-  {path: 'users', children: [
-      {path: '', component: fromUsers.UserListComponent},
+  {path: 'account', children: [
+      {path: '', component: fromUsers.LoginComponent},
       {path:'register-page', component: fromUsers.RegisterComponent},
-      {path:'login-page', component: fromUsers.LoginComponent},
+    ]},
+  {path: 'users', canActivate: [authGuard], children: [
+      {path: '', component: fromUsers.UserListComponent},
       {path: ':id', component: fromUsers.UserDetailComponent},
       {path: 'update/:id', component: fromUsers.UserUpdateComponent},
     ]},
-  {path:'jobs', children: [
+  {path:'jobs', canActivate: [authGuard], children: [
       {path: '', component: fromJobs.JobListComponent},
       {path:'create', component: fromJobs.JobCreateComponent},
       {path:':id', component: fromJobs.JobDetailComponent},
       {path:'update/:id', component: fromJobs.JobUpdateComponent},
     ]},
-  {path:'contacts', children: [
+  {path:'contacts', canActivate: [authGuard], children: [
       {path: '', component: fromContacts.ContactListComponent},
       {path:'create', component: fromContacts.ContactCreateComponent},
       {path:':id', component: fromContacts.ContactDetailComponent},
@@ -52,6 +59,8 @@ export const routes: Routes = [
     ...fromLayout.components,
     ...fromPages.components,
     ...fromContacts.components,
+    TruncatePipe,
+    SafeHtmlPipe,
   ],
   imports: [
     BrowserModule,
@@ -72,10 +81,18 @@ export const routes: Routes = [
         info: 'toast-info',
         warning: 'toast-warning',
       }
-    })
+    }),
+    QuillModule.forRoot(),
   ],
   exports: [RouterModule],
-  providers: [...fromServices.services],
+  providers: [
+    ...fromServices.services,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

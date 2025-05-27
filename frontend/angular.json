@@ -13,6 +13,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "quill",
+              "quill-delta"
+            ],
             "outputPath": "dist/frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -26,6 +30,7 @@
               "src/styles.css",
               "src/assets/css/nucleo-icons.css",
               "src/assets/css/nucleo-svg.css",
+              "node_modules/quill/dist/quill.snow.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "src/assets/css/argon-dashboard.css",
               "node_modules/ngx-toastr/toastr.css"

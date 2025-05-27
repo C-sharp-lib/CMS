@@ -14,6 +14,7 @@ export class JobDetailComponent implements OnInit {
   job!: Job;
   error!: string;
   isLoading: boolean = true;
+  editorInstance: any;
   constructor(private jobService: JobsService, private router: Router,
               private route: ActivatedRoute, private toast: ToasterService) { }
 
@@ -25,6 +26,7 @@ export class JobDetailComponent implements OnInit {
       return;
     }
     this.loadJob();
+    this.getRawHtml();
   }
   loadJob(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -55,4 +57,14 @@ export class JobDetailComponent implements OnInit {
     3: 'High',
     4: 'Urgent'
   };
+
+
+
+  onEditorCreated(quill: any) {
+    this.editorInstance = quill;
+  }
+
+  getRawHtml(): string {
+    return this.editorInstance?.root.innerHTML || '';
+  }
 }

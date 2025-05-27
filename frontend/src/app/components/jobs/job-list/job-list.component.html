@@ -11,29 +11,32 @@
           </div>
           <div class="card-body p-3">
             <div class="table-responsive">
-              <table class="table table-flush" id="datatable-search">
+              <table class="table table-flush table-striped table-hover table-borderless" id="datatable-search">
                 <thead class="ubuntu-bold custom-bg-dark-gradient text-white">
                 <tr>
                   <th class="text-white ubuntu-bold">ID</th>
                   <th class="text-white ubuntu-bold">Title</th>
                   <th class="text-white ubuntu-bold">Status</th>
                   <th class="text-white ubuntu-bold">Priority</th>
-                  <th class="text-white ubuntu-bold">Scheduled</th>
                   <th class="text-white ubuntu-bold">Estimated Cost</th>
                   <th class="text-white ubuntu-bold">Actual Cost</th>
-                  <th class="text-white ubuntu-bold">Notes</th>
+                  <th class="text-white ubuntu-bold">Scheduled</th>
                   <th class="text-white ubuntu-bold">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr *ngFor="let job of paginatedJobs">
                   <td class="text-white inter-normal">{{job.id}}</td>
-                  <td class="text-white inter-normal">{{job.title}}</td>
+                  <td class="text-white inter-normal"><a routerLink="/jobs/{{job.id}}" class="btn-link text-gradient text-info">{{job.title | truncate:20}}</a></td>
                   <td class="text-white inter-normal">
-                    {{job.status ? (job.status === 1 ? 'Pending' :
+                    <span [class]="job.status === 1 ? 'text-gradient text-info' :
+                    (job.status === 2 ? 'text-gradient text-primary' :
+                    (job.status === 3 ? 'text-gradient text-danger' :
+                    (job.status === 4 ? 'text-gradient text-success' : 'text-gradient text-warning')))">{{job.status ? (job.status === 1 ? 'Pending' :
                       (job.status === 2 ? 'Approved' :
                         (job.status === 3 ? 'Rejected' :
                           (job.status === 4 ? 'Completed' : 'Cancelled')))) : 'Cancelled'}}
+                    </span>
                   </td>
                   <td class="text-white inter-normal">
                     {{job.priority ? (job.priority === 1 ? 'Low' :
@@ -41,10 +44,9 @@
                         (job.priority === 3 ? 'High' :
                           (job.priority === 4 ? 'Urgent' : 'Low')))) : 'Low'}}
                   </td>
-                  <td class="text-white inter-normal">{{job.scheduledDate | date: 'short'}}</td>
                   <td class="text-white inter-normal">{{job.estimatedCost | currency: 'USD'}}</td>
-                  <td class="text-white inter-normal">{{job.actualCost | currency: 'USD'}}</td>
-                  <td class="text-white inter-normal">{{job.notes}}</td>
+                  <td class="text-white inter-normal">{{job?.actualCost | currency: 'USD'}}</td>
+                  <td class="text-white inter-normal">{{job.scheduledDate | date: 'short'}}</td>
                   <td class="text-white inter-normal" colspan="2">
                     <div class="btn-group-sm btn-rounded btn-sm">
                       <a routerLink="{{job.id}}" class="btn btn-sm bg-gradient-info table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Job Profile"><i class="fa-solid fa-address-card"></i></a>

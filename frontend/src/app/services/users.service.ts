@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable, tap} from "rxjs";
 import {User} from "../models/user";
 import {environment} from "../../environments/environment";
 import {Router} from '@angular/router';
@@ -24,12 +24,16 @@ export class UsersService {
   }
 
   login(credentials: { email: string; password: string, rememberMe: boolean }): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login`, credentials);
+    return this.http.post<any>(`${this.baseUrl}/login`, credentials).pipe(
+      tap((res: any) => {
+        localStorage.setItem("token", res.token);
+      })
+    );
   }
 
   logout() {
     this.clearToken();
-    this.router.navigate(['/login-page']);
+    this.router.navigate(['/account']);
   }
 
   saveToken(token: string): void {
@@ -72,7 +76,9 @@ export class UsersService {
   getCurrentUser(): User | null {
     return this.currentUser;
   }
-
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
   setCurrentUser(user: User): void {
     this.currentUser = user;
     localStorage.setItem('currentUser', JSON.stringify(user));

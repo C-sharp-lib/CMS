@@ -24,8 +24,11 @@ export class JobsService {
   updateJobById(id: number, job: Job): Observable<Job> {
     return this.http.put<Job>(`${this.baseUrl}/${id}`, job);
   }
-  createJob(job: Partial<Job>): Observable<Job> {
-    return this.http.post<Job>(this.baseUrl, job);
+  createJob(job: Job): Observable<Job> {
+    return this.http.post<Job>(this.baseUrl, job, {
+      withCredentials: true,
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    });
   }
   deleteJob(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
