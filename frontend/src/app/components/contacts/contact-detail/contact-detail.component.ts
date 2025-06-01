@@ -1,6 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
 import {ContactService, JobsService, ToasterService} from "../../../services";
 import {ActivatedRoute, Router} from "@angular/router";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-contact-detail',
@@ -13,6 +14,8 @@ export class ContactDetailComponent implements OnInit {
   error!: string;
   isLoading: boolean = true;
   editorInstance: any;
+  imagePath: string = '';
+  contactImageUrl: string  | null = null;
   constructor(private contactService: ContactService, private router: Router,
               private route: ActivatedRoute, private toast: ToasterService, private renderer: Renderer2, private el: ElementRef) { }
 
@@ -32,6 +35,7 @@ export class ContactDetailComponent implements OnInit {
     this.contactService.getContactById(id).subscribe({
       next: (data) => {
         this.contact = data;
+        this.loadContactImage(this.contact);
         this.isLoading = false;
       },
       error: (err) => {
@@ -40,6 +44,18 @@ export class ContactDetailComponent implements OnInit {
         this.toast.showErrorToast(`${this.error.toString()}`, 'Could not load contact');
       }
     });
+  }
+  loadContactImage(contact: any){
+    this.contactService.getContactImageUrl(contact.imageUrl).subscribe({
+      next: (data) => {
+        this.contactImageUrl = data.imageUrl;
+        console.log(this.contactImageUrl);
+      },
+      error: (err) => {
+        this.error = err.message;
+        console.log(this.error.toString());
+      }
+    })
   }
   onEditorCreated(quill: any) {
     this.editorInstance = quill;

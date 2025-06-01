@@ -21,6 +21,7 @@ public class ContactRepository : IContactRepository
     {
         return await _context.Contacts
             .Include(c => c.OwnerUser)
+            .Include(cp => cp.Company)
             .Include(n => n.ContactNotes)!
             .ThenInclude(n => n.Note)
             .Include(c => c.Tasks)!

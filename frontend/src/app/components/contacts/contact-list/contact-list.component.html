@@ -29,7 +29,7 @@
                 <tr *ngFor="let contact of paginatedContacts">
                   <td class="text-white inter-normal">{{contact.id}}</td>
                   <td class="text-white inter-normal">{{contact.firstName}} {{contact.lastName}}</td>
-                  <td class="text-white inter-normal">{{contact.companyName}}</td>
+                  <td class="text-white inter-normal">{{contact.company.name}}</td>
                   <td class="text-white inter-normal">{{contact.jobTitle}}</td>
                   <td class="text-white inter-normal">{{contact.phoneNumber == null ? 'No phone number added' : contact.phoneNumber}}</td>
                   <td class="text-white inter-normal">{{contact.email}}</td>

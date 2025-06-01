@@ -36,13 +36,30 @@ namespace backend.Areas.Main.Controllers;
             var contacts = await _contactRepository.GetAllContactsAsync();
             return Ok(contacts);
         }
+        [HttpGet("get-contact-image-path")]
+        public IActionResult GetContactImagePath([FromQuery] string relativePath)
+        {
+            if (string.IsNullOrEmpty(relativePath))
+                return BadRequest("Image path is required.");
+
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var fullPath = Path.Combine(wwwrootPath, relativePath.Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+            if (!System.IO.File.Exists(fullPath))
+                return NotFound("Image not found.");
+
+            var request = HttpContext.Request;
+            var baseUrl = $"{request.Scheme}://{request.Host}";
+            var fullImageUrl = $"{baseUrl}/{relativePath}";
+
+            return Ok(new { imageUrl = fullImageUrl });
+        }
 
         // GET: api/Contact/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult> GetContactById(int id)
         {
             var contact = await _contactRepository.GetContactByIdAsync(id);
-
             return Ok(contact);
         }
 
@@ -75,6 +92,7 @@ namespace backend.Areas.Main.Controllers;
                 return BadRequest(new {message = ex.Message});
             }
         }
+        
 
         // PUT: api/Contact/{id}
         [HttpPut("{id}")]

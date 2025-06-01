@@ -7,3 +7,10 @@
   margin-top: 30px;
   margin-bottom: 100px;
 }
+#datatable-search > thead > tr:nth-child(1n) > th {
+  font-size: 14px;
+}
+#datatable-search > tbody > tr:nth-child(1n) > td.text-white.inter-normal {
+  padding: 5px;
+  font-size: 12px;
+}

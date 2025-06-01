@@ -35,4 +35,10 @@ export class ContactService {
   countContacts(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/count`);
   }
+  getContactImageUrl(relativePath: string): Observable<{ imageUrl: string }> {
+    return this.http.get<{ imageUrl: string }>(
+     `${this.apiUrl}/get-contact-image-path`,
+      { params: { relativePath } }
+    );
+  }
 }

@@ -31,7 +31,7 @@ public class Program
         builder.Services.AddAppConfiguration(builder.Configuration);
         builder.Host.UseSerilog();
         var app = builder.Build();
-        app.UseStaticFiles();
+        
         app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = new PhysicalFileProvider(
@@ -44,7 +44,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        
+        app.UseStaticFiles();
         app.UseCors("CorsPolicy");
         app.UseHttpsRedirection();
         app.UseAuthentication();
