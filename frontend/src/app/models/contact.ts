@@ -1,18 +1,21 @@
 import {Job} from "./job";
+import {Campaign} from "./campaign";
+import {Tasks} from "./tasks";
+import {ContactNotes} from "./note";
+import {User} from "./user";
+import {Company} from "./company";
 
 export interface Contact {
-  id?: number;
-
+  id: number;
   firstName: string;
   lastName: string;
-  companyName: string;
   jobTitle: string;
 
   email: string;
   phoneNumber: string;
 
   addressLine1: string;
-  addressLine2?: string;
+  addressLine2: string;
   city: string;
   state: string;
   zipCode: string;
@@ -20,10 +23,15 @@ export interface Contact {
 
   notes: string;
 
-  dateCreated?: Date | null;
-  dateUpdated?: Date | null;
-  imageUrl?: string | null;
-  ownerUserId?: string | null;
-  companyId?: number | null;
+  dateCreated: Date;
+  dateUpdated?: Date;
+  imageUrl?: string;
+  ownerUserId?: string;
+  ownerUser?: User;
+  companyId?: number;
+  company?: Company;
   jobs?: Job[];
+  campaigns?: Campaign[];
+  tasks?: Tasks[];
+  contactNotes?: ContactNotes[];
 }

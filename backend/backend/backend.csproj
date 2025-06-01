@@ -40,6 +40,8 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="Models\ViewModels\" />
     <Folder Include="Services\" />
+    <Folder Include="Uploads\Contact\" />
+    <Folder Include="wwwroot\Uploads\Contact\" />
 </ItemGroup>
 
 </Project>

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using backend.Areas.Main.Models;
 using backend.Areas.Main.Models.ViewModels;
 using backend.Data;
@@ -9,10 +10,11 @@ namespace backend.Areas.Main.Services;
 public class ContactRepository : IContactRepository
 {
     private readonly ApplicationDbContext _context;
-
-    public ContactRepository(ApplicationDbContext context)
+    private readonly IWebHostEnvironment _webenv;
+    public ContactRepository(ApplicationDbContext context, IWebHostEnvironment webenv)
     {
         _context = context;
+        _webenv = webenv;
     }
 
     public async Task<IEnumerable<Contact>> GetAllContactsAsync()
@@ -27,10 +29,11 @@ public class ContactRepository : IContactRepository
             .ToListAsync();
     }
 
-    public async Task<Contact?> GetContactByIdAsync(int id)
+    public async Task<Contact> GetContactByIdAsync(int id)
     {
         var contact = await _context.Contacts
             .Include(c => c.OwnerUser)
+            .Include(cp => cp.Company)
             .Include(n => n.ContactNotes)!
             .ThenInclude(n => n.Note)
             .Include(c => c.Tasks)!
@@ -44,35 +47,84 @@ public class ContactRepository : IContactRepository
         return contact;
     }
 
-    public async Task<Contact> AddContactAsync([FromBody] AddContactViewModel contact)
+    public async Task<Contact> AddContactAsync([FromForm] AddContactViewModel contact)
     {
-        var contacts = new Contact
+
+        try
+        { 
+            string uniqueFileName = null;
+            if (contact.ImageUrl != null && contact.ImageUrl.Length > 0)
+            {
+                var permittedExtensions3 = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var extension3 = Path.GetExtension(contact.ImageUrl.FileName).ToLowerInvariant();
+
+                if (string.IsNullOrEmpty(extension3) || !permittedExtensions3.Contains(extension3))
+                {
+                    throw new FormatException("Invalid image extension");
+                }
+
+                string fileName = Path.GetFileNameWithoutExtension(contact.ImageUrl.FileName);
+                uniqueFileName = $"{fileName}_{Guid.NewGuid()}{extension3}";
+                string uploadsFolder3 = Path.Combine(_webenv.WebRootPath, "Uploads/Contact");
+                if (!Directory.Exists(uploadsFolder3))
+                {
+                    Directory.CreateDirectory(uploadsFolder3);
+                }
+
+                string filePath = Path.Combine(uploadsFolder3, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await contact.ImageUrl.CopyToAsync(fileStream);
+                }
+                var contacts = new Contact
+                {
+                    FirstName = contact.FirstName,
+                    LastName = contact.LastName,
+                    Email = contact.Email,
+                    JobTitle = contact.JobTitle,
+                    PhoneNumber = contact.PhoneNumber,
+                    AddressLine1 = contact.AddressLine1,
+                    AddressLine2 = contact.AddressLine2,
+                    City = contact.City,
+                    State = contact.State,
+                    ZipCode = contact.ZipCode,
+                    Country = contact.Country,
+                    Notes = contact.Notes,
+                    DateCreated = contact.DateCreated,
+                    OwnerUserId = contact.OwnerUserId,
+                    CompanyId = contact.CompanyId,
+                    ImageUrl = (uniqueFileName != null ? Path.Combine("Uploads/Contact/", uniqueFileName) : null)!
+                };
+                _context.Contacts.Add(contacts);
+                await _context.SaveChangesAsync();
+                return contacts;
+            }
+           
+        }
+        catch (Exception ex)
         {
-            FirstName = contact.FirstName,
-            LastName = contact.LastName,
-            Email = contact.Email,
-            JobTitle = contact.JobTitle,
-            CompanyName = contact.CompanyName,
-            PhoneNumber = contact.PhoneNumber,
-            AddressLine1 = contact.AddressLine1,
-            AddressLine2 = contact.AddressLine2,
-            City = contact.City,
-            State = contact.State,
-            ZipCode = contact.ZipCode,
-            Country = contact.Country,
-            Notes = contact.Notes,
-            DateCreated = contact.DateCreated,
-            OwnerUserId = contact.OwnerUserId,
-            ImageUrl = contact.ImageUrl,
-        };
-        _context.Contacts.Add(contacts);
-        await _context.SaveChangesAsync();
-        return contacts;
+            throw new Exception(ex.Message);
+        }
+
+        return null;
     }
 
-    public async Task<Contact> UpdateContactAsync(int id, [FromBody] UpdateContactViewModel contact)
+    public async Task<Contact> UpdateContactAsync(int id, [FromForm] UpdateContactViewModel contact)
     {
         var contactToUpdate = await GetContactByIdAsync(id);
+        string uploadsFolder = Path.Combine(_webenv.WebRootPath, "Uploads/Contact");
+        if (contactToUpdate.ImageUrl != null && contact.ImageUrl?.Length > 0)
+        {
+            string uniqueFileName1 = Guid.NewGuid().ToString() + "_" + Path.GetFileName(contact.ImageUrl.FileName);
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName1);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await contact.ImageUrl.CopyToAsync(fileStream);
+            }
+
+            contactToUpdate.ImageUrl = uniqueFileName1;
+        }
+        
         contactToUpdate.FirstName = contact.FirstName;
         contactToUpdate.LastName = contact.LastName;
         contactToUpdate.JobTitle = contact.JobTitle;
@@ -84,12 +136,10 @@ public class ContactRepository : IContactRepository
         contactToUpdate.Country = contact.Country;
         contactToUpdate.PhoneNumber = contact.PhoneNumber;
         contactToUpdate.Email = contact.Email;
-        contactToUpdate.CompanyName = contact.CompanyName;
         contactToUpdate.DateUpdated = contact.DateUpdated;
-        contactToUpdate.ImageUrl = contact.ImageUrl;
         contactToUpdate.Notes = contact.Notes;
+        contactToUpdate.CompanyId = contact.CompanyId;
         _context.Contacts.Update(contactToUpdate);
-        await _context.SaveChangesAsync();
         await _context.SaveChangesAsync();
         return contactToUpdate;
     }
@@ -101,12 +151,9 @@ public class ContactRepository : IContactRepository
 
     public async Task DeleteContactAsync(int id)
     {
-        var contact = await _context.Contacts.FindAsync(id);
-        if (contact != null)
-        {
-            _context.Contacts.Remove(contact);
-            await _context.SaveChangesAsync();
-        }
+        var contact = await GetContactByIdAsync(id);
+        _context.Contacts.Remove(contact);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Contact>> GetContactsByOwnerAsync(string ownerUserId)

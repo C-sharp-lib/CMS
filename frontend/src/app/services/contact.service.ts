@@ -9,7 +9,7 @@ import {Contact} from "../models/contact";
 })
 export class ContactService {
   private apiUrl = `${environment.apiUrl}/Main/Contact`;
-
+  contact: any;
   constructor(private http: HttpClient) {}
 
   getContacts(): Observable<Contact[]> {
@@ -20,8 +20,8 @@ export class ContactService {
     return this.http.get<Contact>(`${this.apiUrl}/${id}`);
   }
 
-  createContact(contact: Contact): Observable<Contact> {
-    return this.http.post<Contact>(this.apiUrl, contact);
+  createContact(contact: FormData): Observable<any> {
+    return this.http.post(this.apiUrl, contact);
   }
 
   updateContactById(id: number, contact: Contact): Observable<Contact> {

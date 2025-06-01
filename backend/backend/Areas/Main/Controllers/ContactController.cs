@@ -1,7 +1,9 @@
+using System.Text.RegularExpressions;
 using backend.Areas.Main.Models;
 using backend.Areas.Main.Models.ViewModels;
 using backend.Areas.Main.Services;
 using backend.Data;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,8 +42,6 @@ namespace backend.Areas.Main.Controllers;
         public async Task<ActionResult> GetContactById(int id)
         {
             var contact = await _contactRepository.GetContactByIdAsync(id);
-            if (contact == null)
-                return NotFound();
 
             return Ok(contact);
         }
@@ -56,11 +56,14 @@ namespace backend.Areas.Main.Controllers;
 
         // POST: api/Contact
         [HttpPost]
-        public async Task<ActionResult<Contact>> CreateContact([FromBody] AddContactViewModel contact)
+        public async Task<IActionResult> CreateContact([FromForm] AddContactViewModel contact)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new {Errors = errors});
             }
             try
             {
@@ -75,17 +78,20 @@ namespace backend.Areas.Main.Controllers;
 
         // PUT: api/Contact/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult<Contact>> UpdateContact(int id, [FromBody] UpdateContactViewModel contact)
+        public async Task<IActionResult> UpdateContact(int id, [FromForm] UpdateContactViewModel contact)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new {message = ModelState});
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new {Errors = errors});
             }
 
             try
             {
-                var contacts = await _contactRepository.UpdateContactAsync(id, contact);
-                return Ok(contacts);
+                await _contactRepository.UpdateContactAsync(id, contact);
+                return Ok();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -108,12 +114,15 @@ namespace backend.Areas.Main.Controllers;
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteContact(int id)
         {
-            var existingContact = await _contactRepository.GetContactByIdAsync(id);
-            if (existingContact == null)
-                return NotFound();
-
-            await _contactRepository.DeleteContactAsync(id);
-            return NoContent();
+            try
+            {
+                await _contactRepository.DeleteContactAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new {message = ex.Message});
+            }
         }
 
         [HttpGet("contactCount")]
@@ -142,7 +151,10 @@ namespace backend.Areas.Main.Controllers;
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new {Errors = errors});
             }
             try
             {
@@ -171,7 +183,10 @@ namespace backend.Areas.Main.Controllers;
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new {Errors = errors});
             }
 
             try

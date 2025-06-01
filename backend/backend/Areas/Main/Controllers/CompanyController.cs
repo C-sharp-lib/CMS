@@ -30,7 +30,8 @@ public class CompanyController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Company>>> GetCompany()
     {
-        return Ok(await _companyRepository.GetAllCompaniesAsync());
+        var companies = await _context.Companies.ToListAsync();
+        return Ok(companies);
     }
 
     [HttpGet("{id}")]
@@ -39,8 +40,29 @@ public class CompanyController : ControllerBase
         return Ok(await _companyRepository.GetCompanyById(id));
     }
 
+    [HttpPost]
+    public async Task<ActionResult<Company>> CreateCompany([FromBody] AddCompanyViewModel company)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
+
+        try
+        {
+            var companies = await _companyRepository.AddAsync(company);
+            return Ok(companies);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {Error = ex.Message});
+        }
+    }
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateCompany(int id, Company company)
+    public async Task<ActionResult> UpdateCompany(int id, [FromBody] UpdateCompanyViewModel company)
     {
         if (!ModelState.IsValid)
         {

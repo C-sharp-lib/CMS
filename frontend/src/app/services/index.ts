@@ -5,6 +5,7 @@ import {JobsService} from "./jobs.service";
 import {ToasterService} from "./toaster.service";
 import {ContactService} from "./contact.service";
 import {MenuService} from "./menu.service";
+import {CompanyService} from "./company.service";
 
 
 export const services: any[] = [
@@ -15,6 +16,7 @@ export const services: any[] = [
   ToasterService,
   ContactService,
   MenuService,
+  CompanyService,
 ];
 
 export * from './users.service';
@@ -24,3 +26,4 @@ export * from './jobs.service';
 export * from './toaster.service';
 export * from './contact.service';
 export * from './menu.service';
+export * from './company.service';

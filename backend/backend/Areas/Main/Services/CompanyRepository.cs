@@ -1,5 +1,7 @@
 using backend.Areas.Main.Models;
+using backend.Areas.Main.Models.ViewModels;
 using backend.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Areas.Main.Services;
@@ -20,7 +22,7 @@ public class CompanyRepository : ICompanyRepository
 
     public async Task<Company> GetCompanyById(int id)
     {
-        var company = await _context.Companies.FindAsync(id);
+        var company = await _context.Companies.Include(x => x.Contacts).FirstOrDefaultAsync(x => x.Id == id);
         if (company == null)
         {
             throw new NullReferenceException("Company not found");
@@ -28,7 +30,7 @@ public class CompanyRepository : ICompanyRepository
         return company;
     }
 
-    public async Task<Company> AddAsync(Company company)
+    public async Task<Company> AddAsync([FromBody] AddCompanyViewModel company)
     {
         var companies = new Company
         {
@@ -43,14 +45,14 @@ public class CompanyRepository : ICompanyRepository
             PhoneNumber = company.PhoneNumber,
             Fax = company.Fax,
             Description = company.Description,
-            DateCreated = DateTime.Now,
+            DateCreated = company.DateCreated,
         };
         _context.Companies.Add(companies);
         await _context.SaveChangesAsync();
         return companies;
     }
 
-    public async Task UpdateAsync(int id, Company company)
+    public async Task UpdateAsync(int id, [FromBody] UpdateCompanyViewModel company)
     {
         var companyToUpdate = await GetCompanyById(id);
         companyToUpdate.Name = company.Name;

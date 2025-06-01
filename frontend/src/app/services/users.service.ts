@@ -12,9 +12,10 @@ import {jwtDecode} from 'jwt-decode';
 export class UsersService {
   private currentUser: User | null = null;
   user: any;
+  isloggedin: boolean = false;
   private baseUrl = `${environment.apiUrl}/Identity/User`;
   constructor(private http: HttpClient, private router: Router) {
-    this.currentUser = JSON.parse(localStorage.getItem("currentUser") || 'null');
+ /*   this.currentUser = JSON.parse(localStorage.getItem("currentUser") || 'null');*/
   }
 
   register(user: {name: string, email: string, userName: string,
@@ -26,14 +27,17 @@ export class UsersService {
   login(credentials: { email: string; password: string, rememberMe: boolean }): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/login`, credentials).pipe(
       tap((res: any) => {
+        this.saveToken(res.token);
         localStorage.setItem("token", res.token);
+        this.isloggedin = true;
       })
     );
   }
-
   logout() {
     this.clearToken();
+    this.isloggedin = false;
     this.router.navigate(['/account']);
+
   }
 
   saveToken(token: string): void {
@@ -44,6 +48,7 @@ export class UsersService {
   clearToken(): void {
     localStorage.removeItem('token');
   }
+
 
   // Retrieve the token
   getToken(): string | null {

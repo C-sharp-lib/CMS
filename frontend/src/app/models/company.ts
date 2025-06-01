@@ -16,10 +16,10 @@ export interface Company {
   fax: string;
   description: string;
   dateCreated: Date;
-  contacts: Contact[];
-  tasks: Tasks[];
+  contacts?: Contact[];
+  tasks?: Tasks[];
   companyNotes?: CompanyNotes[];
-  companyTasks: CompanyTasks[];
+  companyTasks?: CompanyTasks[];
 }
 export interface CompanyTasks {
   id: number;

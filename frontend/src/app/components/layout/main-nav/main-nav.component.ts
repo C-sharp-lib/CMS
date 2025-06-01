@@ -12,7 +12,7 @@ export class MainNavComponent implements OnInit {
   constructor(private el: ElementRef, private renderer: Renderer2, private usersService: UsersService,
               private router: Router, private menuService: MenuService) { }
   ngOnInit () {
-    this.logoutUser();
+
   }
   newSectionUp() {
     const section = this.el.nativeElement.querySelector('#main-nav');

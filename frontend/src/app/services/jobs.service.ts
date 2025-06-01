@@ -27,7 +27,7 @@ export class JobsService {
   createJob(job: Job): Observable<Job> {
     return this.http.post<Job>(this.baseUrl, job, {
       withCredentials: true,
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: { 'Content-Type': 'multipart/form-data', 'Accept': 'multipart/form-data' },
     });
   }
   deleteJob(id: number): Observable<void> {

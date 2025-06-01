@@ -108,9 +108,17 @@ export class JobCreateComponent implements OnInit, ControlValueAccessor, AfterVi
   }
   getCurrentUserId(): string {
     const token = localStorage.getItem('token');
-    if (!token) return '';
-    const decoded = JSON.parse(atob(token.split('.')[1]));
-    return decoded.nameid;
+    if (!token || token.split('.').length !== 3) {
+      return '';
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.nameid || '';
+    } catch (e) {
+      console.error('Invalid token:', e);
+      return '';
+    }
   }
   getCurrentUser() {
     const userId = this.getCurrentUserId();

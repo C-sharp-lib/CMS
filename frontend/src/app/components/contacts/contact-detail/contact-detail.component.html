@@ -1,1 +1,30 @@
-<p>contact-detail works!</p>
+<section id="contact-detail-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-7">
+        <div class="card shadow-xl custom-bg-dark-gradient">
+          <div class="card-body p-3">
+            <h3 class="text-white inter-normal">{{contact?.firstName}} {{contact?.lastName}}</h3>
+            <p class="text-white inter-normal">{{contact?.jobTitle}}</p>
+            <p class="text-white inter-normal">{{contact?.email}}</p>
+            <h4 class="inter-normal text-gradient text-warning">Company</h4>
+            <p class="lead inter-normal text-white">{{contact?.company.name}}</p>
+            <p class="inter-normal text-primary">
+              {{contact?.company.address}}, {{contact?.company.city}}, {{contact?.company.state}}. {{contact?.company.countru}}.
+            </p>
+            <h4 class="inter-normal text-gradient text-success">Owner</h4>
+            <p class="lead inter-normal text-white">{{contact?.ownerUser.email}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-5">
+        <div class="card shadow-xl custom-bg-dark-gradient">
+          <div class="card-body p-3">
+            <h4 class="text-primary text-gradient ubuntu-bold">Notes</h4>
+            <p class="text-white inter-normal" [innerHTML]="contact?.notes | safeHtml"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
