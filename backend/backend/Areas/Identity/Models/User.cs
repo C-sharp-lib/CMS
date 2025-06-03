@@ -29,6 +29,7 @@ public class User : IdentityUser
     
 
     public DateTime DateCreated { get; set; }
+    public string? ImageUrl { get; set; }
     public IEnumerable<Campaign>? Campaigns { get; set; }
     public IEnumerable<UserRoles>? UserRoles { get; set; }
     public IEnumerable<Lead>? Leads { get; set; }

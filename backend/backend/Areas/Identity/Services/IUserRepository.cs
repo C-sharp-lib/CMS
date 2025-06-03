@@ -10,9 +10,8 @@ public interface IUserRepository
     Task<IdentityResult> RegisterAsync([FromBody] RegisterViewModel model);
     Task<string?> LoginAsync([FromBody] LoginViewModel model);
     Task<IEnumerable<User>> GetAllUsersAsync();
-    Task<User?> GetUserByIdAsync(string userId);
-    Task<IdentityResult> UpdateUserAsync(string id, [FromBody] UpdateUserViewModel model);
-    Task<IdentityResult> DeleteUserAsync(string userId);
-    Task<IdentityResult> AssignRoleAsync(string userId, string roleName);
+    Task<User> GetUserByIdAsync(string userId);
+    Task<User> UpdateUserAsync(string id, [FromForm] UpdateUserViewModel model);
+    Task DeleteUserAsync(string userId);
     Task<int> CountUsersAsync();
 }

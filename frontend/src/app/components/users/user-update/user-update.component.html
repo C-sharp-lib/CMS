@@ -10,7 +10,23 @@
             </div>
           </div>
           <div class="card-body p-3">
-            <form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+            <form [formGroup]="userForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+              <div class="row m-3">
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="imageUrl" class="custom-file-upload btn btn-primary">
+                      <i class="fas fa-upload"></i> &nbsp; Upload Image
+                    </label>
+                    <input type="file" id="imageUrl" (change)="onFileSelected($event)" accept="image/*"/>
+
+                    <!-- Preview image -->
+                    <div *ngIf="imagePreview">
+                      <p class="text-success ubuntu-bold">Image Preview:</p>
+                      <img [src]="imagePreview" alt="Image Preview" height="350" width="300"  style="border: 1px solid dodgerblue; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px;" class="mx-auto" />
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="row m-2">
                 <div class="col-12 col-md-4">
                   <div class="form-group">
@@ -48,7 +64,7 @@
                   <div class="form-group">
                     <label for="state" class="text-gradient text-primary ubuntu-bold">State</label>
                     <select formControlName="state" id="state" class="form-control form-control-sm  color-background custom-bg-dark-gradient border-primary text-white inter-bold">
-                      <option value="" [selected]="user?.state.toString()">{{ user?.state.toString() }}</option>
+                      <option value="" [selected]="user?.state">{{ user?.state }}</option>
                       <option value="AL">Alabama</option>
                       <option value="AK">Alaska</option>
                       <option value="AZ">Arizona</option>
@@ -112,8 +128,8 @@
               <div class="row m-2">
                 <div class="col-12">
                   <div class="form-group">
-                    <label for="description" class="text-gradient text-primary ubuntu-bold">Description</label>
-                    <textarea id="description" formControlName="description" class="form-control color-background custom-bg-dark-gradient border-primary text-white inter-bold" cols="10" rows="10"></textarea>
+                    <label for="userDescription" class="text-gradient text-primary ubuntu-bold">Description</label>
+                    <quill-editor id="userDescription" formControlName="description" class="dark-quill" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
                   </div>
                 </div>
               </div>

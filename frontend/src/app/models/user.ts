@@ -16,6 +16,7 @@ export interface User {
   description?: string;
   dateOfBirth?: string; // ISO format string (e.g., "1990-01-01")
   dateCreated?: string;
+  imageUrl?: string;
 
   userRoles?: UserRole[];
   createdJobs?: Job[];

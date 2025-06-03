@@ -14,15 +14,18 @@ public class UserRepository : IUserRepository
     private readonly SignInManager<User> _signInManager;
     private readonly RoleManager<Role> _roleManager;
     private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment _webenv;
 
-    public UserRepository(ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager,
-        RoleManager<Role> roleManager, IConfiguration configuration)
+    public UserRepository(ApplicationDbContext context, UserManager<User> userManager,
+        SignInManager<User> signInManager,
+        RoleManager<Role> roleManager, IConfiguration configuration, IWebHostEnvironment webenv)
     {
         _context = context;
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
         _configuration = configuration;
+        _webenv = webenv;
     }
 
     public async Task<IdentityResult> RegisterAsync([FromBody] RegisterViewModel model)
@@ -40,7 +43,7 @@ public class UserRepository : IUserRepository
             DateOfBirth = model.DateOfBirth,
             DateCreated = DateTime.Now
         };
-        
+
         return await _userManager.CreateAsync(user, model.Password);
     }
 
@@ -86,19 +89,21 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> GetAllUsersAsync()
     {
-        var users =  await _context.Users
+        var users = await _context.Users
             .Include(x => x.UserRoles)!
             .ThenInclude(xu => xu.Role)
             .ToListAsync();
         return users;
     }
 
-    public async Task<User?> GetUserByIdAsync(string userId)
+    public async Task<User> GetUserByIdAsync(string userId)
     {
-        var user =  await _context.Users
+        var user = await _context.Users
             .Include(x => x.UserRoles)!
             .ThenInclude(xu => xu.Role)
             .Include(j => j.AssignedJobs)
+            .Include(ct => ct.UserNotes)!
+            .ThenInclude(ct => ct.Note)
             .Include(c => c.Contacts)!
             .ThenInclude(c => c.Jobs)
             .FirstOrDefaultAsync(xc => xc.Id == userId);
@@ -106,48 +111,64 @@ public class UserRepository : IUserRepository
         {
             throw new NullReferenceException("User not found");
         }
+
         return user;
     }
 
-    public async Task<IdentityResult> UpdateUserAsync(string id, [FromBody] UpdateUserViewModel model)
+    public async Task<User> UpdateUserAsync(string id, [FromForm] UpdateUserViewModel model)
     {
-        var existingUser = await _userManager.FindByIdAsync(id);
-        if (existingUser == null)
-            return IdentityResult.Failed(new IdentityError { Description = "User not found." });
-        existingUser.Name = model.Name;
-        existingUser.Email = model.Email;
-        existingUser.UserName = model.UserName;
-        existingUser.PhoneNumber = model.PhoneNumber;
-        existingUser.Address = model.Address;
-        existingUser.City = model.City;
-        existingUser.Description = model.Description;
-        existingUser.State = model.State;
-        existingUser.ZipCode = model.ZipCode;
-        existingUser.DateOfBirth = model.DateOfBirth;
-        existingUser.DateCreated = DateTime.Now;
-        // add more fields if needed
+        try
+        {
+            var existingUser = await GetUserByIdAsync(id);
+            if (existingUser == null)
+                throw new NullReferenceException("User not found");
 
-        return await _userManager.UpdateAsync(existingUser);
+            string uploadsFolder = Path.Combine(_webenv.WebRootPath, "Uploads/User");
+            if (model.ImageUrl != null && model.ImageUrl?.Length > 0)
+            {
+                string uniqueFileName1 = Guid.NewGuid().ToString() + "_" + Path.GetFileName(model.ImageUrl.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName1);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.ImageUrl.CopyToAsync(fileStream);
+                }
+
+                existingUser.ImageUrl = uniqueFileName1;
+            }
+
+            existingUser.Name = model.Name;
+            existingUser.PhoneNumber = model.PhoneNumber;
+            existingUser.Address = model.Address;
+            existingUser.City = model.City;
+            existingUser.Description = model.Description;
+            existingUser.State = model.State;
+            existingUser.ZipCode = model.ZipCode;
+            existingUser.DateOfBirth = model.DateOfBirth;
+            await _userManager.UpdateAsync(existingUser);
+            await _context.SaveChangesAsync();
+            return existingUser;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
-    public async Task<IdentityResult> DeleteUserAsync(string userId)
+    public async Task DeleteUserAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            throw new NullReferenceException("User not found");
         }
 
-        return await _userManager.DeleteAsync(user);
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
     }
-
-    public async Task<IdentityResult> AssignRoleAsync(string userId, string roleName)
-    {
-        throw new NotImplementedException();
-    }
+    
 
     public async Task<int> CountUsersAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Users.CountAsync();
     }
 }

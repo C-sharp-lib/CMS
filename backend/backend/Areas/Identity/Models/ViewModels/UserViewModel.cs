@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Areas.Identity.Models.ViewModels;
 
@@ -40,18 +41,19 @@ public class LoginViewModel : IdentityUser
     public string Password { get; set; }
 }
 
-public class UpdateUserViewModel : IdentityUser
+public class UpdateUserViewModel
 {
-    [Required] public string Name { get; set; }
-    [Required] public string Address { get; set; }
-    [Required] public string City { get; set; }
-    [Required] public string State { get; set; }
-    [Required] public string ZipCode { get; set; }
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public string City { get; set; }
+    public string State { get; set; }
+    public string ZipCode { get; set; }
     public string? Description { get; set; }
 
     [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
     [DataType(DataType.Date)]
     public DateTime DateOfBirth { get; set; }
     public string PhoneNumber { get; set; }
-    
+    [FromForm]
+    public IFormFile? ImageUrl { get; set; }
 }

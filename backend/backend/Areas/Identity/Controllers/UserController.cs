@@ -102,49 +102,75 @@ public class UserController : ControllerBase
         return Ok(users);
     }
     
+    [HttpGet("get-users-image")]
+    public IActionResult GetUserImagePath([FromQuery] string relativePath)
+    {
+        if (string.IsNullOrEmpty(relativePath))
+            return BadRequest("Image path is required.");
+
+        var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        var fullPath = Path.Combine(wwwrootPath, relativePath.Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+        if (!System.IO.File.Exists(fullPath))
+            return NotFound("Image not found.");
+
+        var request = HttpContext.Request;
+        var baseUrl = $"{request.Scheme}://{request.Host}";
+        var fullImageUrl = $"{baseUrl}/{relativePath}";
+
+        return Ok(new { imageUrl = fullImageUrl });
+    }
+    
     [HttpGet("{id}")]
     public async Task<ActionResult> GetUser(string id)
     {
         var user = await _userRepository.GetUserByIdAsync(id);
-        if (user == null)
-            return NotFound();
-
         return Ok(user);
     }
+
     
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateUser(string id, [FromBody] UpdateUserViewModel model)
+    public async Task<IActionResult> UpdateUser(string id, [FromForm] UpdateUserViewModel model)
     {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
         try
         {
-            var result = await _userRepository.UpdateUserAsync(id, model);
-            if (!result.Succeeded)
-            {
-                return BadRequest(new {error = $"{result.Errors}"});
-            }
-
+            await _userRepository.UpdateUserAsync(id, model);
             return Ok(new {message = "User updated successfully"});
         }
         catch (DbUpdateConcurrencyException ex)
         {
+            _logger.LogError(ex, ex.Message);
             return BadRequest(new { message = "Failed to update user - DbUpdateConcurrencyException: " + ex.Message });
         }
         catch (DbUpdateException ex)
         {
+            _logger.LogError(ex, ex.Message);
             return BadRequest(new { message = "Failed to update user - DbUpdateException: " + ex.Message });
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return BadRequest(new { message = "Failed to update user - Exception: " + ex.Message });
         }
     }
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteUser(string id)
     {
-        var result = await _userRepository.DeleteUserAsync(id);
-        if (!result.Succeeded)
-            return BadRequest(new {error = $"{result.Errors}"});
-
+        await _userRepository.DeleteUserAsync(id);
         return Ok(new {message = "User deleted successfully"});
+    }
+
+    [HttpGet("count")]
+    public async Task<ActionResult> GetUserCount()
+    {
+        var countUsers = await _userRepository.CountUsersAsync();
+        return Ok(countUsers);
     }
 }

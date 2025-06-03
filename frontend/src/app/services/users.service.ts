@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {BehaviorSubject, Observable, tap} from "rxjs";
 import {User} from "../models/user";
 import {environment} from "../../environments/environment";
@@ -69,15 +69,23 @@ export class UsersService {
     return this.http.get<User>(`${this.baseUrl}/${id}`);
   }
 
-  updateUserById(id: string, user: User): Observable<User> {
-    return this.http.put<User>(`${this.baseUrl}/${id}`, user);
+  updateUserById(id: string, user: FormData): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, user);
   }
 
   deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
-
-
+/*  getUserImageUrl(relativePath: string): Observable<{ imageUrl: string }> {
+    return this.http.get<{ imageUrl: string }>(
+      `${this.baseUrl}/get-users-image`,
+      { params: { relativePath } }
+    );
+  }*/
+  getUserImage(relativePath: string) {
+    const params = new HttpParams().set('relativePath', relativePath);
+    return this.http.get<{ imageUrl: string }>(`${this.baseUrl}/get-users-image`, { params });
+  }
   getCurrentUser(): User | null {
     return this.currentUser;
   }
@@ -88,4 +96,5 @@ export class UsersService {
     this.currentUser = user;
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
+
 }

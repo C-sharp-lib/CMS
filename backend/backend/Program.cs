@@ -38,6 +38,12 @@ public class Program
                 Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads", "Contact")),
             RequestPath = "/Contact"
         });
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads", "User")),
+            RequestPath = "/User"
+        });
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
