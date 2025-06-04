@@ -9,45 +9,66 @@ import * as fromJobs from './components/jobs/index';
 import * as fromBlog from './components/blog/index';
 import * as fromPages from './components/pages/index';
 import * as fromContacts from './components/contacts/index';
+import * as fromCampaigns from './components/campaigns/index';
+import * as fromNotes from './components/notes/index';
+import * as fromTasks from './components/tasks/index';
 import * as fromServices from './services/index';
+import * as fromPipes from './utils/pipes/index';
+import * as fromInterceptors from './utils/interceptors/index';
 import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
-import { TruncatePipe } from './utils/pipes/truncate.pipe';
 import {QuillModule} from "ngx-quill";
 import {authGuard} from "./utils/guards/auth.guard";
-import {AuthInterceptor} from "./utils/interceptors/auth.interceptor";
-import { SafeHtmlPipe } from './utils/pipes/safe-html.pipe';
+
 
 export const routes: Routes = [
   {path: '', children: [
-      {path: '', component: fromPages.HomeComponent, pathMatch: 'full'},
-      {path: 'about', component: fromPages.AboutComponent},
-      {path: 'contact', component: fromPages.ContactComponent},
-      {path:'privacy-policy', component: fromPages.PrivacyPolicyComponent},
-      {path:'terms-and-conditions', component: fromPages.TermsAndConditionsComponent},
-      {path:'faq', component: fromPages.FaqComponent},
+      {path: '', component: fromPages.HomeComponent, pathMatch: 'full', data: {breadcrumb: 'Home'}},
+      {path: 'about', component: fromPages.AboutComponent, data: {breadcrumb: 'About'}},
+      {path: 'contact', component: fromPages.ContactComponent, data: {breadcrumb: 'Contact'}},
+      {path:'privacy-policy', component: fromPages.PrivacyPolicyComponent, data: {breadcrumb: 'Privacy Policy'}},
+      {path:'terms-and-conditions', component: fromPages.TermsAndConditionsComponent, data: {breadcrumb: 'Terms And Conditions'}},
+      {path:'faq', component: fromPages.FaqComponent, data: {breadcrumb: 'FAQ'}},
     ]},
   {path: 'account', children: [
       {path: '', component: fromUsers.LoginComponent},
       {path:'register-page', component: fromUsers.RegisterComponent},
     ]},
   {path: 'users', canActivate: [authGuard], children: [
-      {path: '', component: fromUsers.UserListComponent},
-      {path: ':id', component: fromUsers.UserDetailComponent},
-      {path: 'update/:id', component: fromUsers.UserUpdateComponent},
+      {path: '', component: fromUsers.UserListComponent, data: {breadcrumb: 'Users'}},
+      {path: ':id', component: fromUsers.UserDetailComponent, data: {breadcrumb: 'User Details'}},
+      {path: 'update/:id', component: fromUsers.UserUpdateComponent, data: {breadcrumb: 'User Update'}},
     ]},
   {path:'jobs', canActivate: [authGuard], children: [
-      {path: '', component: fromJobs.JobListComponent},
-      {path:'create', component: fromJobs.JobCreateComponent},
-      {path:':id', component: fromJobs.JobDetailComponent},
-      {path:'update/:id', component: fromJobs.JobUpdateComponent},
+      {path: '', component: fromJobs.JobListComponent, data: {breadcrumb: 'Jobs'}},
+      {path:'create', component: fromJobs.JobCreateComponent, data: {breadcrumb: 'Create Job'}},
+      {path:':id', component: fromJobs.JobDetailComponent, data: {breadcrumb: 'Job Details'}},
+      {path:'update/:id', component: fromJobs.JobUpdateComponent, data: {breadcrumb: 'Update Job'}},
     ]},
   {path:'contacts', canActivate: [authGuard], children: [
-      {path: '', component: fromContacts.ContactListComponent},
-      {path:'create', component: fromContacts.ContactCreateComponent},
-      {path:':id', component: fromContacts.ContactDetailComponent},
-      {path:'update/:id', component: fromContacts.ContactUpdateComponent},
+      {path: '', component: fromContacts.ContactListComponent, data: {breadcrumb: 'Contacts'}},
+      {path:'create', component: fromContacts.ContactCreateComponent, data: {breadcrumb: 'Create Contact'}},
+      {path:':id', component: fromContacts.ContactDetailComponent, data: {breadcrumb: 'Contact Details'}},
+      {path:'update/:id', component: fromContacts.ContactUpdateComponent, data: {breadcrumb: 'Update Contact'}},
+    ]},
+  {path:'notes', canActivate: [authGuard], children: [
+      {path: '', component: fromNotes.NoteListComponent, data: {breadcrumb: 'Notes'}},
+      {path:'create', component: fromNotes.NoteCreateComponent, data: {breadcrumb: 'Create Note'}},
+      {path:':id', component: fromNotes.NoteDetailComponent, data: {breadcrumb: 'Note Details'}},
+      {path:'update/:id', component: fromNotes.NoteUpdateComponent, data: {breadcrumb: 'Update Note'}},
+    ]},
+  {path:'tasks', canActivate: [authGuard], children: [
+      {path: '', component: fromTasks.TaskListComponent, data: {breadcrumb: 'Tasks'}},
+      {path:'create', component: fromTasks.TaskCreateComponent, data: {breadcrumb: 'Create Task'}},
+      {path:':id', component: fromTasks.TaskDetailComponent, data: {breadcrumb: 'Task Details'}},
+      {path:'update/:id', component: fromTasks.TaskUpdateComponent, data: {breadcrumb: 'Update Task'}},
+    ]},
+  {path:'campaigns', canActivate: [authGuard], children: [
+      {path: '', component: fromCampaigns.CampaignListComponent, data: {breadcrumb: 'Campaigns'}},
+      {path:'create', component: fromCampaigns.CampaignCreateComponent, data: {breadcrumb: 'Create Campaign'}},
+      {path:':id', component: fromCampaigns.CampaignDetailComponent, data: {breadcrumb: 'Campaign Details'}},
+      {path:'update/:id', component: fromCampaigns.CampaignUpdateComponent, data: {breadcrumb: 'Update Campaign'}},
     ]},
 ];
 @NgModule({
@@ -59,8 +80,10 @@ export const routes: Routes = [
     ...fromLayout.components,
     ...fromPages.components,
     ...fromContacts.components,
-    TruncatePipe,
-    SafeHtmlPipe,
+    ...fromCampaigns.components,
+    ...fromNotes.components,
+    ...fromTasks.components,
+    ...fromPipes.pipes,
   ],
   imports: [
     BrowserModule,
@@ -87,9 +110,10 @@ export const routes: Routes = [
   exports: [RouterModule],
   providers: [
     ...fromServices.services,
+    ...fromInterceptors.interceptors,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
+      useClass: fromInterceptors.AuthInterceptor,
       multi: true,
     }
   ],

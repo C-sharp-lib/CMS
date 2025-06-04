@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {User} from "../../../models/user";
-import {ToasterService, UsersService} from "../../../services";
+import {BreadcrumbService, ToasterService, UsersService} from "../../../services";
 
 @Component({
   selector: 'app-user-detail',
@@ -19,6 +19,7 @@ export class UserDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private userService: UsersService,
+    private breadcrumbService: BreadcrumbService,
     private toast: ToasterService,
     private el: ElementRef,
     private renderer: Renderer2
@@ -26,6 +27,7 @@ export class UserDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUser();
+    this.loadBreadcrumb();
     this.getRawHtml();
     this.newSectionUp();
   }
@@ -61,11 +63,18 @@ export class UserDetailComponent implements OnInit {
       }
     });
   }
+
+  loadBreadcrumb(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.userService.getUserById(id).subscribe(user => {
+      this.user = user;
+      this.breadcrumbService.setBreadcrumb(user.userName);
+    });
+  }
   newSectionUp() {
     const section = this.el.nativeElement.querySelector('#user-detail-section');
     this.renderer.addClass(section, 'active');
   }
-
   getRawHtml(): string {
     return this.editorInstance?.root.innerHTML || '';
   }

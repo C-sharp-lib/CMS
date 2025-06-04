@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ToasterService, UsersService} from "../../../services";
+import {BreadcrumbService, ToasterService, UsersService} from "../../../services";
 import {User} from "../../../models/user";
 import Quill from "quill";
 
@@ -33,12 +33,14 @@ export class UserUpdateComponent implements OnInit {
     private toast: ToasterService,
     private el: ElementRef,
     private renderer: Renderer2,
+    private breadcrumbService: BreadcrumbService,
   ) {}
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('id')!;
     this.buildForm();
     this.loadUser();
+    this.loadBreadcrumb();
     this.getCurrentUserId();
     this.getCurrentUser();
     this.newSectionUp();
@@ -127,7 +129,13 @@ export class UserUpdateComponent implements OnInit {
     });
   }
 
-
+  loadBreadcrumb(){
+    const id = this.route.snapshot.paramMap.get('id');
+    this.userService.getUserById(id).subscribe(user => {
+      this.user = user;
+      this.breadcrumbService.setBreadcrumb(user.email);
+    });
+  }
   getCurrentUserId(): string {
     const token = localStorage.getItem('token');
     if (!token || token.split('.').length !== 3) {

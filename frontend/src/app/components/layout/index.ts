@@ -3,6 +3,7 @@ import {FooterComponent} from "./footer/footer.component";
 import {MainComponent} from "./main/main.component";
 import {SidenavComponent} from "./sidenav/sidenav.component";
 import {MainNavComponent} from "./main-nav/main-nav.component";
+import {BreadcrumbComponent} from "./breadcrumb/breadcrumb.component";
 
 export const components: any[] = [
   HeaderComponent,
@@ -10,6 +11,7 @@ export const components: any[] = [
   MainComponent,
   SidenavComponent,
   MainNavComponent,
+  BreadcrumbComponent,
 ];
 
 export * from './header/header.component';
@@ -17,3 +19,4 @@ export * from './footer/footer.component';
 export * from './main/main.component';
 export * from './sidenav/sidenav.component';
 export * from './main-nav/main-nav.component';
+export * from './breadcrumb/breadcrumb.component';

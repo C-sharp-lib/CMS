@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {ContactService, JobsService, ToasterService} from "../../../services";
+import {BreadcrumbService, ContactService, JobsService, ToasterService} from "../../../services";
 import {ActivatedRoute, Router} from "@angular/router";
 import {environment} from "../../../../environments/environment";
 
@@ -17,7 +17,8 @@ export class ContactDetailComponent implements OnInit {
   imagePath: string = '';
   contactImageUrl: string  | null = null;
   constructor(private contactService: ContactService, private router: Router,
-              private route: ActivatedRoute, private toast: ToasterService, private renderer: Renderer2, private el: ElementRef) { }
+              private route: ActivatedRoute, private toast: ToasterService, private renderer: Renderer2, private el: ElementRef,
+              private breadcrumbService: BreadcrumbService,) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -27,6 +28,7 @@ export class ContactDetailComponent implements OnInit {
       return;
     }
     this.loadContact();
+    this.loadBreadcrumb();
     this.getRawHtml();
     this.newSectionUp();
   }
@@ -56,6 +58,14 @@ export class ContactDetailComponent implements OnInit {
         console.log(this.error.toString());
       }
     })
+  }
+
+  loadBreadcrumb(){
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.contactService.getContactById(id).subscribe(contact => {
+      this.contact = contact;
+      this.breadcrumbService.setBreadcrumb(contact.email);
+    });
   }
   onEditorCreated(quill: any) {
     this.editorInstance = quill;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Job} from "../../../models/job";
-import {JobsService, ToasterService} from "../../../services";
+import {BreadcrumbService, JobsService, ToasterService} from "../../../services";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 
@@ -16,7 +16,7 @@ export class JobDetailComponent implements OnInit {
   isLoading: boolean = true;
   editorInstance: any;
   constructor(private jobService: JobsService, private router: Router,
-              private route: ActivatedRoute, private toast: ToasterService) { }
+              private route: ActivatedRoute, private toast: ToasterService, private breadcrumbService: BreadcrumbService) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -26,6 +26,7 @@ export class JobDetailComponent implements OnInit {
       return;
     }
     this.loadJob();
+    this.loadBreadcrumb();
     this.getRawHtml();
   }
   loadJob(): void {
@@ -58,7 +59,13 @@ export class JobDetailComponent implements OnInit {
     4: 'Urgent'
   };
 
-
+loadBreadcrumb(){
+  const id = Number(this.route.snapshot.paramMap.get('id'));
+  this.jobService.getJobById(id).subscribe(job => {
+    this.job = job;
+    this.breadcrumbService.setBreadcrumb(job.title);
+  });
+}
 
   onEditorCreated(quill: any) {
     this.editorInstance = quill;

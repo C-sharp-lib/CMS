@@ -24,8 +24,8 @@ export class ContactService {
     return this.http.post(this.apiUrl, contact);
   }
 
-  updateContactById(id: number, contact: Contact): Observable<Contact> {
-    return this.http.put<Contact>(`${this.apiUrl}/${id}`, contact);
+  updateContactById(id: number, contact: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, contact);
   }
 
   deleteContactById(id: number): Observable<void> {

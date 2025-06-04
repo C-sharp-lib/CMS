@@ -1,4 +1,5 @@
 using backend.Areas.Main.Models;
+using backend.Areas.Main.Models.ViewModels;
 using backend.Areas.Main.Services;
 using backend.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -38,16 +39,36 @@ public class NoteController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Note>> CreateNote(Note note)
+    public async Task<ActionResult<Note>> CreateNote([FromBody] AddNoteViewModel note)
     {
-        var notes = await _noteRepository.AddAsync(note);
-        return Ok(notes);
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
+        try
+        {
+            var notes = await _noteRepository.AddAsync(note);
+            return Ok(notes);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = ex.Message});
+        }
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Note>> UpdateNote(int id, Note note)
+    public async Task<ActionResult<Note>> UpdateNote(int id, [FromBody] UpdateNoteViewModel note)
     {
-        if(!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
         try
         {
             await _noteRepository.UpdateAsync(id, note);

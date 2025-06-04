@@ -1,5 +1,7 @@
 using backend.Areas.Main.Models;
+using backend.Areas.Main.Models.ViewModels;
 using backend.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Areas.Main.Services;
@@ -27,40 +29,37 @@ public class NoteRepository : INoteRepository
         return note;
     }
 
-    public async Task<Note> AddAsync(Note note)
+    public async Task<Note> AddAsync([FromBody] AddNoteViewModel note)
     {
         var notes = new Note
         {
             Title = note.Title,
             Content = note.Content,
-            Created = DateTime.Now,
+            Created = note.Created
         };
         _context.Notes.Add(notes);
         await _context.SaveChangesAsync();
         return notes;
     }
 
-    public async Task UpdateAsync(int id, Note note)
+    public async Task<Note> UpdateAsync(int id, [FromBody] UpdateNoteViewModel note)
     {
-        var notes = await _context.Notes.FindAsync(id);
+        var notes = await GetNoteById(id);
         if (notes == null)
         {
             throw new NullReferenceException("Note not found");
         }
         notes.Title = note.Title;
         notes.Content = note.Content;
-        notes.Updated = DateTime.Now;
+        notes.Updated = note.Updated;
         _context.Notes.Update(notes);
         await _context.SaveChangesAsync();
+        return notes;
     }
 
     public async Task DeleteAsync(int id)
     {
-        var notes = await _context.Notes.FindAsync(id);
-        if (notes == null)
-        {
-            throw new NullReferenceException("Note not found");
-        }
+        var notes = await GetNoteById(id);
         _context.Notes.Remove(notes);
         await _context.SaveChangesAsync();
     }
