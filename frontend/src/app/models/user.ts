@@ -2,6 +2,7 @@ import {UserRole} from "./userRoles";
 import {Job} from "./job";
 import {Contact} from "./contact";
 import {Campaign} from "./campaign";
+import {UserNotes} from "./note";
 
 export interface User {
   id?: string;
@@ -17,7 +18,7 @@ export interface User {
   dateOfBirth?: string; // ISO format string (e.g., "1990-01-01")
   dateCreated?: string;
   imageUrl?: string;
-
+  userNotes?: UserNotes[];
   userRoles?: UserRole[];
   createdJobs?: Job[];
   comments?: Comment[];

@@ -37,10 +37,6 @@ public class JobController : ControllerBase
     public async Task<ActionResult<Job>> GetJob(int id)
     {
         var job = await _jobRepository.GetJobByIdAsync(id);
-        if (job == null)
-        {
-            return NotFound("Job not found");
-        }
         return Ok(job);
     }
 
@@ -75,7 +71,10 @@ public class JobController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
         try
         {
@@ -115,11 +114,14 @@ public class JobController : ControllerBase
     }
 
     [HttpPut("notes/{id}")]
-    public async Task<ActionResult<JobNotes>> UpdateJobNotes(int id, JobNotes jobNote)
+    public async Task<ActionResult<JobNotes>> UpdateJobNotes(int id, [FromBody] UpdateJobNoteViewModel jobNote)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
         try
         {
@@ -144,11 +146,14 @@ public class JobController : ControllerBase
     }
 
     [HttpPost("notes")]
-    public async Task<ActionResult<JobNotes>> CreateJobNotes(JobNotes jobNote)
+    public async Task<ActionResult<JobNotes>> CreateJobNotes([FromBody] AddJobNoteViewModel jobNote)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
         try
         {
@@ -205,7 +210,10 @@ public class JobController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
         try
         {
@@ -223,7 +231,10 @@ public class JobController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
         try
         {

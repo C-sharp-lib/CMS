@@ -1,5 +1,7 @@
 using backend.Areas.Main.Models;
+using backend.Areas.Main.Models.ViewModels;
 using backend.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Areas.Main.Services;
@@ -28,16 +30,16 @@ public class JobNoteRepository : IJobNoteRepository
         return jobNote;
     }
 
-    public async Task<JobNotes> AddAsync(JobNotes note)
+    public async Task<JobNotes> AddAsync([FromBody] AddJobNoteViewModel note)
     {
         var jobNote = new JobNotes
         {
             JobId = note.JobId,
             Note = new Note
             {
-                Title = note.Note.Title,
-                Content = note.Note.Content,
-                Created = DateTime.Now,
+                Title = note.Title,
+                Content = note.Content,
+                Created = note.Created
             }
         };
         _context.JobNotes.Add(jobNote);
@@ -45,12 +47,12 @@ public class JobNoteRepository : IJobNoteRepository
         return jobNote;
     }
 
-    public async Task UpdateAsync(int id, JobNotes note)
+    public async Task UpdateAsync(int id, [FromBody] UpdateJobNoteViewModel note)
     {
         var jobNote = await GetJobNoteById(id);
-        jobNote.Note.Title = note.Note.Title;
-        jobNote.Note.Content = note.Note.Content;
-        jobNote.Note.Updated = DateTime.Now;
+        jobNote.Note.Title = note.Title;
+        jobNote.Note.Content = note.Content;
+        jobNote.Note.Updated = note.Updated;
         _context.JobNotes.Update(jobNote);
         await _context.SaveChangesAsync();
     }

@@ -1,3 +1,4 @@
+using backend.Areas.Identity.Services;
 using backend.Areas.Main.Models;
 using backend.Areas.Main.Models.ViewModels;
 using backend.Areas.Main.Services;
@@ -16,12 +17,15 @@ public class NoteController : ControllerBase
     private readonly ILogger<NoteController> _logger;
     private readonly INoteRepository _noteRepository;
     private readonly IUserNoteRepository _userNoteRepository;
-    public NoteController(ApplicationDbContext context, ILogger<NoteController> logger, INoteRepository noteRepository, IUserNoteRepository userNoteRepository)
+    private readonly IUserRepository _userRepository;
+    public NoteController(ApplicationDbContext context, ILogger<NoteController> logger, INoteRepository noteRepository, IUserNoteRepository userNoteRepository,
+        IUserRepository userRepository)
     {
         _context = context;
         _logger = logger;
         _noteRepository = noteRepository;
         _userNoteRepository = userNoteRepository;
+        _userRepository = userRepository;
     }
 
     [HttpGet]
@@ -120,43 +124,55 @@ public class NoteController : ControllerBase
     }
 
     [HttpPost("userNotes")]
-    public async Task<ActionResult<UserNotes>> CreateUserNote(UserNotes note)
+    public async Task<ActionResult<UserNotes>> CreateUserNote([FromBody] AddUserNoteViewModel note)
     {
-        if(!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
         try
         {
             await _userNoteRepository.AddAsync(note);
-            return Ok("Note created");
+            return Ok(new {message = "User Note created"});
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new {message = ex.Message});
         }
     }
 
     [HttpPut("userNotes/{id}")]
-    public async Task<ActionResult<UserNotes>> UpdateUserNote(int id, UserNotes note)
+    public async Task<ActionResult<UserNotes>> UpdateUserNote(int id, [FromBody] UpdateUserNoteViewModel note)
     {
-        if(!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
         try
         {
             await _userNoteRepository.UpdateAsync(id, note);
-            return Ok("Note updated");
+            return Ok(new {message = "User Note updated"});
         }
         catch (DbUpdateConcurrencyException ex)
         {
             _logger.LogInformation($"Updating Note with id {id} failed", ex);
-            return BadRequest($"Failed to update Note with id - DbUpdateConcurrencyException {id}");
+            return BadRequest(new {message = $"Failed to update Note with id - DbUpdateConcurrencyException {id}"});
         }
         catch (DbUpdateException ex)
         {
             _logger.LogInformation($"Updating Note with id {id} failed", ex);
-            return BadRequest($"Failed to update Note with id - DbUpdateException {id}");
+            return BadRequest(new {message = $"Failed to update Note with id - DbUpdateException {id}"});
         }
         catch (Exception ex)
         {
             _logger.LogInformation($"Updating Note with id {id} failed", ex);
-            return BadRequest($"Failed to update Note with id - Exception {id}");
+            return BadRequest(new {message = $"Failed to update Note with id - Exception {id}"});
         }
     }
 

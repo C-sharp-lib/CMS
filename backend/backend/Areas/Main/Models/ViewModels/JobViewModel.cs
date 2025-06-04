@@ -58,3 +58,18 @@ public class UpdateJobViewModel
     public DateTime? DateUpdated { get; set; } = DateTime.Now;
 }
 
+public class AddJobNoteViewModel
+{
+    public int JobId { get; set; }
+    public string Title { get; set; }
+    public string Content { get; set; }
+    public DateTime Created { get; set; } = DateTime.Now;
+}
+
+public class UpdateJobNoteViewModel
+{
+    public int JobId { get; set; }
+    public string Title { get; set; }
+    public string Content { get; set; }
+    public DateTime Updated { get; set; } = DateTime.Now;
+}

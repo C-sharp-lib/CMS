@@ -1,5 +1,7 @@
 using backend.Areas.Main.Models;
+using backend.Areas.Main.Models.ViewModels;
 using backend.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Areas.Main.Services;
@@ -28,15 +30,15 @@ public class UserNoteRepository : IUserNoteRepository
         return note;
     }
 
-    public async Task<UserNotes> AddAsync(UserNotes note)
+    public async Task<UserNotes> AddAsync([FromBody] AddUserNoteViewModel note)
     {
         var userNote = new UserNotes
         {
             Note = new Note
             {
-                Title = note.Note.Title,
-                Content = note.Note.Content,
-                Created = note.Note.Created,
+                Title = note.Title,
+                Content = note.Content,
+                Created = note.Created,
             },
             UserId = note.UserId,
         };
@@ -45,27 +47,19 @@ public class UserNoteRepository : IUserNoteRepository
         return userNote;
     }
 
-    public async Task UpdateAsync(int id, UserNotes note)
+    public async Task UpdateAsync(int id, [FromBody] UpdateUserNoteViewModel note)
     {
-        var userNote = await _context.UserNotes.FindAsync(id);
-        if (userNote == null)
-        {
-            throw new NullReferenceException($"UserNote with id: {id} was not found.");
-        }
-        userNote.Note.Title = note.Note.Title;
-        userNote.Note.Content = note.Note.Content;
-        userNote.Note.Updated = DateTime.Now;
+        var userNote = await GetUserNoteById(id);
+        userNote.Note.Title = note.Title;
+        userNote.Note.Content = note.Content;
+        userNote.Note.Updated = note.Updated;
         _context.UserNotes.Update(userNote);
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
     {
-        var userNote = await _context.UserNotes.FindAsync(id);
-        if (userNote == null)
-        {
-            throw new NullReferenceException($"UserNote with id: {id} was not found.");
-        }
+        var userNote = await GetUserNoteById(id);
         _context.UserNotes.Remove(userNote);
         await _context.SaveChangesAsync();
     }
