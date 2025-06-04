@@ -8,7 +8,8 @@ public interface IJobNoteRepository
 {
     Task<IEnumerable<JobNotes>> GetAllJobNotesAsync();
     Task<JobNotes> GetJobNoteById(int id);
-    Task<JobNotes> AddAsync([FromBody] AddJobNoteViewModel note);
+    Task<IEnumerable<JobNotes>> GetJobNotesByJobId(int jobId);
+    Task<JobNotes> AddAsync(int id, [FromBody] AddJobNoteViewModel note);
     Task UpdateAsync(int id, [FromBody] UpdateJobNoteViewModel note);
     Task DeleteAsync(int id);
     Task<int> CountAsync();

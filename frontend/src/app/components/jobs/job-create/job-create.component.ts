@@ -76,10 +76,10 @@ export class JobCreateComponent implements OnInit, ControlValueAccessor, AfterVi
     this.jobForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
-      status: [1, Validators.required],
-      priority: [1, Validators.required],
+      status: ['', Validators.required],
+      priority: ['', Validators.required],
       scheduledDate: ['', Validators.required],
-      contactId: [1, Validators.required],
+      contactId: ['', Validators.required],
       estimatedCost: [0, [Validators.required, Validators.min(0)]],
       actualCost: [0, [Validators.min(0)]],
       notes: [''],
@@ -136,8 +136,6 @@ export class JobCreateComponent implements OnInit, ControlValueAccessor, AfterVi
   onSubmit(): void {
     if (this.jobForm.invalid) return;
     const formValues = this.jobForm.value;
-    formValues.status = this.status.indexOf(formValues.status);
-    formValues.priority = this.priority.indexOf(formValues.priority);
     formValues.scheduledDate = new Date(formValues.scheduledDate).toISOString();
     const newJob = {
       ...formValues,

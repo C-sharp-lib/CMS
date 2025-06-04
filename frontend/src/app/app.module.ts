@@ -39,12 +39,20 @@ export const routes: Routes = [
       {path: '', component: fromUsers.UserListComponent, data: {breadcrumb: 'Users'}},
       {path: ':id', component: fromUsers.UserDetailComponent, data: {breadcrumb: 'User Details'}},
       {path: 'update/:id', component: fromUsers.UserUpdateComponent, data: {breadcrumb: 'User Update'}},
+      {path: 'notes', component: fromNotes.UserNoteListComponent, data: {breadcrumb: 'Users Notes'}},
+      {path:'notes/create/:id', component: fromNotes.UserNoteCreateComponent, data: {breadcrumb: 'Create User Note'}},
+      {path: 'notes/:id', component: fromNotes.UserNoteDetailComponent, data: {breadcrumb: 'User Note Details'}},
+      {path: 'notes/update/:id', component: fromNotes.UserNoteUpdateComponent, data: {breadcrumb: 'User Note Update'}},
     ]},
   {path:'jobs', canActivate: [authGuard], children: [
       {path: '', component: fromJobs.JobListComponent, data: {breadcrumb: 'Jobs'}},
       {path:'create', component: fromJobs.JobCreateComponent, data: {breadcrumb: 'Create Job'}},
       {path:':id', component: fromJobs.JobDetailComponent, data: {breadcrumb: 'Job Details'}},
       {path:'update/:id', component: fromJobs.JobUpdateComponent, data: {breadcrumb: 'Update Job'}},
+      {path: 'job/:id', component: fromNotes.JobNoteListComponent, data: {breadcrumb: 'Job Notes'}},
+      {path:'notes/create/:id', component: fromNotes.JobNoteCreateComponent, data: {breadcrumb: 'Create Job Note'}},
+      {path: 'notes/:id', component: fromNotes.JobNoteDetailComponent, data: {breadcrumb: 'Job Note Details'}},
+      {path: 'notes/update/:id', component: fromNotes.JobNoteUpdateComponent, data: {breadcrumb: 'Job Note Update'}},
     ]},
   {path:'contacts', canActivate: [authGuard], children: [
       {path: '', component: fromContacts.ContactListComponent, data: {breadcrumb: 'Contacts'}},
@@ -69,6 +77,10 @@ export const routes: Routes = [
       {path:'create', component: fromCampaigns.CampaignCreateComponent, data: {breadcrumb: 'Create Campaign'}},
       {path:':id', component: fromCampaigns.CampaignDetailComponent, data: {breadcrumb: 'Campaign Details'}},
       {path:'update/:id', component: fromCampaigns.CampaignUpdateComponent, data: {breadcrumb: 'Update Campaign'}},
+      {path: 'notes', component: fromNotes.CampaignNoteListComponent, data: {breadcrumb: 'Campaign Notes'}},
+      {path:'notes/create/:id', component: fromNotes.CampaignNoteCreateComponent, data: {breadcrumb: 'Create Campaign Note'}},
+      {path: 'notes/:id', component: fromNotes.CampaignNoteDetailComponent, data: {breadcrumb: 'Campaign Note Details'}},
+      {path: 'notes/update/:id', component: fromNotes.CampaignNoteUpdateComponent, data: {breadcrumb: 'Campaign Note Update'}},
     ]},
 ];
 @NgModule({

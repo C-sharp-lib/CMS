@@ -1,5 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {JobsService, UsersService} from "../../../services";
+import {JobsService, NotesService, UsersService} from "../../../services";
+import {Job} from "../../../models/job";
+import {JobNotes} from "../../../models/note";
 
 @Component({
   selector: 'app-job-list',
@@ -8,13 +10,14 @@ import {JobsService, UsersService} from "../../../services";
 })
 export class JobListComponent implements OnInit {
   jobs: any[] = [];
+  job: Job;
   paginatedJobs: any[] = [];
   isLoading = false;
   error: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 10;
   totalPages: number = 0;
-  constructor(private jobService: JobsService, private renderer: Renderer2, private el: ElementRef) { }
+  constructor(private jobService: JobsService, private renderer: Renderer2, private el: ElementRef, private notesService: NotesService) { }
 
   ngOnInit() {
     this.fetchJobs();
@@ -39,6 +42,7 @@ export class JobListComponent implements OnInit {
       }
     })
   }
+
   get totalPagesArray(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }

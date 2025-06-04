@@ -1,0 +1,9 @@
+#job-note-create-section {
+  position: relative;
+  top: 0;
+  transition: top 0.3s ease;
+}
+#job-note-create-section.active {
+  margin-top: 30px;
+  margin-bottom: 100px;
+}

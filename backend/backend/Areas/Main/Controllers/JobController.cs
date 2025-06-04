@@ -45,7 +45,10 @@ public class JobController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
         try
         {
@@ -54,11 +57,11 @@ public class JobController : ControllerBase
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            return BadRequest(new {message = "DbConcurrencyUpdateException: " +ex.Message});
+            return BadRequest(new {message = "DbConcurrencyUpdateException: " + ex.Message});
         }
         catch (DbUpdateException ex)
         {
-            return BadRequest(new {message = "DbUpdateException: " +ex.Message});
+            return BadRequest(new {message = "DbUpdateException: " + ex.Message});
         }
         catch (Exception ex)
         {
@@ -112,6 +115,17 @@ public class JobController : ControllerBase
         var jobNote = await _jobNoteRepository.GetJobNoteById(id);
         return Ok(jobNote);
     }
+    
+    [HttpGet("job/{jobId}")]
+    public async Task<ActionResult<IEnumerable<JobNotes>>> GetJobNotesByJobId(int jobId)
+    {
+        var jobNote = await _jobNoteRepository.GetJobNotesByJobId(jobId);
+        if (jobNote == null)
+        {
+            return NotFound();
+        }
+        return Ok(jobNote);
+    }
 
     [HttpPut("notes/{id}")]
     public async Task<ActionResult<JobNotes>> UpdateJobNotes(int id, [FromBody] UpdateJobNoteViewModel jobNote)
@@ -145,8 +159,8 @@ public class JobController : ControllerBase
         }
     }
 
-    [HttpPost("notes")]
-    public async Task<ActionResult<JobNotes>> CreateJobNotes([FromBody] AddJobNoteViewModel jobNote)
+    [HttpPost("notes/{id}")]
+    public async Task<ActionResult<JobNotes>> CreateJobNotes(int id, [FromBody] AddJobNoteViewModel jobNote)
     {
         if (!ModelState.IsValid)
         {
@@ -157,12 +171,12 @@ public class JobController : ControllerBase
         }
         try
         {
-            await _jobNoteRepository.AddAsync(jobNote);
-            return Ok("Job Notes created.");
+            await _jobNoteRepository.AddAsync(id, jobNote);
+            return Ok(new {message = "Job Notes created"});
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new {message = ex.Message});
         }
     }
 
@@ -170,7 +184,7 @@ public class JobController : ControllerBase
     public async Task<ActionResult<JobNotes>> DeleteJobNotes(int id)
     {
         await _jobNoteRepository.DeleteAsync(id);
-        return Ok("Job Notes deleted.");
+        return NoContent();
     }
 
     [HttpGet("notes/count")]
@@ -182,6 +196,13 @@ public class JobController : ControllerBase
     [HttpGet("jobTasks")]
     public async Task<ActionResult<IEnumerable<JobTask>>> GetJobTasks()
     {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
         try
         {
             return Ok(await _jobTaskRepository.GetJobTasks());

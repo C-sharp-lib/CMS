@@ -31,6 +31,7 @@ public class JobRepository : IJobRepository
             .Include(j => j.Contact)
             .Include(j => j.AssignedUser)
             .Include(j => j.CreatedByUser)
+            .Include(jn => jn.JobNotes)
             .FirstOrDefaultAsync(j => j.Id == id);
         if (job == null)
         {

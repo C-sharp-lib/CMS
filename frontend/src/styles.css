@@ -190,6 +190,18 @@ body {
   background-image: -moz-linear-gradient(90deg, rgb(22,22,22), rgb(44,44,44), rgb(55,55,55) ) !important;
   background-image: -ms-linear-gradient(90deg, rgb(22,22,22), rgb(44,44,44), rgb(55,55,55) ) !important;
 }
+.custom-rainbow-blue-gradient {
+  background-image: linear-gradient(120deg, #00f260, #0575e6);
+  background-image: -webkit-linear-gradient(120deg, #00f260, #0575e6);
+  background-image: -moz-linear-gradient(120deg, #00f260, #0575e6);
+  background-image: -ms-linear-gradient(120deg, #00f260, #0575e6);
+}
+.custom-instagram-gradient {
+  background-image: linear-gradient(120deg, #833ab4, #fd1d1d,#fcb045);
+  background-image: -webkit-linear-gradient(120deg, #833ab4, #fd1d1d,#fcb045);
+  background-image: -moz-linear-gradient(120deg, #833ab4, #fd1d1d,#fcb045);
+  background-image: -ms-linear-gradient(120deg, #833ab4, #fd1d1d,#fcb045);
+}
 /*Toastr Styles*/
 
 /* position */
