@@ -22,6 +22,7 @@ import {QuillModule} from "ngx-quill";
 import {authGuard} from "./utils/guards/auth.guard";
 
 
+
 export const routes: Routes = [
   {path: '', children: [
       {path: '', component: fromPages.HomeComponent, pathMatch: 'full', data: {breadcrumb: 'Home'}},
@@ -59,6 +60,10 @@ export const routes: Routes = [
       {path:'create', component: fromContacts.ContactCreateComponent, data: {breadcrumb: 'Create Contact'}},
       {path:':id', component: fromContacts.ContactDetailComponent, data: {breadcrumb: 'Contact Details'}},
       {path:'update/:id', component: fromContacts.ContactUpdateComponent, data: {breadcrumb: 'Update Contact'}},
+      {path: 'contact/:id', component: fromNotes.ContactNoteListComponent, data: {breadcrumb: 'Contact Notes'}},
+      {path:'notes/create/:id', component: fromNotes.ContactNoteCreateComponent, data: {breadcrumb: 'Create Contact Note'}},
+      {path: 'notes/:id', component: fromNotes.CampaignNoteDetailComponent, data: {breadcrumb: 'Contact Note Details'}},
+      {path: 'notes/update/:id', component: fromNotes.ContactNoteUpdateComponent, data: {breadcrumb: 'Contact Note Update'}},
     ]},
   {path:'notes', canActivate: [authGuard], children: [
       {path: '', component: fromNotes.NoteListComponent, data: {breadcrumb: 'Notes'}},
@@ -117,7 +122,7 @@ export const routes: Routes = [
         warning: 'toast-warning',
       }
     }),
-    QuillModule.forRoot(),
+    QuillModule.forRoot()
   ],
   exports: [RouterModule],
   providers: [

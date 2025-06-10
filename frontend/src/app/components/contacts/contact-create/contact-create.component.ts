@@ -20,7 +20,6 @@ import {Company} from "../../../models/company";
   ]
 })
 export class ContactCreateComponent implements OnInit {
-  @ViewChild('contactNotes', {static: true}) notes: ElementRef;
   contactForm!: FormGroup;
   contacts: Contact[] = [];
   companies: Company[] = [];
@@ -30,7 +29,7 @@ export class ContactCreateComponent implements OnInit {
   imagePreview: string | ArrayBuffer | null = null;
   fullUser: User | null = null;
   editorContent: string = '';
-  contact: any = {notes: ''};
+  contact: any;
   quill!: Quill;
   value: string = '';
   private onChange = (_: any) => {};
@@ -107,7 +106,6 @@ export class ContactCreateComponent implements OnInit {
       state: ['', [Validators.required]],
       zipCode: ['', [Validators.required]],
       country: ['', [Validators.required]],
-      notes: [''],
       imageUrl: [null],
       ownerUserId: [''],
       companyId: [1],
@@ -150,7 +148,6 @@ export class ContactCreateComponent implements OnInit {
       formData.append('state', formValues.state);
       formData.append('zipCode', formValues.zipCode);
       formData.append('country', formValues.country);
-      formData.append('notes', formValues.notes);
       formData.append('ownerUserId', formValues.ownerUserId);
       formData.append('companyId', formValues.companyId);
       formData.append('dateCreated', formValues.dateCreated);

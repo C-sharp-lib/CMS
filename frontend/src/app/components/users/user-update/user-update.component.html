@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-12 col-md-10 offset-md-1">
         <div class="card shadow-xl custom-bg-dark-gradient border-primary">
-          <div class="card-header"  style="display: flex; justify-content: space-between; align-items: center">
-            <h1 class="text-gradient text-primary inter-bold">Update User</h1>
+          <div class="card-header custom-bg-dark-gradient"  style="display: flex; justify-content: space-between; align-items: center">
+            <h1 class="inter-bold gradient-text-instagram">Update User</h1>
             <div class="btn-group text-sm">
               <a routerLink="/users" class="btn custom-bg-dark-gradient btn-toolbar bs-tooltip-top text-primary" title="Back To Users"><i class="fa-solid fa-users"></i></a>
             </div>
@@ -18,11 +18,15 @@
                       <i class="fas fa-upload"></i> &nbsp; Upload Image
                     </label>
                     <input type="file" id="imageUrl" (change)="onFileSelected($event)" accept="image/*"/>
-
-                    <!-- Preview image -->
-                    <div *ngIf="imagePreview">
-                      <p class="text-success ubuntu-bold">Image Preview:</p>
-                      <img [src]="imagePreview" alt="Image Preview" height="350" width="300"  style="border: 1px solid dodgerblue; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px;" class="mx-auto" />
+                    <div class="row m-2">
+                      <div class="col-12 col-md-6" *ngIf="userImageUrl">
+                        <p class="text-success ubuntu-bold">Current Image:</p>
+                        <img [src]="userImageUrl" alt="Current Image" height="350" width="300"  style="border: 1px solid dodgerblue; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px;" class="mx-auto" />
+                      </div>
+                      <div class="col-12 col-md-6" *ngIf="imagePreview">
+                        <p class="text-success ubuntu-bold">New Image:</p>
+                        <img [src]="imagePreview" alt="New Image" height="350" width="300"  style="border: 1px solid dodgerblue; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px;" class="mx-auto" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -129,6 +133,10 @@
                 <div class="col-12">
                   <div class="form-group">
                     <label for="userDescription" class="text-gradient text-primary ubuntu-bold">Description</label>
+                    <div class="border border-primary rounded mt-2 mb-2 p-3">
+                      <label for="previousDescription" class="text-gradient text-primary ubuntu-bold">Preview:</label>
+                      <div [innerHTML]="user?.description" id="previousDescription"></div>
+                    </div>
                     <quill-editor id="userDescription" formControlName="description" class="dark-quill" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
                   </div>
                 </div>

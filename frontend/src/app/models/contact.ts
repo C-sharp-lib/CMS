@@ -10,19 +10,14 @@ export interface Contact {
   firstName: string;
   lastName: string;
   jobTitle: string;
-
   email: string;
   phoneNumber: string;
-
   addressLine1: string;
   addressLine2: string;
   city: string;
   state: string;
   zipCode: string;
   country: string;
-
-  notes: string;
-
   dateCreated: Date;
   dateUpdated?: Date;
   imageUrl?: string;

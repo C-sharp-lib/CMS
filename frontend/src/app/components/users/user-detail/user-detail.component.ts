@@ -52,7 +52,7 @@ export class UserDetailComponent implements OnInit {
     });
   }
   loadUserImage(relativePath: string): void {
-    this.userService.getUserImage(relativePath).subscribe({
+    this.userService.getUserImageUrl(relativePath).subscribe({
       next: (response) => {
         this.userImageUrl = response.imageUrl;
       },

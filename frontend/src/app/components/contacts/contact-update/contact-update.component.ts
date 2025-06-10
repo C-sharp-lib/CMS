@@ -21,7 +21,7 @@ export class ContactUpdateComponent implements OnInit {
   selectedFile: File | null = null;
   imagePreview: string | ArrayBuffer | null = null;
   editorContent: string = '';
-  contact: any = {notes: ''};
+  contact: any;
   quill!: Quill;
   value: string = '';
   isLoading: boolean = true;
@@ -102,7 +102,6 @@ export class ContactUpdateComponent implements OnInit {
       country: ['', [Validators.required]],
       phoneNumber: ['', [Validators.required]],
       jobTitle: ['', [Validators.required]],
-      notes: [''],
       email: ['', [Validators.required]],
       ownerUserId: ['', [Validators.required]],
       companyId: ['', [Validators.required]],
@@ -115,7 +114,6 @@ export class ContactUpdateComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.contactService.getContactById(id).subscribe(contact => {
       this.contact = contact;
-      const notes = contact.notes;
       this.loadContactImage(this.contact);
       this.contactForm.patchValue({
         firstName: contact.firstName,
@@ -127,7 +125,6 @@ export class ContactUpdateComponent implements OnInit {
         phoneNumber: contact.phoneNumber,
         email: contact.email,
         jobTitle: contact.jobTitle,
-        notes: notes,
         companyId: contact.companyId,
         dateUpdated: contact.dateUpdated,
         ownerUserId: contact.ownerUserId,

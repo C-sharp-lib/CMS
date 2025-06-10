@@ -149,6 +149,13 @@ namespace backend.Areas.Main.Controllers;
             var contacts = await _contactRepository.GetAllContactsAsync();
             return Ok(contacts);
         }
+        
+        [HttpGet("contact/{contactId}/notes")]
+        public async Task<ActionResult<IEnumerable<ContactNotes>>> GetJobNotesByJobId(int contactId)
+        {
+            var contactNotes = await _contactNotesRepository.GetAllContactNotesByContactId(contactId);
+            return Ok(contactNotes);
+        }
 
         [HttpGet("notes")]
         public async Task<ActionResult<IEnumerable<ContactNotes>>> GetContactNotes()

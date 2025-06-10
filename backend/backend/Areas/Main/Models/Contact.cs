@@ -32,8 +32,6 @@ public class Contact
     
     public string Country { get; set; }
 
-    public string? Notes { get; set; }
-
     public DateTime DateCreated { get; set; }
 
     public DateTime? DateUpdated { get; set; }

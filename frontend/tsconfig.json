@@ -29,6 +29,8 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    "skipLibCheck": true
+    "fullTemplateTypeCheck": true,
+    "skipLibCheck": true,
+    "enableIvy": true
   }
 }

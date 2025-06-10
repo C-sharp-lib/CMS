@@ -202,6 +202,14 @@ body {
   background-image: -moz-linear-gradient(120deg, #833ab4, #fd1d1d,#fcb045);
   background-image: -ms-linear-gradient(120deg, #833ab4, #fd1d1d,#fcb045);
 }
+
+.gradient-text-instagram {
+  background: linear-gradient(120deg, #833ab4, #fd1d1d, #fcb045);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
 /*Toastr Styles*/
 
 /* position */

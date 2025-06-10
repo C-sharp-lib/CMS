@@ -7,6 +7,7 @@ namespace backend.Areas.Main.Services;
 public interface IContactNotesRepository
 {
     Task<IEnumerable<ContactNotes>> GetAllContactNotesAsync();
+    Task<IEnumerable<ContactNotes>> GetAllContactNotesByContactId(int contactId);
     Task<ContactNotes> GetContactNoteById(int id);
     Task<ContactNotes> AddAsync([FromBody] AddContactNoteViewModel note);
     Task UpdateAsync(int id, [FromBody] UpdateContactNoteViewModel note);

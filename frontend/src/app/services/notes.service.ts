@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {JobNotes, Note, UserNotes} from "../models/note";
+import {ContactNotes, JobNotes, Note, UserNotes} from "../models/note";
 import {forkJoin, Observable} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Job} from "../models/job";
@@ -12,6 +12,7 @@ export class NotesService {
   private notesApiUrl = `${environment.apiUrl}/Main/Notes`;
   private userNotesUrl = `${environment.apiUrl}/Identity/User`;
   private jobNotesUrl = `${environment.apiUrl}/Main/Job`;
+  private contactNotesUrl = `${environment.apiUrl}/Main/Contact`;
   private campaignNotesUrl = `${environment.apiUrl}/Main/Campaign`;
 
   constructor(private http: HttpClient) { }
@@ -78,4 +79,19 @@ export class NotesService {
     const url = `${this.jobNotesUrl}/notes/${noteId}`;
     return this.http.delete<void>(url);
   }
+  /*END JOBS*/
+  /*Start Contacts*/
+  getContactNotesByContactId(contactId: number): Observable<ContactNotes[]> {
+    const url = `${this.contactNotesUrl}/contact/${contactId}/notes`;
+    return this.http.get<ContactNotes[]>(url);
+  }
+  getContactNoteById(noteId: number): Observable<ContactNotes> {
+    const url = `${this.contactNotesUrl}/notes/${noteId}`;
+    return this.http.get<ContactNotes>(url);
+  }
+  createContactNote(contactNote: ContactNotes): Observable<any> {
+    const url = `${this.contactNotesUrl}/notes/${contactNote.id}`;
+    return this.http.post<ContactNotes>(url, contactNote);
+  }
+  /*END CONTACTS*/
 }

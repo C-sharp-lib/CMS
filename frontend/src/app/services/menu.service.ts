@@ -13,6 +13,6 @@ export class MenuService {
   }
 
   refreshMenu() {
-    this.sideNavComponent?.updateMenuItems();
+    this.sideNavComponent?.filteredMenuItems;
   }
 }

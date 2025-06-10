@@ -22,6 +22,8 @@ export class UserUpdateComponent implements OnInit {
   editorContent: string = '';
   quill!: Quill;
   value: string = '';
+  userImageUrl: string  | null = null;
+  error: string = '';
   private onChange = (_: any) => {};
   private onTouched = () => {};
 
@@ -37,8 +39,10 @@ export class UserUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userId = this.route.snapshot.paramMap.get('id')!;
+    this.userId = this.route.snapshot.paramMap.get('id')!.toString();
     this.buildForm();
+
+    this.loadUserData();
     this.loadUser();
     this.loadBreadcrumb();
     this.getCurrentUserId();
@@ -60,9 +64,12 @@ export class UserUpdateComponent implements OnInit {
     });
   }
 
-  loadUser(): void {
-    this.userService.getUserById(this.userId).subscribe(user => {
+  loadUserData(): void {
+    const id = this.route.snapshot.paramMap.get('id')!.toString();
+    this.userService.getUserById(id).subscribe(user => {
       this.user = user;
+      const relativePath = `Uploads/User/${this.user.imageUrl}`;
+      this.loadUserImage(relativePath);
       this.userForm.patchValue({
         name: user.name,
         address: user.address,
@@ -72,9 +79,30 @@ export class UserUpdateComponent implements OnInit {
         zipCode: user.zipCode,
         description: this.safeContent(user.description),
         dateOfBirth: this.formatDate(user.dateOfBirth),
-        imageUrl: user.imageUrl
+        imageUrl: user?.imageUrl,
       });
     });
+  }
+  loadUser(): void {
+    const id = this.route.snapshot.paramMap.get('id')!.toString();
+    this.userService.getUserById(id).subscribe({
+      next: (response) => {
+        this.user = response;
+        if(this.user?.imageUrl) {
+          const relativePath = `Uploads/User/${this.user.imageUrl}`;
+          this.loadUserImage(relativePath);
+          console.log(this.user.imageUrl);
+        } else {
+          this.userImageUrl = null;
+          console.log('Could not load user image.');
+        }
+
+      },
+      error: (err) => {
+        this.error = err;
+        console.log(this.error);
+      }
+    })
   }
   safeContent(value: any): string {
     return value == null ? '' : value;
@@ -94,7 +122,18 @@ export class UserUpdateComponent implements OnInit {
     const d = new Date(date);
     return d.toISOString().substring(0, 10);
   }
-
+  loadUserImage(relativePath: string): void {
+    this.userService.getUserImageUrl(relativePath).subscribe({
+      next: (response) => {
+        this.userImageUrl = response.imageUrl;
+      },
+      error: (err) => {
+        this.userImageUrl = null;
+        this.toast.showErrorToast('Failed to load user image', 'Image Error');
+        console.error(err);
+      }
+    });
+  }
   onSubmit(): void {
     if (this.userForm.invalid) {
       return;

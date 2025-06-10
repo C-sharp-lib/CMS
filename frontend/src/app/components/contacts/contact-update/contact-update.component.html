@@ -431,17 +431,18 @@
                   </div>
                 </div>
               </div>
-              <div class="row m-3">
+              <!--<div class="row m-3">
                 <div class="col-12">
 
                   <label for="updateContactNotes" class="text-gradient text-primary ubuntu-bold">Notes</label>
                   <div class="border border-primary rounded mt-2 mb-2 p-3">
                     <label for="previousContactNote" class="text-gradient text-primary ubuntu-bold">Preview:</label>
-                    <div [innerHTML]="contact?.notes" id="previousContactNote"></div>
+                    <div [innerHTML]="contact?.contactNotes.note.title"></div>
+                    <div [innerHTML]="contact?.contactNotes.note.content" id="previousContactNote"></div>
                   </div>
                     <quill-editor formControlName="notes" (onEditorCreated)="onEditorCreated($event)" class="dark-quill" id="updateContactNotes"></quill-editor>
                 </div>
-              </div>
+              </div>-->
               <div class="row m-3">
                 <button type="submit" class="btn bg-gradient-primary ubuntu-bold">Update Contact</button>
               </div>

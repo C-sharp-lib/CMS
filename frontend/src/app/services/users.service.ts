@@ -82,9 +82,11 @@ export class UsersService {
       { params: { relativePath } }
     );
   }*/
-  getUserImage(relativePath: string) {
-    const params = new HttpParams().set('relativePath', relativePath);
-    return this.http.get<{ imageUrl: string }>(`${this.baseUrl}/get-users-image`, { params });
+  getUserImageUrl(relativePath: string): Observable<{ imageUrl: string }> {
+    return this.http.get<{ imageUrl: string }>(
+      `${this.baseUrl}/get-user-image-path`,
+      { params: { relativePath } }
+    );
   }
   getCurrentUser(): User | null {
     return this.currentUser;

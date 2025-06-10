@@ -102,7 +102,7 @@ public class UserController : ControllerBase
         return Ok(users);
     }
     
-    [HttpGet("get-users-image")]
+    [HttpGet("get-user-image-path")]
     public IActionResult GetUserImagePath([FromQuery] string relativePath)
     {
         if (string.IsNullOrEmpty(relativePath))

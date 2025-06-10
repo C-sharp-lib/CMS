@@ -90,7 +90,6 @@ public class ContactRepository : IContactRepository
                     State = contact.State,
                     ZipCode = contact.ZipCode,
                     Country = contact.Country,
-                    Notes = contact.Notes,
                     DateCreated = contact.DateCreated,
                     OwnerUserId = contact.OwnerUserId,
                     CompanyId = contact.CompanyId,
@@ -138,7 +137,6 @@ public class ContactRepository : IContactRepository
         contactToUpdate.PhoneNumber = contact.PhoneNumber;
         contactToUpdate.Email = contact.Email;
         contactToUpdate.DateUpdated = contact.DateUpdated;
-        contactToUpdate.Notes = contact.Notes;
         contactToUpdate.CompanyId = contact.CompanyId;
         _context.Contacts.Update(contactToUpdate);
         await _context.SaveChangesAsync();

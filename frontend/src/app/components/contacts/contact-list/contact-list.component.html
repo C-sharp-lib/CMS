@@ -42,6 +42,8 @@
                       <a routerLink="{{contact.id}}" class="btn btn-sm bg-gradient-info table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Contact Profile"><i class="fa-solid fa-address-card"></i></a>
                       <a routerLink="update/{{contact.id}}" class="btn btn-sm bg-gradient-warning table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update Contact"><i class="fa-solid fa-pen-to-square"></i></a>
                       <a href="#" (click)="deleteContact(contact.id, $event)" class="btn btn-sm bg-gradient-danger table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete Contact"><i class="fa-solid fa-trash"></i></a>
+                      <a routerLink="/contacts/contact/{{contact.id}}" class="btn btn-sm custom-rainbow-blue-gradient text-white table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Contact Notes"><i class="fa-solid fa-comment"></i></a>
+                      <a routerLink="/contacts/notes/create/{{contact.id}}" class="btn btn-sm custom-instagram-gradient text-white table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Create Contact Notes"><i class="fa-solid fa-plus"></i></a>
                     </div>
                   </td>
                 </tr>

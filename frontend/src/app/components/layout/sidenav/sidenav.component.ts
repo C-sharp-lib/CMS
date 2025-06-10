@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {UsersService} from "../../../services";
 import {BehaviorSubject} from "rxjs";
 import {MenuService} from "../../../services/menu.service";
+import {MatSidenav} from "@angular/material/sidenav";
 
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css']
 })
-export class SidenavComponent implements OnInit {
-  filteredMenuItems: any[] = [];
-  isExpanded = false;
+export class SidenavComponent implements OnInit{
+  selectedItem: any = null;
+  isLoggedIn: boolean = false;
+  collapsed = true;
   dropdowns = {
     users: false,
     jobs: false,
@@ -48,33 +50,34 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.menuService.login(this);
 
-    this.updateMenuItems();
+    this.filteredMenuItems;
   }
-  toggleSidebar() {
-    this.isExpanded = !this.isExpanded;
+  toggleCollapse() {
+    this.collapsed = !this.collapsed;
   }
-  toggleDropdown(menu: string) {
-    this.dropdowns[menu] = !this.dropdowns[menu];
-  }
-
-  updateMenuItems(): void {
+  get filteredMenuItems() {
     const isLoggedIn = this.userService.isLoggedIn();
-
-    this.filteredMenuItems = this.menuItems
-      .map(group => {
-        const filteredChildren = group.children.filter(child =>
+    return this.menuItems
+      .map(menu => ({
+        ...menu,
+        children: menu.children.filter(child =>
           (child.requiresAuth && isLoggedIn) ||
           (!child.requiresAuth && !isLoggedIn) ||
           child.requiresAuth === undefined
-        );
+        ),
+      }))
+      .filter(menu => menu.children.length > 0);
 
-        // Only return the group if it has visible children
-        if (filteredChildren.length > 0) {
-          return { ...group, children: filteredChildren };
-        }
+  }
+  toggleLogin() {
+    this.isLoggedIn = !this.isLoggedIn;
+    this.selectedItem = null;
+  }
+  openSubmenu(item: any) {
+    this.selectedItem = this.selectedItem === item ? null : item;
+  }
 
-        return null;
-      })
-      .filter(group => group !== null);
+  closeSubmenu() {
+    this.selectedItem = null;
   }
 }

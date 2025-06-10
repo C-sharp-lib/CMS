@@ -22,6 +22,17 @@ public class ContactNotesRepository : IContactNotesRepository
             .ToListAsync();
         return contactNotes;
     }
+    
+    public async Task<IEnumerable<ContactNotes>> GetAllContactNotesByContactId(int id)
+    {
+        var notes = await _context.ContactNotes
+            .Where(cn => cn.Id == id)
+            .Include(n => n.Contact)
+            .Include(n => n.Note)
+            .ToListAsync();
+
+        return notes;
+    }
 
     public async Task<ContactNotes> GetContactNoteById(int id)
     {
