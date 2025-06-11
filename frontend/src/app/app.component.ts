@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ToasterService, UsersService} from "./services";
+import {MenuService, ToasterService, UsersService} from "./services";
 import {User} from "./models/user";
 
 @Component({
@@ -10,7 +10,8 @@ import {User} from "./models/user";
 export class AppComponent implements OnInit {
   title = 'frontend';
   fullUser: User | null = null;
-  constructor(private userService: UsersService, private toast: ToasterService) {
+  constructor(private userService: UsersService, private toast: ToasterService,
+              private menuService: MenuService) {
    /* this.userService.getCurrentUser = JSON.parse(localStorage.getItem("currentUser") || 'null');*/
   }
   ngOnInit() {
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit {
     } else {
       this.userService.logout();
     }
+    this.refreshMainMenu();
   }
   getCurrentUserId(): string {
     const token = localStorage.getItem('token');
@@ -46,5 +48,8 @@ export class AppComponent implements OnInit {
         console.error('Failed to fetch user:', err);
       }
     });
+  }
+  refreshMainMenu(): void {
+    this.menuService.refreshMenu();
   }
 }

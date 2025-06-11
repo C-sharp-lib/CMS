@@ -42,6 +42,7 @@ public class User : IdentityUser
     public IEnumerable<UserMeeting>? UserMeetings { get; set; }
     public IEnumerable<Meeting>? Meetings { get; set; }
     public IEnumerable<UserNotes>? UserNotes { get; set; }
+    public IEnumerable<UserTasks>? UserTasks { get; set; }
     public IEnumerable<Customer>? Customers { get; set; }
     public IEnumerable<Order>? Orders { get; set; }
     public IEnumerable<Review>? Reviews { get; set; }

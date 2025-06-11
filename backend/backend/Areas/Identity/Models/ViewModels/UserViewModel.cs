@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using backend.Areas.Main.Models.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,4 +57,27 @@ public class UpdateUserViewModel
     public string PhoneNumber { get; set; }
     [FromForm]
     public IFormFile? ImageUrl { get; set; }
+}
+
+public class AddUserTasksViewModel
+{
+    public string TaskTitle { get; set; }
+    public string TaskDescription { get; set; }
+    public DateTime DueDate { get; set; }
+    public Status Status { get; set; } 
+    public Priority Priority { get; set; } 
+    public string AssignedToUserId { get; set; } 
+    public DateTime DateCreated { get; set; } = DateTime.Now;
+}
+
+public class UpdateUserTasksViewModel
+{
+    public string TaskTitle { get; set; }
+    public string TaskDescription { get; set; }
+    public DateTime DueDate { get; set; }
+    public Status Status { get; set; } 
+    public Priority Priority { get; set; } 
+    public string AssignedToUserId { get; set; } 
+    public DateTime DateUpdated { get; set; } = DateTime.Now;
+    public DateTime DateCompleted {get; set;}
 }

@@ -9,63 +9,67 @@ namespace backend.Areas.Main.Services;
 public class CampaignTaskRepository : ICampaignTaskRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ICampaignRepository _campaignRepository;
 
-    public CampaignTaskRepository(ApplicationDbContext context)
+    public CampaignTaskRepository(ApplicationDbContext context, ICampaignRepository campaignRepository)
     {
         _context = context;
+        _campaignRepository = campaignRepository;
     }
-    public async Task<IEnumerable<CampaignTask>> GetAllCampaignTasks()
+    public async Task<IEnumerable<CampaignTasks>> GetAllCampaignTasks()
     {
-        return await _context.CampaignTasks
-            .Include(x => x.Campaign)
-            .Include(x => x.Tasks)
-            .ToListAsync();
+        return await _context.CampaignTasks.Include(c => c.Campaign).Include(t => t.Tasks).ToListAsync();
     }
 
-    public async Task<CampaignTask> GetCampaignTask(int id)
+    public async Task<CampaignTasks> GetCampaignTask(int id)
     {
         var campaignTask = await _context.CampaignTasks
             .Include(x => x.Campaign)
             .Include(x => x.Tasks)
             .FirstOrDefaultAsync(x => x.Id == id);
-        if (campaignTask == null)
-        {
-            throw new NullReferenceException("Campaign task not found");
-        }
+        if (campaignTask is null) return null;
         return campaignTask;
     }
 
-    public async Task AddCampaignTask([FromBody] AddCampaignTaskViewModel task)
+    public async Task<IEnumerable<CampaignTasks>> GetCampaignTasksByCampaignId(int campaignId)
     {
-        var campaignTask = new CampaignTask
+        var campaign = await _campaignRepository.GetByIdAsync(campaignId);
+        var tasks = await _context.CampaignTasks.Include(x => x.Campaign).Include(x => x.Tasks).Where(ct => ct.Campaign.Id == campaign.Id).ToListAsync();
+        if (!tasks.Any()) return null;
+        return tasks;
+    }
+
+    public async Task<CampaignTasks> AddCampaignTask(int campaignId, [FromBody] AddCampaignTaskViewModel task)
+    {
+        var campaign = await _campaignRepository.GetByIdAsync(campaignId);
+        var campaignTask = new CampaignTasks
         {
             Tasks = new Tasks
             {
-                TaskDescription = task.Tasks.TaskDescription,
-                DueDate = task.Tasks.DueDate,
-                Status = task.Tasks.Status,
-                Priority = task.Tasks.Priority,
-                AssignedToUser = task.Tasks.AssignedToUser,
-                DateCreated = task.Tasks.DateCreated,
+                TaskTitle = task.TaskTitle,
+                TaskDescription = task.TaskDescription,
+                DueDate = task.DueDate,
+                Status = task.Status,
+                Priority = task.Priority,
+                AssignedToUser = task.AssignedToUserId,
+                DateCreated = task.DateCreated
             },
-            CampaignId = task.CampaignId,
-            Created = task.Created
+            CampaignId = campaign.Id
         };
         _context.CampaignTasks.Add(campaignTask);
         await _context.SaveChangesAsync();
+        return campaignTask;
     }
 
-    public async Task UpdateCampaignTask(int id, UpdateCampaignTaskViewModel task)
+    public async Task UpdateCampaignTask(int id, [FromBody] UpdateCampaignTaskViewModel task)
     {
         var campaignTask = await GetCampaignTask(id);
-        campaignTask.Tasks.TaskDescription = task.Tasks.TaskDescription;
-        campaignTask.Tasks.DueDate = task.Tasks.DueDate;
-        campaignTask.Tasks.Status = task.Tasks.Status;
-        campaignTask.Tasks.Priority = task.Tasks.Priority;
-        campaignTask.Tasks.AssignedToUser = task.Tasks.AssignedToUser;
-        campaignTask.Tasks.DateUpdated = task.Tasks.DateUpdated;
-        campaignTask.CampaignId = task.CampaignId;
-        campaignTask.Updated = task.Updated;
+        campaignTask.Tasks.TaskDescription = task.TaskDescription;
+        campaignTask.Tasks.DueDate = task.DueDate;
+        campaignTask.Tasks.Status = task.Status;
+        campaignTask.Tasks.Priority = task.Priority;
+        campaignTask.Tasks.AssignedToUser = task.AssignedToUserId;
+        campaignTask.Tasks.DateUpdated = task.DateUpdated;
         _context.CampaignTasks.Update(campaignTask);
         await _context.SaveChangesAsync();
     }

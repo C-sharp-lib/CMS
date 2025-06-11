@@ -47,12 +47,23 @@
 <!--</div>-->
 <div class="d-flex position-relative" (click)="closeSubmenu()">
 
+
   <!-- Main Sidenav -->
   <div
     class="main-sidenav custom-bg-dark-gradient p-3"
     [class.collapsed]="collapsed"
     (click)="$event.stopPropagation()"
   >
+    <ng-container *ngIf="isUserLoggedIn(); else guestView">
+      <img [src]="userImageUrl" class="rounded-circle mb-2" width="70" height="70" alt="{{fullUser?.name}}'s Image" />
+      <h6 class="mb-0 text-gradient text-primary p-2 ubuntu-bold">{{ getInitials(fullUser?.name) }}</h6>
+      <hr class="custom-instagram-gradient"/>
+    </ng-container>
+    <ng-template #guestView>
+      <img [src]="defaultPhoto" alt="Guest User" class="rounded-circle mb-2" height="70" width="70">
+      <h6 class="mb-5 text-gradient text-primary ubuntu-bold p-2">Guest</h6>
+      <hr class="custom-instagram-gradient"/>
+    </ng-template>
     <button class="btn btn-sm btn-outline-primary mb-3" (click)="toggleCollapse()">
       <i class="bi" [ngClass]="collapsed ? 'bi-arrow-right-square' : 'bi-arrow-left-square'"></i>
     </button>
@@ -88,7 +99,6 @@
 
   <!-- Main Content -->
   <div class="flex-grow-1 p-4">
-    <app-breadcrumb></app-breadcrumb>
     <router-outlet></router-outlet>
     <app-footer></app-footer>
   </div>

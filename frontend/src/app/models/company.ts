@@ -1,6 +1,6 @@
 import {Contact} from "./contact";
-import {CampaignTasks, Tasks} from "./tasks";
-import {Note} from "./note";
+import {CompanyTasks, Tasks} from "./tasks";
+import {CompanyNotes} from "./note";
 
 export interface Company {
   id: number;
@@ -21,17 +21,5 @@ export interface Company {
   companyNotes?: CompanyNotes[];
   companyTasks?: CompanyTasks[];
 }
-export interface CompanyTasks {
-  id: number;
-  companyId: number;
-  taskId: number;
-  tasks: Tasks;
-  company: Company;
-}
-export interface CompanyNotes {
-  id: number;
-  noteId: number;
-  companyId: number;
-  company: Company;
-  note: Note;
-}
+
+

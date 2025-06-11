@@ -129,7 +129,6 @@ export class UserUpdateComponent implements OnInit {
       },
       error: (err) => {
         this.userImageUrl = null;
-        this.toast.showErrorToast('Failed to load user image', 'Image Error');
         console.error(err);
       }
     });

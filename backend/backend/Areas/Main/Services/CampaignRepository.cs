@@ -30,6 +30,8 @@ public class CampaignRepository : ICampaignRepository
             .Include(c => c.Leads)
             .Include(c => c.Contacts)
             .Include(c => c.Tasks)
+            .Include(c => c.CampaignNotes)
+            .Include(c => c.CampaignTasks)
             .FirstOrDefaultAsync(c => c.Id == id))!;
     }
 

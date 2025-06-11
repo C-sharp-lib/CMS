@@ -97,7 +97,7 @@ public class JobController : ControllerBase
         return Ok(await _jobRepository.DeleteJobAsync(id));
     }
 
-    [HttpGet("jobCount")]
+    [HttpGet("count")]
     public async Task<ActionResult<int>> GetJobCount()
     {
         return Ok(await _jobRepository.CountAllJobsAsync());
@@ -116,14 +116,11 @@ public class JobController : ControllerBase
         return Ok(jobNote);
     }
     
-    [HttpGet("job/{jobId}")]
+    [HttpGet("job/{jobId}/notes")]
     public async Task<ActionResult<IEnumerable<JobNotes>>> GetJobNotesByJobId(int jobId)
     {
         var jobNote = await _jobNoteRepository.GetJobNotesByJobId(jobId);
-        if (jobNote == null)
-        {
-            return NotFound();
-        }
+        if (!jobNote.Any()) return Array.Empty<JobNotes>();
         return Ok(jobNote);
     }
 
@@ -193,7 +190,7 @@ public class JobController : ControllerBase
         return Ok(await _jobNoteRepository.CountAsync());
     }
 
-    [HttpGet("jobTasks")]
+    [HttpGet("tasks")]
     public async Task<ActionResult<IEnumerable<JobTask>>> GetJobTasks()
     {
         if (!ModelState.IsValid)
@@ -213,7 +210,14 @@ public class JobController : ControllerBase
         }
     }
 
-    [HttpGet("jobTasks/{id}")]
+    [HttpGet("job/{jobId}/tasks")]
+    public async Task<ActionResult<IEnumerable<JobTask>>> GetJobTasks(int jobId)
+    {
+        var jobTasks = await _jobTaskRepository.GetJobTasksByJobId(jobId);
+        return Ok(jobTasks);
+    }
+
+    [HttpGet("tasks/{id}")]
     public async Task<ActionResult<JobTask>> GetJobTask(int id)
     {
         try
@@ -226,8 +230,8 @@ public class JobController : ControllerBase
         }
     }
 
-    [HttpPost("jobTasks")]
-    public async Task<ActionResult<JobTask>> CreateJobTask([FromBody] AddJobTaskViewModel jobTask)
+    [HttpPost("tasks")]
+    public async Task<ActionResult<JobTask>> CreateJobTask(int jobId, [FromBody] AddJobTaskViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -238,7 +242,7 @@ public class JobController : ControllerBase
         }
         try
         {
-            await _jobTaskRepository.CreateJobTask(jobTask);
+            await _jobTaskRepository.CreateJobTask(jobId, model);
             return Ok("Job Task Created.");
         }
         catch (Exception ex)
@@ -247,7 +251,7 @@ public class JobController : ControllerBase
         }
     }
 
-    [HttpPut("jobTasks/{id}")]
+    [HttpPut("tasks/{id}")]
     public async Task<ActionResult<JobTask>> UpdateJobTask(int id, [FromBody] UpdateJobTaskViewModel jobTask)
     {
         if (!ModelState.IsValid)
@@ -276,14 +280,14 @@ public class JobController : ControllerBase
         }
     }
 
-    [HttpDelete("jobTasks/{id}")]
+    [HttpDelete("tasks/{id}")]
     public async Task<ActionResult<JobTask>> DeleteJobTask(int id)
     {
         await _jobTaskRepository.DeleteJobTask(id);
-        return Ok("Job Task Deleted.");
+        return NoContent();
     }
 
-    [HttpGet("jobTasks/count")]
+    [HttpGet("tasks/count")]
     public async Task<ActionResult<int>> GetJobTasksCount()
     {
         return Ok(await _jobTaskRepository.CountJobTasks());

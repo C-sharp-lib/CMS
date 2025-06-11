@@ -1,5 +1,7 @@
 using backend.Areas.Main.Models;
+using backend.Areas.Main.Models.ViewModels;
 using backend.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Areas.Main.Services;
@@ -7,10 +9,12 @@ namespace backend.Areas.Main.Services;
 public class CampaignNotesRepository : ICampaignNotesRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ICampaignRepository _campaignRepository;
 
-    public CampaignNotesRepository(ApplicationDbContext context)
+    public CampaignNotesRepository(ApplicationDbContext context, ICampaignRepository campaignRepository)
     {
         _context = context;
+        _campaignRepository = campaignRepository;
     }
 
     public async Task<IEnumerable<CampaignNotes>> GetCampaignNotesAsync()
@@ -34,16 +38,25 @@ public class CampaignNotesRepository : ICampaignNotesRepository
         return campaignNote;
     }
 
-    public async Task<CampaignNotes> AddAsync(CampaignNotes note)
+    public async Task<IEnumerable<CampaignNotes>> GetCampaignNotesbyCampaignIdAsync(int campaignId)
     {
+        var campaign = await _campaignRepository.GetByIdAsync(campaignId);
+        var notes = await _context.CampaignNotes.Include(c => c.Campaign).Include(c => c.Note).Where(cn => cn.Campaign.Id == campaign.Id).ToListAsync();
+        if(!notes.Any()) return Array.Empty<CampaignNotes>();
+        return notes;
+    }
+    
+    public async Task<CampaignNotes> AddAsync(int campaignId, [FromBody] AddCampaignNoteViewModel model)
+    {
+        var campaign = await _campaignRepository.GetByIdAsync(campaignId);
         var campaignNote = new CampaignNotes
         {
-            CampaignId = note.CampaignId,
+            CampaignId = campaign.Id,
             Note = new Note
             {
-                Title = note.Note.Title,
-                Content = note.Note.Content,
-                Created = DateTime.Now,
+                Title = model.Title,
+                Content = model.Content,
+                Created = model.Created
             }
         };
         _context.CampaignNotes.Add(campaignNote);
@@ -51,12 +64,12 @@ public class CampaignNotesRepository : ICampaignNotesRepository
         return campaignNote;
     }
 
-    public async Task UpdateAsync(int id, CampaignNotes note)
+    public async Task UpdateAsync(int id, [FromBody] UpdateCampaignNoteViewModel model)
     {
         var campaignNote = await GetCampaignNoteById(id);
-        campaignNote.Note.Title = note.Note.Title;
-        campaignNote.Note.Content = note.Note.Content;
-        campaignNote.Note.Updated = DateTime.Now;
+        campaignNote.Note.Title = model.Title;
+        campaignNote.Note.Content = model.Content;
+        campaignNote.Note.Updated = model.Updated;
         _context.CampaignNotes.Update(campaignNote);
         await _context.SaveChangesAsync();
     }

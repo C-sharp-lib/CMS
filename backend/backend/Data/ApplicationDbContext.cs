@@ -31,6 +31,9 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<UserMeeting> UserMeetings { get; set; }
     public DbSet<Note> Notes { get; set; }
     public DbSet<UserNotes> UserNotes { get; set; }
+    public DbSet<UserTasks> UserTasks { get; set; }
+    public DbSet<CampaignTasks> CampaignTasks { get; set; }
+    public DbSet<ContactTasks> ContactTasks { get; set; }
     public DbSet<TaskNotes> TaskNotes { get; set; }
     public DbSet<LeadNotes> LeadNotes { get; set; }
     public DbSet<ContactNotes> ContactNotes { get; set; }
@@ -39,7 +42,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<JobNotes> JobNotes { get; set; }
     public DbSet<JobTask> JobTasks { get; set; }
     public DbSet<LeadTask> LeadTasks { get; set; }
-    public DbSet<CampaignTask> CampaignTasks { get; set; }
     public DbSet<CompanyTask> CompanyTasks { get; set; }
     public DbSet<Post> Posts { get; set; }
     public DbSet<PostCategory> Categories { get; set; }
@@ -139,10 +141,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
             entity.HasOne(x => x.OwnerUser)
                 .WithMany(x => x.Contacts)
                 .HasForeignKey(x => x.OwnerUserId);
-            entity.HasMany(x => x.Tasks)
-                .WithOne(c => c.Contact)
-                .HasForeignKey(c => c.ContactId)
-                .HasPrincipalKey(c => c.Id);
             entity.HasOne(x => x.Company)
                 .WithMany(x => x.Contacts)
                 .HasForeignKey(x => x.CompanyId)
@@ -165,10 +163,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
                 .WithMany(x => x.Jobs)
                 .HasForeignKey(x => x.ContactId)
                 .HasPrincipalKey(x => x.Id);
-            entity.HasMany(x => x.Tasks)
-                .WithOne(c => c.Job)
-                .HasForeignKey(c => c.JobId)
-                .HasPrincipalKey(x => x.Id);
         });
         builder.Entity<Campaign>(entity =>
         {
@@ -183,11 +177,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
             entity.HasMany(x => x.Contacts)
                 .WithMany(c => c.Campaigns)
                 .UsingEntity(j => j.ToTable("CampaignContacts"));
-            entity.HasMany(x => x.Tasks)
-                .WithOne(x => x.Campaign)
-                .HasForeignKey(x => x.CampaignId)
-                .HasPrincipalKey(x => x.Id)
-                .OnDelete(DeleteBehavior.Cascade);
         });
         builder.Entity<EmailMessage>(entity =>
         {
@@ -203,23 +192,12 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
         });
         builder.Entity<Tasks>(entity =>
         {
-            entity.HasKey(c => new { c.Id, c.ContactId, c.CampaignId, c.JobId, c.AssignedToUserId, c.CompanyId });
+            entity.HasKey(c => new { c.Id, c.AssignedToUserId});
             entity.HasOne(c => c.AssignedToUser)
                 .WithMany(t => t.Tasks)
                 .HasForeignKey(c => c.AssignedToUserId)
                 .OnDelete(DeleteBehavior.Cascade);
-            entity.HasOne(c => c.Contact)
-                .WithMany(c => c.Tasks)
-                .HasForeignKey(c => c.ContactId)
-                .OnDelete(DeleteBehavior.Cascade);
-            entity.HasOne(c => c.Job)
-                .WithMany(c => c.Tasks)
-                .HasForeignKey(c => c.JobId)
-                .OnDelete(DeleteBehavior.Restrict);
-            entity.HasOne(c => c.Company)
-                .WithMany(t => t.Tasks)
-                .HasForeignKey(c => c.CompanyId)
-                .OnDelete(DeleteBehavior.Restrict);
+            
         });
         builder.Entity<Company>(entity => { entity.HasKey(e => e.Id); });
         builder.Entity<Analytic>(entity =>
@@ -301,16 +279,57 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
                 .WithMany(n => n.UserNotes)
                 .HasForeignKey(n => n.UserId);
         });
+        builder.Entity<UserTasks>(entity =>
+        {
+            entity.HasKey(e => new { e.Id, e.TaskId, e.UserId });
+            entity.HasOne(n => n.Tasks)
+                .WithMany(n => n.UserTasks)
+                .HasForeignKey(n => n.TaskId)
+                .HasPrincipalKey(m => m.Id);
+            entity.HasOne(n => n.User)
+                .WithMany(n => n.UserTasks)
+                .HasForeignKey(n => n.UserId)
+                .HasPrincipalKey(m => m.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+        builder.Entity<CampaignTasks>(entity =>
+        {
+            entity.HasKey(e => new { e.Id, e.TaskId, e.CampaignId });
+            entity.HasOne(n => n.Tasks)
+                .WithMany(n => n.CampaignTasks)
+                .HasForeignKey(n => n.TaskId)
+                .HasPrincipalKey(m => m.Id);
+            entity.HasOne(n => n.Campaign)
+                .WithMany(n => n.CampaignTasks)
+                .HasForeignKey(n => n.CampaignId)
+                .HasPrincipalKey(m => m.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+        builder.Entity<ContactTasks>(entity =>
+        {
+            entity.HasKey(e => new { e.Id, e.TaskId, e.ContactId });
+            entity.HasOne(n => n.Tasks)
+                .WithMany(n => n.ContactTasks)
+                .HasForeignKey(n => n.TaskId)
+                .HasPrincipalKey(m => m.Id);
+            entity.HasOne(n => n.Contact)
+                .WithMany(n => n.ContactTasks)
+                .HasForeignKey(n => n.ContactId)
+                .HasPrincipalKey(m => m.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
         builder.Entity<TaskNotes>(entity =>
         {
             entity.HasKey(e => new { e.Id, e.TaskId, e.NoteId });
             entity.HasOne(t => t.Note)
                 .WithMany(n => n.TaskNotes)
-                .HasForeignKey(t => t.NoteId);
+                .HasForeignKey(t => t.NoteId)
+                .HasPrincipalKey(m => m.Id);
             entity.HasOne(t => t.Task)
                 .WithMany(n => n.TaskNotes)
                 .HasForeignKey(t => t.TaskId)
-                .HasPrincipalKey(t => t.Id);
+                .HasPrincipalKey(t => t.Id)
+                .OnDelete(DeleteBehavior.Cascade);
         });
         builder.Entity<LeadNotes>(entity =>
         {
@@ -389,18 +408,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
                 .HasPrincipalKey(c => c.Id);
             entity.HasOne(n => n.Tasks)
                 .WithMany(n => n.LeadTasks)
-                .HasForeignKey(n => n.TaskId)
-                .HasPrincipalKey(c => c.Id);
-        });
-        builder.Entity<CampaignTask>(entity =>
-        {
-            entity.HasKey(e => new { e.Id, e.CampaignId, e.TaskId });
-            entity.HasOne(n => n.Campaign)
-                .WithMany(n => n.CampaignTask)
-                .HasForeignKey(n => n.CampaignId)
-                .HasPrincipalKey(c => c.Id);
-            entity.HasOne(n => n.Tasks)
-                .WithMany(n => n.CampaignTasks)
                 .HasForeignKey(n => n.TaskId)
                 .HasPrincipalKey(c => c.Id);
         });

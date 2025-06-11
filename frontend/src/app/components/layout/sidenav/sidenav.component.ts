@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {UsersService} from "../../../services";
-import {BehaviorSubject} from "rxjs";
-import {MenuService} from "../../../services/menu.service";
-import {MatSidenav} from "@angular/material/sidenav";
+import {BehaviorSubject, filter} from "rxjs";
+import {MenuService} from "../../../services";
+import {User} from "../../../models/user";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'app-sidenav',
@@ -12,6 +13,11 @@ import {MatSidenav} from "@angular/material/sidenav";
 export class SidenavComponent implements OnInit{
   selectedItem: any = null;
   isLoggedIn: boolean = false;
+  userImageUrl: string = '';
+  isLoading: boolean = true;
+  defaultPhoto: string = 'assets/img/user-placeholder.png';
+  fullUser: any;
+  error: string = '';
   collapsed = true;
   dropdowns = {
     users: false,
@@ -45,15 +51,25 @@ export class SidenavComponent implements OnInit{
         {label: 'Add Contact', path: 'contacts/create', icon: 'bi bi-building-add', requiresAuth: true}
       ]},
   ];
-  constructor(private userService: UsersService, private menuService: MenuService) { }
+  constructor(private userService: UsersService, private menuService: MenuService, private router: Router) { }
 
   ngOnInit(): void {
+    this.refreshMainMenu();
     this.menuService.login(this);
+    this.loadUser();
+    this.getInitials(this.fullUser?.name);
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.loadUser(); // re-load user every time navigation ends
+      });
 
-    this.filteredMenuItems;
   }
   toggleCollapse() {
     this.collapsed = !this.collapsed;
+  }
+  refreshMainMenu(): void {
+    this.menuService.refreshMenu();
   }
   get filteredMenuItems() {
     const isLoggedIn = this.userService.isLoggedIn();
@@ -69,9 +85,73 @@ export class SidenavComponent implements OnInit{
       .filter(menu => menu.children.length > 0);
 
   }
-  toggleLogin() {
-    this.isLoggedIn = !this.isLoggedIn;
-    this.selectedItem = null;
+
+  getCurrentUserId(): string {
+    const token = localStorage.getItem('token');
+    if (!token || token.split('.').length !== 3) {
+      return '';
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.nameid || '';
+    } catch (e) {
+      console.error('Invalid token:', e);
+      return '';
+    }
+  }
+  getCurrentUser() {
+    const userId = this.getCurrentUserId();
+
+    this.userService.getUserById(userId).subscribe({
+      next: (user) => {
+        console.log('Full user info:', user);
+        this.fullUser = user;
+
+      },
+      error: (err) => {
+        console.error('Failed to fetch user:', err);
+      }
+    });
+  }
+  isUserLoggedIn(){
+    this.isLoggedIn = this.userService.isLoggedIn();
+    return this.isLoggedIn;
+  }
+  loadUser(): void {
+    const id = this.getCurrentUserId();
+    this.userService.getUserById(id).subscribe({
+      next: (data) => {
+        this.fullUser = data;
+        if (this.fullUser?.imageUrl) {
+          const relativePath = `Uploads/User/${this.fullUser?.imageUrl}`;
+          this.loadUserImage(relativePath);
+          this.refreshMainMenu();
+          this.filteredMenuItems;
+          console.log(this.fullUser?.imageUrl);
+        } else {
+          this.userImageUrl = this.defaultPhoto;
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = err.message;
+        console.error(this.error);
+        this.isLoading = false;
+      }
+    });
+  }
+  loadUserImage(relativePath: string): void {
+    this.userService.getUserImageUrl(relativePath).subscribe({
+      next: (response) => {
+        this.refreshMainMenu();
+        this.userImageUrl = response.imageUrl;
+      },
+      error: (err) => {
+        this.userImageUrl = null;
+        console.error(err.message);
+      }
+    });
   }
   openSubmenu(item: any) {
     this.selectedItem = this.selectedItem === item ? null : item;
@@ -79,5 +159,14 @@ export class SidenavComponent implements OnInit{
 
   closeSubmenu() {
     this.selectedItem = null;
+  }
+
+  getInitials(name: string): string {
+    if (!name) return '';
+
+    const parts = name.trim().split(' ');
+    const first = parts[0]?.charAt(0) || '';
+    const last = parts.length > 1 ? parts[1]?.charAt(0) : '';
+    return (first + last).toUpperCase();
   }
 }

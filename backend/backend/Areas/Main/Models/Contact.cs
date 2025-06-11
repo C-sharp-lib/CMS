@@ -48,4 +48,5 @@ public class Contact
     public virtual IEnumerable<Tasks>? Tasks { get; set; }
     public virtual IEnumerable<Meeting>? Meetings { get; set; }
     public virtual IEnumerable<ContactNotes>? ContactNotes { get; set; }
+    public virtual IEnumerable<ContactTasks>? ContactTasks { get; set; }
 }

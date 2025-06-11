@@ -49,9 +49,9 @@ public class Campaign
     public virtual User CreatedByUser { get; set; }
 
     // Optional: Collection of leads or contacts associated with this campaign
-    public virtual ICollection<Lead> Leads { get; set; }
-    public virtual ICollection<Contact> Contacts { get; set; }
-    public virtual ICollection<Tasks> Tasks { get; set; }
-    public virtual IEnumerable<CampaignNotes> CampaignNotes { get; set; }
-    public virtual IEnumerable<CampaignTask> CampaignTask { get; set; }
+    public virtual ICollection<Lead>? Leads { get; set; }
+    public virtual ICollection<Contact>? Contacts { get; set; }
+    public virtual ICollection<Tasks>? Tasks { get; set; }
+    public virtual IEnumerable<CampaignNotes>? CampaignNotes { get; set; }
+    public virtual IEnumerable<CampaignTasks>? CampaignTasks { get; set; }
 }

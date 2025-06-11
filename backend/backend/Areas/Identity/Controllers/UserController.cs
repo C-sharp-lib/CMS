@@ -2,6 +2,8 @@ using System.Security.Claims;
 using backend.Areas.Identity.Models;
 using backend.Areas.Identity.Models.ViewModels;
 using backend.Areas.Identity.Services;
+using backend.Areas.Main.Models;
+using backend.Areas.Main.Models.ViewModels;
 using backend.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
@@ -20,15 +22,19 @@ public class UserController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly IRoleRepository _roleRepository;
     private readonly ILogger<UserController> _logger;
+    private readonly IUserNoteRepository _userNoteRepository;
+    private readonly IUserTasksRepository _userTasksRepository;
     
     public UserController(ApplicationDbContext context, IUserRepository userRepository, UserManager<User> userManager, IRoleRepository roleRepository, 
-        ILogger<UserController> logger)
+        ILogger<UserController> logger, IUserNoteRepository userNoteRepository, IUserTasksRepository userTasksRepository)
     {
         _context = context;
         _userRepository = userRepository;
         _userManager = userManager;
         _roleRepository = roleRepository;
         _logger = logger;
+        _userNoteRepository = userNoteRepository;
+        _userTasksRepository = userTasksRepository;
     }
 
     [HttpGet("current-user")]
@@ -172,5 +178,152 @@ public class UserController : ControllerBase
     {
         var countUsers = await _userRepository.CountUsersAsync();
         return Ok(countUsers);
+    }
+
+    [HttpGet("user/{userId}/notes")]
+    public async Task<ActionResult<IEnumerable<UserNotes>>> GetUserNotesByUserId(string userId)
+    {
+        var userNotes = await _userNoteRepository.GetUserNotesByUserId(userId);
+        if(userNotes.Count() < 0) return NoContent();
+        return Ok(userNotes);
+    }
+    [HttpGet("notes/{noteId}")]
+    public async Task<ActionResult<UserNotes>> GetUserNotesById(int noteId)
+    {
+        var userNotes = await _userNoteRepository.GetUserNoteById(noteId);
+        return Ok(userNotes);
+    }
+
+    [HttpPost("notes")]
+    public async Task<ActionResult> AddNote(string id, [FromBody] AddUserNoteViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
+        try
+        {
+            var userNote = await _userNoteRepository.AddAsync(id, model);
+            return Ok(userNote);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = $"Failed to add note: {ex.Message}"});
+        }
+    }
+    [HttpPut("notes/{id}")]
+    public async Task<ActionResult> UpdateNote(int id, [FromBody] UpdateUserNoteViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
+        try
+        {
+            await _userNoteRepository.UpdateAsync(id, model);
+            return Ok();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            return BadRequest(new {message = $"Failed to add note: {ex.Message}"});
+        }
+        catch (DbUpdateException ex)
+        {
+            return BadRequest(new {message = $"Failed to add note: {ex.Message}"});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = $"Failed to add note: {ex.Message}"});
+        }
+    }
+
+    [HttpDelete("notes/{id}")]
+    public async Task<ActionResult> DeleteNote(int id)
+    {
+        await _userNoteRepository.DeleteAsync(id);
+        return NoContent();
+    }
+
+    [HttpGet("notes/count")]
+    public async Task<int> GetUserNotesCount()
+    {
+        return await _userNoteRepository.CountAsync();
+    }
+
+    [HttpGet("user/{userId}/tasks")]
+    public async Task<ActionResult<IEnumerable<UserTasks>>> GetUserTasks(string userId)
+    {
+        var tasks = await _userTasksRepository.GetUserTasksByUserId(userId);
+        if (tasks.Count() < 0) return NoContent();
+        return Ok(tasks);
+    }
+
+    [HttpGet("tasks/count")]
+    public async Task<int> GetUserTasksCount()
+    {
+        return await _userTasksRepository.CountUserTasksAsync();
+    }
+
+    [HttpGet("tasks/{id}")]
+    public async Task<ActionResult<UserTasks>> GetUserTask(int id)
+    {
+        var task = await _userTasksRepository.GetUserTaskById(id);
+        return Ok(task);
+    }
+
+    [HttpPost("tasks")]
+    public async Task<ActionResult<UserTasks>> CreateUserTask(string userId, [FromBody] AddUserTasksViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
+        try
+        {
+            var userNote = await _userTasksRepository.AddUserTaskAsync(userId, model);
+            return Ok(userNote);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = $"Failed to add note: {ex.Message}"});
+        }
+    }
+
+    [HttpPut("tasks/{id}")]
+    public async Task<ActionResult<UserTasks>> UpdateUserTask(int id, [FromBody] UpdateUserTasksViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
+        try
+        {
+            await _userTasksRepository.UpdateUserTaskAsync(id, model);
+            return Ok();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            return BadRequest(new {message = $"Failed to add note: {ex.Message}"});
+        }
+        catch (DbUpdateException ex)
+        {
+            return BadRequest(new {message = $"Failed to add note: {ex.Message}"});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = $"Failed to add note: {ex.Message}"});
+        }
     }
 }

@@ -487,3 +487,10 @@ input[type="file"] {
 .custom-file-upload:hover {
   background-color: #0056b3;
 }
+input:-webkit-autofill {
+  background-image: linear-gradient(90deg, rgb(22,22,22), rgb(44,44,44), rgb(55,55,55) ) !important;
+  background-image: -webkit-linear-gradient(90deg, rgb(22,22,22), rgb(44,44,44), rgb(55,55,55) ) !important;
+  background-image: -moz-linear-gradient(90deg, rgb(22,22,22), rgb(44,44,44), rgb(55,55,55) ) !important;
+  background-image: -ms-linear-gradient(90deg, rgb(22,22,22), rgb(44,44,44), rgb(55,55,55) ) !important;
+  color: white !important;
+}

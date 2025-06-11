@@ -1,7 +1,7 @@
 import {Job, Priority, Status} from "./job";
 import {User} from "./user";
 import {Contact} from "./contact";
-import {Company, CompanyTasks} from "./company";
+import {Company} from "./company";
 import {Campaign} from "./campaign";
 import {TaskNotes} from "./note";
 import {LeadTasks} from "./lead";
@@ -46,4 +46,27 @@ export interface CampaignTasks {
   campaignId: number;
   campaign: Campaign;
   tasks: Tasks;
+}
+
+export interface UserTasks {
+  id: number;
+  taskId: number;
+  userId: string;
+  tasks: Tasks;
+  user: User;
+}
+
+export interface ContactTasks {
+  id: number;
+  taskId: number;
+  contactId: number;
+  contact: Contact;
+  tasks: Tasks;
+}
+export interface CompanyTasks {
+  id: number;
+  companyId: number;
+  taskId: number;
+  tasks: Tasks;
+  company: Company;
 }

@@ -142,16 +142,13 @@ public static class AppConfiguration
         services.AddScoped<ICompanyNoteRepository, CompanyNoteRepository>();
         services.AddScoped<IJobRepository, JobRepository>();
         services.AddScoped<ICampaignRepository, CampaignRepository>();
-        services.AddScoped<ITasksRepository, TasksRepository>();
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<IUserNoteRepository, UserNoteRepository>();
         services.AddScoped<ICampaignNotesRepository, CampaignNotesRepository>();
-        services.AddScoped<ITaskNotesRepository, TaskNotesRepository>();
         services.AddScoped<ILeadNotesRepository, LeadNotesRepository>();
         services.AddScoped<IContactNotesRepository, ContactNotesRepository>();
         services.AddScoped<IJobNoteRepository, JobNoteRepository>();
         services.AddScoped<IAnalyticRepository, AnalyticRepository>();
-        services.AddScoped<IJobTaskRepository, JobTaskRepository>();
         services.AddScoped<ILeadTaskRepository, LeadTaskRepository>();
         services.AddScoped<ICampaignTaskRepository, CampaignTaskRepository>();
         services.AddScoped<ICompanyTaskRepository, CompanyTaskRepository>();
@@ -163,7 +160,13 @@ public static class AppConfiguration
         services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
-        
+        //-------------  Tasks Services   ----------------//
+        services.AddScoped<ITaskNotesRepository, TaskNotesRepository>();
+        services.AddScoped<IUserTasksRepository, UserTasksRepository>();
+        services.AddScoped<IJobTaskRepository, JobTaskRepository>();
+        services.AddScoped<ICampaignTaskRepository, CampaignTaskRepository>();
+        services.AddScoped<ICompanyTaskRepository, CompanyTaskRepository>();
+        services.AddScoped<IContactTasksRepository, ContactTasksRepository>();
         services.AddHttpContextAccessor();
         services.AddSerilog();
         services.AddEndpointsApiExplorer();

@@ -44,3 +44,19 @@ public class UpdateCompanyTaskViewModel
     public int CompanyId { get; set; }
     public DateTime Updated { get; set; } = DateTime.Now;
 }
+
+public class AddCompanyNoteViewModel
+{
+    public int CompanyId { get; set; }
+    public string Title { get; set; }
+    public string Content { get; set; }
+    public DateTime Created { get; set; } = DateTime.Now;
+}
+
+public class UpdateCompanyNoteViewModel
+{
+    public int CompanyId { get; set; }
+    public string Title { get; set; }
+    public string Content { get; set; }
+    public DateTime Updated { get; set; } = DateTime.Now;
+}

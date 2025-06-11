@@ -10,6 +10,7 @@ import * as fromBlog from './components/blog/index';
 import * as fromPages from './components/pages/index';
 import * as fromContacts from './components/contacts/index';
 import * as fromCampaigns from './components/campaigns/index';
+import * as fromCompanies from './components/company/index';
 import * as fromNotes from './components/notes/index';
 import * as fromTasks from './components/tasks/index';
 import * as fromServices from './services/index';
@@ -20,7 +21,6 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {QuillModule} from "ngx-quill";
 import {authGuard} from "./utils/guards/auth.guard";
-
 
 
 export const routes: Routes = [
@@ -40,10 +40,14 @@ export const routes: Routes = [
       {path: '', component: fromUsers.UserListComponent, data: {breadcrumb: 'Users'}},
       {path: ':id', component: fromUsers.UserDetailComponent, data: {breadcrumb: 'User Details'}},
       {path: 'update/:id', component: fromUsers.UserUpdateComponent, data: {breadcrumb: 'User Update'}},
-      {path: 'notes', component: fromNotes.UserNoteListComponent, data: {breadcrumb: 'Users Notes'}},
+      {path: 'user/:id/notes', component: fromNotes.UserNoteListComponent, data: {breadcrumb: 'Users Notes'}},
       {path:'notes/create/:id', component: fromNotes.UserNoteCreateComponent, data: {breadcrumb: 'Create User Note'}},
       {path: 'notes/:id', component: fromNotes.UserNoteDetailComponent, data: {breadcrumb: 'User Note Details'}},
       {path: 'notes/update/:id', component: fromNotes.UserNoteUpdateComponent, data: {breadcrumb: 'User Note Update'}},
+      {path: 'user/:id/tasks', component: fromTasks.UserTaskListComponent},
+      {path: 'tasks/create/:id', component: fromTasks.UserTaskCreateComponent},
+      {path: 'tasks/:id', component: fromTasks.UserTaskDetailComponent},
+      {path: 'tasks/update/:id', component: fromTasks.UserTaskUpdateComponent},
     ]},
   {path:'jobs', canActivate: [authGuard], children: [
       {path: '', component: fromJobs.JobListComponent, data: {breadcrumb: 'Jobs'}},
@@ -54,6 +58,10 @@ export const routes: Routes = [
       {path:'notes/create/:id', component: fromNotes.JobNoteCreateComponent, data: {breadcrumb: 'Create Job Note'}},
       {path: 'notes/:id', component: fromNotes.JobNoteDetailComponent, data: {breadcrumb: 'Job Note Details'}},
       {path: 'notes/update/:id', component: fromNotes.JobNoteUpdateComponent, data: {breadcrumb: 'Job Note Update'}},
+      {path: 'job/:id/tasks', component: fromTasks.JobTaskListComponent},
+      {path: 'tasks/create/:id', component: fromTasks.JobTaskCreateComponent},
+      {path: 'tasks/:id', component: fromTasks.JobTaskDetailComponent},
+      {path: 'tasks/update/:id', component: fromTasks.JobTaskUpdateComponent},
     ]},
   {path:'contacts', canActivate: [authGuard], children: [
       {path: '', component: fromContacts.ContactListComponent, data: {breadcrumb: 'Contacts'}},
@@ -64,6 +72,10 @@ export const routes: Routes = [
       {path:'notes/create/:id', component: fromNotes.ContactNoteCreateComponent, data: {breadcrumb: 'Create Contact Note'}},
       {path: 'notes/:id', component: fromNotes.CampaignNoteDetailComponent, data: {breadcrumb: 'Contact Note Details'}},
       {path: 'notes/update/:id', component: fromNotes.ContactNoteUpdateComponent, data: {breadcrumb: 'Contact Note Update'}},
+      {path: 'contact/:id/tasks', component: fromTasks.ContactTaskListComponent},
+      {path: 'tasks/create/:id', component: fromTasks.ContactTaskCreateComponent},
+      {path: 'tasks/:id', component: fromTasks.ContactTaskDetailComponent},
+      {path: 'tasks/update/:id', component: fromTasks.ContactTaskUpdateComponent},
     ]},
   {path:'notes', canActivate: [authGuard], children: [
       {path: '', component: fromNotes.NoteListComponent, data: {breadcrumb: 'Notes'}},
@@ -78,14 +90,32 @@ export const routes: Routes = [
       {path:'update/:id', component: fromTasks.TaskUpdateComponent, data: {breadcrumb: 'Update Task'}},
     ]},
   {path:'campaigns', canActivate: [authGuard], children: [
-      {path: '', component: fromCampaigns.CampaignListComponent, data: {breadcrumb: 'Campaigns'}},
-      {path:'create', component: fromCampaigns.CampaignCreateComponent, data: {breadcrumb: 'Create Campaign'}},
-      {path:':id', component: fromCampaigns.CampaignDetailComponent, data: {breadcrumb: 'Campaign Details'}},
-      {path:'update/:id', component: fromCampaigns.CampaignUpdateComponent, data: {breadcrumb: 'Update Campaign'}},
-      {path: 'notes', component: fromNotes.CampaignNoteListComponent, data: {breadcrumb: 'Campaign Notes'}},
-      {path:'notes/create/:id', component: fromNotes.CampaignNoteCreateComponent, data: {breadcrumb: 'Create Campaign Note'}},
-      {path: 'notes/:id', component: fromNotes.CampaignNoteDetailComponent, data: {breadcrumb: 'Campaign Note Details'}},
-      {path: 'notes/update/:id', component: fromNotes.CampaignNoteUpdateComponent, data: {breadcrumb: 'Campaign Note Update'}},
+      {path: '', component: fromCampaigns.CampaignListComponent},
+      {path:'create', component: fromCampaigns.CampaignCreateComponent},
+      {path:':id', component: fromCampaigns.CampaignDetailComponent},
+      {path:'update/:id', component: fromCampaigns.CampaignUpdateComponent},
+      {path: 'campaign/:id/notes', component: fromNotes.CampaignNoteListComponent},
+      {path:'notes/create/:id', component: fromNotes.CampaignNoteCreateComponent},
+      {path: 'notes/:id', component: fromNotes.CampaignNoteDetailComponent},
+      {path: 'notes/update/:id', component: fromNotes.CampaignNoteUpdateComponent},
+      {path: 'campaign/:id/tasks', component: fromTasks.CampaignTaskListComponent},
+      {path: 'tasks/create/:id', component: fromTasks.CampaignTaskCreateComponent},
+      {path: 'tasks/:id', component: fromTasks.CampaignTaskDetailComponent},
+      {path: 'tasks/update/:id', component: fromTasks.CampaignTaskUpdateComponent},
+    ]},
+  {path:'companies', canActivate: [authGuard], children: [
+      {path: '', component: fromCompanies.CompanyListComponent},
+      {path:'create', component: fromCompanies.CompanyCreateComponent},
+      {path:':id', component: fromCompanies.CompanyDetailComponent},
+      {path:'update/:id', component: fromCompanies.CompanyUpdateComponent},
+      {path: 'company/:id/notes', component: fromNotes.CompanyNoteListComponent},
+      {path:'notes/create/:id', component: fromNotes.CompanyNoteCreateComponent},
+      {path: 'notes/:id', component: fromNotes.CompanyNoteDetailComponent},
+      {path: 'notes/update/:id', component: fromNotes.CompanyNoteUpdateComponent},
+      {path: 'company/:id/tasks', component: fromTasks.CompanyTaskListComponent},
+      {path: 'tasks/create/:id', component: fromTasks.CompanyTaskCreateComponent},
+      {path: 'tasks/:id', component: fromTasks.CompanyTaskDetailComponent},
+      {path: 'tasks/update/:id', component: fromTasks.CompanyTaskUpdateComponent},
     ]},
 ];
 @NgModule({
@@ -98,6 +128,7 @@ export const routes: Routes = [
     ...fromPages.components,
     ...fromContacts.components,
     ...fromCampaigns.components,
+    ...fromCompanies.components,
     ...fromNotes.components,
     ...fromTasks.components,
     ...fromPipes.pipes,

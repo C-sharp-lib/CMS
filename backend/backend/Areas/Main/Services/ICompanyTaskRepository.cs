@@ -8,8 +8,9 @@ public interface ICompanyTaskRepository
 {
     Task<IEnumerable<CompanyTask>> GetAllAsync();
     Task<CompanyTask> GetByIdAsync(int id);
-    Task<CompanyTask> AddAsync([FromBody] AddCompanyTaskViewModel companyTask);
-    Task<CompanyTask> UpdateAsync(int id, [FromBody] UpdateCompanyTaskViewModel companyTask);
+    Task<IEnumerable<CompanyTask>> GetByCompanyIdAsync(int companyId);
+    Task<CompanyTask> AddAsync(int companyId, [FromBody] AddCompanyTaskViewModel companyTask);
+    Task UpdateAsync(int id, [FromBody] UpdateCompanyTaskViewModel companyTask);
     Task DeleteAsync(int id);
     Task<int> CountAsync();
 }

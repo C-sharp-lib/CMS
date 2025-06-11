@@ -18,6 +18,10 @@ import {ContactNoteListComponent} from "./contactNotes/contact-note-list/contact
 import {ContactNoteDetailComponent} from "./contactNotes/contact-note-detail/contact-note-detail.component";
 import {ContactNoteCreateComponent} from "./contactNotes/contact-note-create/contact-note-create.component";
 import {ContactNoteUpdateComponent} from "./contactNotes/contact-note-update/contact-note-update.component";
+import {CompanyNoteListComponent} from "./companyNotes/company-note-list/company-note-list.component";
+import {CompanyNoteDetailComponent} from "./companyNotes/company-note-detail/company-note-detail.component";
+import {CompanyNoteCreateComponent} from "./companyNotes/company-note-create/company-note-create.component";
+import {CompanyNoteUpdateComponent} from "./companyNotes/company-note-update/company-note-update.component";
 
 export const components: any[] = [
   NoteListComponent,
@@ -40,6 +44,10 @@ export const components: any[] = [
   ContactNoteDetailComponent,
   ContactNoteCreateComponent,
   ContactNoteUpdateComponent,
+  CompanyNoteListComponent,
+  CompanyNoteDetailComponent,
+  CompanyNoteCreateComponent,
+  CompanyNoteUpdateComponent
 ];
 
 export * from './note-list/note-list.component';
@@ -62,3 +70,7 @@ export * from "./contactNotes/contact-note-list/contact-note-list.component";
 export * from "./contactNotes/contact-note-detail/contact-note-detail.component";
 export * from "./contactNotes/contact-note-create/contact-note-create.component";
 export * from "./contactNotes/contact-note-update/contact-note-update.component";
+export * from "./companyNotes/company-note-list/company-note-list.component";
+export * from "./companyNotes/company-note-detail/company-note-detail.component";
+export * from "./companyNotes/company-note-create/company-note-create.component";
+export * from "./companyNotes/company-note-update/company-note-update.component";

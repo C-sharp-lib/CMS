@@ -1,4 +1,5 @@
 using backend.Areas.Main.Models;
+using backend.Areas.Main.Models.ViewModels;
 using backend.Areas.Main.Services;
 using backend.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +16,15 @@ public class CampaignController : ControllerBase
     private readonly ILogger<CampaignController> _logger;
     private readonly ApplicationDbContext _context;
     private readonly ICampaignNotesRepository _campaignNotesRepository;
+    private readonly ICampaignTaskRepository _campaignTaskRepository;
     public CampaignController(ICampaignRepository repository, ILogger<CampaignController> logger, ApplicationDbContext context,
-        ICampaignNotesRepository campaignNotesRepository)
+        ICampaignNotesRepository campaignNotesRepository, ICampaignTaskRepository campaignTaskRepository)
     {
         _repository = repository;
         _context = context;
         _logger = logger;
         _campaignNotesRepository = campaignNotesRepository;
+        _campaignTaskRepository = campaignTaskRepository;
     }
 
     [HttpGet]
@@ -84,6 +87,13 @@ public class CampaignController : ControllerBase
         return Ok(campaignNotes);
     }
 
+    [HttpGet("campaign/{campaignId}/notes")]
+    public async Task<ActionResult<IEnumerable<CampaignNotes>>> GetCampaignNotesByCampaignId(int campaignId)
+    {
+        var campaignNotes = await _campaignNotesRepository.GetCampaignNotesbyCampaignIdAsync(campaignId);
+        return Ok(campaignNotes);
+    }
+
     [HttpGet("notes/{id}")]
     public async Task<ActionResult<CampaignNotes>> GetCampaignNotes(int id)
     {
@@ -92,16 +102,19 @@ public class CampaignController : ControllerBase
     }
 
     [HttpPost("notes")]
-    public async Task<ActionResult<CampaignNotes>> CreateCampaignNotes(CampaignNotes campaignNotes)
+    public async Task<ActionResult<CampaignNotes>> CreateCampaignNotes(int campaignId, [FromBody] AddCampaignNoteViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
         try
         {
-            var campaignNote = await _campaignNotesRepository.AddAsync(campaignNotes);
-            return Ok(campaignNote);
+            await _campaignNotesRepository.AddAsync(campaignId, model);
+            return Ok(new {message = "Campaign Note created"});
         }
         catch (Exception ex)
         {
@@ -110,16 +123,19 @@ public class CampaignController : ControllerBase
     }
 
     [HttpPut("notes/{id}")]
-    public async Task<ActionResult<CampaignNotes>> UpdateCampaignNotes(int id, CampaignNotes campaignNotes)
+    public async Task<ActionResult<CampaignNotes>> UpdateCampaignNotes(int id, [FromBody] UpdateCampaignNoteViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
         try
         {
-            await _campaignNotesRepository.UpdateAsync(id, campaignNotes);
-            return Ok(campaignNotes);
+            await _campaignNotesRepository.UpdateAsync(id, model);
+            return Ok(new {message = "Campaign Note updated"});
         }
         catch (DbUpdateConcurrencyException ex)
         {
@@ -150,5 +166,85 @@ public class CampaignController : ControllerBase
     {
         var campaignNoteCount = await _campaignNotesRepository.CountAsync();
         return Ok(campaignNoteCount);
+    }
+
+    [HttpGet("tasks")]
+    public async Task<ActionResult<IEnumerable<Task>>> GetCampaignTasks()
+    {
+        var campaignTasks = await _campaignTaskRepository.GetAllCampaignTasks();
+        return Ok(campaignTasks);
+    }
+
+    [HttpGet("campaign/{campaignId}/tasks")]
+    public async Task<ActionResult<IEnumerable<Task>>> GetCampaignTasksByCampaignId(int campaignId)
+    {
+        var campaignTasks = await _campaignTaskRepository.GetCampaignTasksByCampaignId(campaignId);
+        return Ok(campaignTasks);
+    }
+
+    [HttpGet("tasks/{id}")]
+    public async Task<ActionResult<CampaignTasks>> GetCampaignTaskById(int id)
+    {
+        var campaignTask = await _campaignTaskRepository.GetCampaignTask(id);
+        return Ok(campaignTask);
+    }
+
+    [HttpGet("tasks/count")]
+    public async Task<ActionResult<int>> GetCampaignTaskCount()
+    {
+        return Ok(await _campaignTaskRepository.CountCampaignTasks());
+    }
+
+    [HttpPost("tasks")]
+    public async Task<ActionResult<CampaignTasks>> CreateCampaignTasks(int campaignId,
+        [FromBody] AddCampaignTaskViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
+        try
+        {
+            await _campaignTaskRepository.AddCampaignTask(campaignId, model);
+            return Ok(new {message = "Campaign Task created"});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {Errors = ex.Message});
+        }
+    }
+    [HttpPut("tasks/{id}")]
+    public async Task<ActionResult<CampaignTasks>> UpdateCampaignTask(int id, [FromBody] UpdateCampaignTaskViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
+        }
+        try
+        {
+            await _campaignTaskRepository.UpdateCampaignTask(id, model);
+            return Ok(new {message = "Campaign Task updated"});
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            _logger.LogInformation($"Updating Campaign Task with id {id} failed", ex);
+            return BadRequest($"Failed to update Campaign Task with id - DbUpdateConcurrencyException {id}");
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogInformation($"Updating Campaign Task with id {id} failed", ex);
+            return BadRequest($"Failed to update Campaign Task with id - DbUpdateException {id}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogInformation($"Updating Campaign Task with id {id} failed", ex);
+            return BadRequest($"Failed to update Campaign Task with id - Exception {id}");
+        }
     }
 }

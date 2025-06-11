@@ -111,51 +111,57 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPost("notes")]
-    public async Task<ActionResult<CompanyNotes>> CreateCompanyNotes([FromBody] CompanyNotes companyNotes)
+    public async Task<ActionResult<CompanyNotes>> CreateCompanyNotes(int companyId, [FromBody] AddCompanyNoteViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
 
         try
         {
-            await _companyNoteRepository.AddAsync(companyNotes);
-            return Ok("CompanyNotes created");
+            await _companyNoteRepository.AddAsync(companyId, model);
+            return Ok(new {message = "Note created successfully"});
         }
         catch (Exception ex)
         {
-            return BadRequest(ex);
+            return BadRequest(new {Errors = ex.Message});
         }
     }
 
     [HttpPut("notes/{id}")]
-    public async Task<ActionResult> UpdateCompanyNotes(int id, [FromBody] CompanyNotes companyNotes)
+    public async Task<ActionResult> UpdateCompanyNotes(int id, [FromBody] UpdateCompanyNoteViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
 
         try
         {
-            await _companyNoteRepository.UpdateAsync(id, companyNotes);
-            return Ok("CompanyNotes updated");
+            await _companyNoteRepository.UpdateAsync(id, model);
+            return Ok(new {message = "Note updated successfully"});
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            _logger.LogInformation($"Updating Company Note with id {id} failed", ex);
-            return BadRequest($"Failed to update Company Note with id - DbUpdateConcurrencyException {id}");
+            _logger.LogInformation($"Updating Contact Note with id {id} failed", ex.Message);
+            return BadRequest(new { Errors = $"Failed to update Contact Note with id - DbUpdateConcurrencyException {id}" });
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogInformation($"Updating Company Note with id {id} failed", ex);
-            return BadRequest($"Failed to update Company Note with id - DbUpdateException {id}");
+            _logger.LogInformation($"Updating Contact Note with id {id} failed", ex.Message);
+            return BadRequest(new {Errors = $"Failed to update Contact Note with id - DbUpdateException {id}" });
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Updating CompanyNotes with id {id} failed", ex);
-            return BadRequest(ex.Message);
+            _logger.LogInformation($"Updating Contact Note with id {id} failed", ex.Message);
+            return BadRequest(new {Errors = $"Failed to update Contact Note with id - Exception {id}"});
         }
     }
 
@@ -163,7 +169,7 @@ public class CompanyController : ControllerBase
     public async Task<ActionResult> DeleteCompanyNotes(int id)
     {
         await _companyNoteRepository.DeleteAsync(id);
-        return Ok("CompanyNotes deleted");
+        return NoContent();
     }
 
     [HttpGet("notes/count")]
@@ -172,62 +178,78 @@ public class CompanyController : ControllerBase
         return Ok(await _companyNoteRepository.CountAsync());
     }
 
-    [HttpGet("companyTasks")]
+    [HttpGet("tasks")]
     public async Task<ActionResult<IEnumerable<CompanyTask>>> GetCompanyTasks()
     {
         return Ok(await _companyTaskRepository.GetAllAsync());
     }
 
-    [HttpGet("companyTasks/{id}")]
+    [HttpGet("tasks/{id}")]
     public async Task<ActionResult<CompanyTask>> GetCompanyTasks(int id)
     {
         return Ok(await _companyTaskRepository.GetByIdAsync(id));
     }
 
-    [HttpPost("companyTasks")]
-    public async Task<ActionResult<CompanyTask>> CreateCompanyTasks([FromBody] AddCompanyTaskViewModel companyTasks)
+    [HttpGet("company/{companyId}/tasks")]
+    public async Task<ActionResult<IEnumerable<CompanyTask>>> GetCompanyTasksByCompanyId(int companyId)
+    {
+        var companyTasks = await _companyTaskRepository.GetByCompanyIdAsync(companyId);
+        return Ok(companyTasks);
+    }
+
+    [HttpPost("tasks")]
+    public async Task<ActionResult<CompanyTask>> CreateCompanyTasks(int companyId, [FromBody] AddCompanyTaskViewModel companyTasks)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new {Errors = errors});
         }
 
         try
         {
-            await _companyTaskRepository.AddAsync(companyTasks);
-            return Ok("CompanyTasks created");
+            await _companyTaskRepository.AddAsync(companyId, companyTasks);
+            return Ok(new {message = "Tasks created successfully"});
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new {Errors = ex.Message});
         }
     }
 
-    [HttpPut("companyTasks/{id}")]
-    public async Task<ActionResult<CompanyTask>> UpdateCompanyTasks(int id,
-        [FromBody] UpdateCompanyTaskViewModel companyTask)
+    [HttpPut("tasks/{id}")]
+    public async Task<ActionResult> UpdateCompanyTask(int id, [FromBody] UpdateCompanyTaskViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new { Errors = errors });
         }
 
         try
         {
-            await _companyTaskRepository.UpdateAsync(id, companyTask);
-            return Ok("CompanyTasks updated");
+            await _companyTaskRepository.UpdateAsync(id, model);
+            return Ok(new { message = "Tasks updated successfully" });
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            return BadRequest(ex.Message);
+            _logger.LogInformation($"Updating Company Task with id {id} failed", ex.Message);
+            return BadRequest(new
+                { Errors = $"Failed to update Company Task with id - DbUpdateConcurrencyException {id}" });
         }
         catch (DbUpdateException ex)
         {
-            return BadRequest(ex.Message);
+            _logger.LogInformation($"Updating Company Task with id {id} failed", ex.Message);
+            return BadRequest(new { Errors = $"Failed to update Company Task with id - DbUpdateException {id}" });
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            _logger.LogInformation($"Updating Company Task with id {id} failed", ex.Message);
+            return BadRequest(new { Errors = $"Failed to update Company Task with id - Exception {id}" });
         }
     }
 

@@ -1,6 +1,6 @@
 import {Job} from "./job";
 import {Campaign} from "./campaign";
-import {Tasks} from "./tasks";
+import {ContactTasks, Tasks} from "./tasks";
 import {ContactNotes} from "./note";
 import {User} from "./user";
 import {Company} from "./company";
@@ -29,4 +29,5 @@ export interface Contact {
   campaigns?: Campaign[];
   tasks?: Tasks[];
   contactNotes?: ContactNotes[];
+  contactTasks?: ContactTasks[];
 }
