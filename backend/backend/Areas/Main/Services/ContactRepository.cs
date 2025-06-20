@@ -21,12 +21,10 @@ public class ContactRepository : IContactRepository
     {
         return await _context.Contacts
             .Include(c => c.OwnerUser)
-            .Include(cp => cp.Company)
+            .Include(cp => cp.CompanyContacts)!
+            .ThenInclude(cp => cp.Company)
             .Include(n => n.ContactNotes)!
             .ThenInclude(n => n.Note)
-            .Include(c => c.Tasks)!
-            .ThenInclude(ct => ct.TaskNotes)!
-            .ThenInclude(ct => ct.Note)
             .ToListAsync();
     }
 
@@ -34,17 +32,12 @@ public class ContactRepository : IContactRepository
     {
         var contact = await _context.Contacts
             .Include(c => c.OwnerUser)
-            .Include(cp => cp.Company)
+            .Include(cp => cp.CompanyContacts)!
+            .ThenInclude(cp => cp.Company)
             .Include(n => n.ContactNotes)!
             .ThenInclude(n => n.Note)
-            .Include(c => c.Tasks)!
-            .ThenInclude(ct => ct.TaskNotes)!
-            .ThenInclude(ct => ct.Note)
             .FirstOrDefaultAsync(c => c.Id == id);
-        if (contact == null)
-        {
-            throw new NullReferenceException("Contact not found");
-        }
+        if (contact is null) return null;
         return contact;
     }
 
@@ -92,7 +85,6 @@ public class ContactRepository : IContactRepository
                     Country = contact.Country,
                     DateCreated = contact.DateCreated,
                     OwnerUserId = contact.OwnerUserId,
-                    CompanyId = contact.CompanyId,
                     ImageUrl = (uniqueFileName != null ? Path.Combine("Uploads/Contact/", uniqueFileName) : null)!
                 };
                 _context.Contacts.Add(contacts);
@@ -125,19 +117,18 @@ public class ContactRepository : IContactRepository
             contactToUpdate.ImageUrl = uniqueFileName1;
         }
         
-        contactToUpdate.FirstName = contact.FirstName;
-        contactToUpdate.LastName = contact.LastName;
-        contactToUpdate.JobTitle = contact.JobTitle;
-        contactToUpdate.AddressLine1 = contact.AddressLine1;
+        contactToUpdate.FirstName = contact.FirstName!;
+        contactToUpdate.LastName = contact.LastName!;
+        contactToUpdate.JobTitle = contact.JobTitle!;
+        contactToUpdate.AddressLine1 = contact.AddressLine1!;
         contactToUpdate.AddressLine2 = contact.AddressLine2;
-        contactToUpdate.City = contact.City;
-        contactToUpdate.State = contact.State;
-        contactToUpdate.ZipCode = contact.ZipCode;
-        contactToUpdate.Country = contact.Country;
-        contactToUpdate.PhoneNumber = contact.PhoneNumber;
-        contactToUpdate.Email = contact.Email;
+        contactToUpdate.City = contact.City!;
+        contactToUpdate.State = contact.State!;
+        contactToUpdate.ZipCode = contact.ZipCode!;
+        contactToUpdate.Country = contact.Country!;
+        contactToUpdate.PhoneNumber = contact.PhoneNumber!;
+        contactToUpdate.Email = contact.Email!;
         contactToUpdate.DateUpdated = contact.DateUpdated;
-        contactToUpdate.CompanyId = contact.CompanyId;
         _context.Contacts.Update(contactToUpdate);
         await _context.SaveChangesAsync();
         return contactToUpdate;
@@ -160,6 +151,8 @@ public class ContactRepository : IContactRepository
         return await _context.Contacts
             .Where(c => c.OwnerUserId == ownerUserId)
             .Include(c => c.OwnerUser)
+            .Include(cc => cc.CompanyContacts)!
+            .ThenInclude(cc => cc.Company)
             .ToListAsync();
     }
 }

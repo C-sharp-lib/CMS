@@ -10,6 +10,9 @@ import {BreadcrumbService} from "./breadcrumb.service";
 import {NotesService} from "./notes.service";
 import {TasksService} from "./tasks.service";
 import {CampaignsService} from "./campaigns.service";
+import {CompanyContactService} from "./company-contact.service";
+import {SearchService} from "./search.service";
+
 
 export const services: any[] = [
   UsersService,
@@ -24,6 +27,8 @@ export const services: any[] = [
   NotesService,
   TasksService,
   CampaignsService,
+  CompanyContactService,
+  SearchService,
 ];
 
 export * from './users.service';
@@ -38,3 +43,5 @@ export * from './breadcrumb.service';
 export * from './notes.service';
 export * from './tasks.service';
 export * from './campaigns.service';
+export * from './company-contact.service';
+export * from './search.service';

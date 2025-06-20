@@ -20,6 +20,8 @@ public class JobRepository : IJobRepository
     {
         return await _context.Jobs
             .Include(j => j.Contact)
+            .ThenInclude(j => j.CompanyContacts)!
+            .ThenInclude(j => j.Company)
             .Include(j => j.AssignedUser)
             .Include(j => j.CreatedByUser)
             .ToListAsync();
@@ -29,6 +31,8 @@ public class JobRepository : IJobRepository
     {
         var job = await _context.Jobs
             .Include(j => j.Contact)
+            .ThenInclude(j => j.CompanyContacts)!
+            .ThenInclude(j => j.Company)
             .Include(j => j.AssignedUser)
             .Include(j => j.CreatedByUser)
             .Include(jn => jn.JobNotes)

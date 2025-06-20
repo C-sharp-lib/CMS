@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {ToasterService, UsersService} from "../../../services";
-import {ActivatedRoute} from "@angular/router";
+import {CompanyContactService, ToasterService, UsersService} from "../../../services";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ContactService} from "../../../services/contact.service";
 
 @Component({
@@ -16,7 +16,9 @@ export class ContactListComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 10;
   totalPages: number = 0;
-  constructor(private contactService: ContactService, private renderer: Renderer2, private el: ElementRef, private route: ActivatedRoute, private toast: ToasterService) { }
+  companyContacts: any[] = [];
+  constructor(private contactService: ContactService, private renderer: Renderer2, private el: ElementRef,
+              private route: ActivatedRoute, private toast: ToasterService, private companyContactService: CompanyContactService, private router: Router) { }
 
   ngOnInit() {
     this.fetchContacts();
@@ -29,6 +31,7 @@ export class ContactListComponent implements OnInit {
     this.contactService.getContacts().subscribe({
       next: (data) => {
         this.contacts = data;
+        this.loadCompanyContacts();
         this.totalPages = Math.ceil(this.contacts.length / this.itemsPerPage);
         this.updatePaginatedContacts();
         this.isLoading = false;
@@ -70,6 +73,19 @@ export class ContactListComponent implements OnInit {
       this.currentPage++;
       this.updatePaginatedContacts();
     }
+  }
+  loadCompanyContacts(): void {
+    this.companyContactService.getCompanyContacts().subscribe({
+      next: (data) => {
+        this.companyContacts = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = err.message;
+        console.error(this.error.toString());
+        this.isLoading = false;
+      }
+    })
   }
   deleteContact(contactId: number, event: Event): void {
     event.preventDefault();

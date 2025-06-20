@@ -23,3 +23,12 @@
 .cursor-pointer {
   cursor: pointer;
 }
+li.side-nav-menu-item {
+  background-color: transparent !important;
+  width: 100% !important;
+  height: 50px !important;
+}
+li.side-nav-menu-item:hover {
+  background-color: rgba(100,100,100,0.5) !important;
+  transition: background-color 0.5s ease-in-out !important;
+}

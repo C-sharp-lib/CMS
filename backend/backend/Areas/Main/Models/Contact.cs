@@ -41,8 +41,7 @@ public class Contact
     public string? OwnerUserId { get; set; }
     [ForeignKey(nameof(OwnerUserId))]
     public virtual User? OwnerUser { get; set; }
-    public int? CompanyId { get; set; }
-    public Company? Company { get; set; }
+    public IEnumerable<CompanyContacts>? CompanyContacts { get; set; }
     public IEnumerable<Job>? Jobs { get; set; }
     public virtual IEnumerable<Campaign>? Campaigns { get; set; }
     public virtual IEnumerable<Tasks>? Tasks { get; set; }

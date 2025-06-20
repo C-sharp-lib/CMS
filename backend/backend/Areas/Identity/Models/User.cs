@@ -20,9 +20,6 @@ public class User : IdentityUser
     public string? ZipCode { get; set; }
     public string? Description { get; set; }
     public int? MessageUserId { get; set; }
-    [NotMapped]
-    [ForeignKey(nameof(MessageUserId))]
-    public MessageUsers? MessageUser { get; set; }
     [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
     [DataType(DataType.Date)]
     public DateTime? DateOfBirth { get; set; }
@@ -38,7 +35,6 @@ public class User : IdentityUser
     public IEnumerable<Job>? AssignedJobs { get; set; }
     public IEnumerable<Analytic>? Analytics { get; set; }
     public IEnumerable<Tasks>? Tasks { get; set; }
-    public IEnumerable<MessageUsers>? MessageUsers { get; set; }
     public IEnumerable<UserMeeting>? UserMeetings { get; set; }
     public IEnumerable<Meeting>? Meetings { get; set; }
     public IEnumerable<UserNotes>? UserNotes { get; set; }
@@ -48,4 +44,5 @@ public class User : IdentityUser
     public IEnumerable<Review>? Reviews { get; set; }
     public IEnumerable<Post>? Posts { get; set; }
     public IEnumerable<Comment>? Comments { get; set; }
-}
+    public IEnumerable<ConversationParticipants>? Participants { get; set; }
+ }

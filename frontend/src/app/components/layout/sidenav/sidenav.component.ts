@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {UsersService} from "../../../services";
-import {BehaviorSubject, filter} from "rxjs";
+import {BehaviorSubject, filter, last} from "rxjs";
 import {MenuService} from "../../../services";
 import {User} from "../../../models/user";
 import {NavigationEnd, Router} from "@angular/router";
@@ -25,6 +25,8 @@ export class SidenavComponent implements OnInit{
     home: false,
     contacts: false,
     account: false,
+    companies: false,
+    campaigns: false
   }
   menuItems = [
     {icon: 'bi bi-house', key: 'home', label: 'Home', children: [
@@ -37,18 +39,25 @@ export class SidenavComponent implements OnInit{
     {icon: 'bi bi-unlock2', label: 'Account', key: 'account', children: [
         {label: 'Login', path: 'account', icon: 'bi bi-person-lock', requiresAuth: false},
         {label: 'Register', path: 'account/register-page', icon: 'bi bi-person-add', requiresAuth: false},
-
       ]},
     {icon: 'bi bi-people', label: 'Users', key: 'users', children: [
         {label: 'All Users', path: 'users', icon: 'bi bi-people', requiresAuth: true},
       ]},
     {icon: 'bi bi-briefcase', label: 'Jobs', key: 'jobs', children: [
       {label: 'All Jobs', path: 'jobs', icon: 'bi bi-card-checklist', requiresAuth: true},
-        {label: 'Add Job', path: 'jobs/create', icon: 'bi bi-building-add', requiresAuth: true}
+        {label: 'Add Job', path: 'jobs/create', icon: 'bi bi-clipboard-plus', requiresAuth: true}
       ]},
     {icon: 'bi bi-telephone', label: 'Contacts', key: 'contacts', children: [
         {label: 'All Contacts', path: 'contacts', icon: 'bi bi-card-checklist', requiresAuth: true},
-        {label: 'Add Contact', path: 'contacts/create', icon: 'bi bi-building-add', requiresAuth: true}
+        {label: 'Add Contact', path: 'contacts/create', icon: 'bi bi-clipboard-plus', requiresAuth: true}
+      ]},
+    {icon: 'bi bi-building', label: 'Companies', key: 'companies', children: [
+        {label: 'All Companies', path: 'companies', icon: 'bi bi-card-checklist', requiresAuth: true},
+        {label: 'Add Company', path: 'companies/create', icon: 'bi bi-clipboard-plus', requiresAuth: true}
+      ]},
+    {icon: 'bi bi-mailbox-flag', label: 'Campaigns', key: 'campaigns', children: [
+        {label: 'All Campaigns', path: 'campaigns', icon: 'bi bi-card-checklist', requiresAuth: true},
+        {label: 'Add Campaign', path: 'campaigns/create', icon: 'bi bi-clipboard-plus', requiresAuth: true}
       ]},
   ];
   constructor(private userService: UsersService, private menuService: MenuService, private router: Router) { }
@@ -61,7 +70,7 @@ export class SidenavComponent implements OnInit{
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        this.loadUser(); // re-load user every time navigation ends
+        this.loadUser();
       });
 
   }

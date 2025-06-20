@@ -9,12 +9,12 @@ public class Message
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    [StringLength(1000)]
+    public int ConversationId { get; set; }
+    public string SenderId { get; set; }
     public string Content { get; set; }
-
-    public bool IsRead { get; set; } = false;
-
     public DateTime SentAt { get; set; } = DateTime.UtcNow;
+
+    public Conversation Conversation { get; set; }
+    public User Sender { get; set; }
     
-    public virtual IEnumerable<MessageUsers> MessageUsers { get; set; }
 }

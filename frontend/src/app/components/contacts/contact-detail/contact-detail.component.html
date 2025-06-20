@@ -14,10 +14,12 @@
             <p class="text-white inter-normal">{{contact?.jobTitle}}</p>
             <p class="text-white inter-normal">{{contact?.email}}</p>
             <h4 class="inter-normal text-gradient text-warning">Company</h4>
-            <p class="lead inter-normal text-white">{{contact?.company.name}}</p>
-            <p class="inter-normal text-primary">
-              {{contact?.company.address}}, {{contact?.company.city}}, {{contact?.company.state}}. {{contact?.company.countru}}.
-            </p>
+            <div *ngFor="let company of companyContacts">
+              <p class="lead inter-normal text-white">{{company?.company?.name}}</p>
+              <p class="inter-normal text-primary">
+                {{company?.company?.address}}, {{company?.company?.city}}, {{company?.company?.state}}. {{company?.company?.country}}.
+              </p>
+            </div>
             <h4 class="inter-normal text-gradient text-success">Owner</h4>
             <p class="lead inter-normal text-white">{{contact?.ownerUser.email}}</p>
           </div>

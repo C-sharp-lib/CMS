@@ -17,16 +17,35 @@ public class CompanyRepository : ICompanyRepository
 
     public async Task<IEnumerable<Company>> GetAllCompaniesAsync()
     {
-        return await _context.Companies.ToListAsync();
+        return await _context.Companies
+            .Include(x => x.CompanyContacts)!
+            .ThenInclude(x => x.Contact)
+            .Include(x => x.CompanyContacts)!
+            .ThenInclude(x => x.Company)
+            .Include(x => x.CompanyTasks)!
+            .ThenInclude(x => x.Tasks)
+            .Include(x => x.CompanyTasks)!
+            .ThenInclude(x => x.Company)
+            .Include(x => x.CompanyNotes)!
+            .ThenInclude(x => x.Note)
+            .ToListAsync();
     }
 
     public async Task<Company> GetCompanyById(int id)
     {
-        var company = await _context.Companies.Include(x => x.Contacts).FirstOrDefaultAsync(x => x.Id == id);
-        if (company == null)
-        {
-            throw new NullReferenceException("Company not found");
-        }
+        var company = await _context.Companies
+            .Include(x => x.CompanyContacts)!
+            .ThenInclude(x => x.Contact)
+            .Include(x => x.CompanyContacts)!
+            .ThenInclude(x => x.Company)
+            .Include(x => x.CompanyTasks)!
+            .ThenInclude(x => x.Tasks)
+            .Include(x => x.CompanyTasks)!
+            .ThenInclude(x => x.Company)
+            .Include(x => x.CompanyNotes)!
+            .ThenInclude(x => x.Note)
+            .FirstOrDefaultAsync(x => x.Id == id);
+        if (company is null) return null;
         return company;
     }
 

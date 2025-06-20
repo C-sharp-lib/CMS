@@ -16,7 +16,7 @@
                 <tr>
                   <th class="text-white ubuntu-bold">ID</th>
                   <th class="text-white ubuntu-bold">Name</th>
-                  <th class="text-white ubuntu-bold">Company Name</th>
+                  <th class="text-white ubuntu-bold">Companies</th>
                   <th class="text-white ubuntu-bold">Job Title</th>
                   <th class="text-white ubuntu-bold">Phone Number</th>
                   <th class="text-white ubuntu-bold">Email</th>
@@ -29,7 +29,12 @@
                 <tr *ngFor="let contact of paginatedContacts">
                   <td class="text-white inter-normal">{{contact.id}}</td>
                   <td class="text-white inter-normal">{{contact.firstName}} {{contact.lastName}}</td>
-                  <td class="text-white inter-normal">{{contact.company.name}}</td>
+                  <td class="text-white inter-normal" *ngIf="contact.companyContacts">
+                    <div *ngFor="let company of contact.companyContacts">
+                      <p class="text-xxs p-0 m-0">{{company?.company?.name}}</p>
+                      <p class="text-xxs p-0 m-0">{{company?.company?.website | truncate: 20}}</p>
+                    </div>
+                  </td>
                   <td class="text-white inter-normal">{{contact.jobTitle}}</td>
                   <td class="text-white inter-normal">{{contact.phoneNumber == null ? 'No phone number added' : contact.phoneNumber}}</td>
                   <td class="text-white inter-normal">{{contact.email}}</td>

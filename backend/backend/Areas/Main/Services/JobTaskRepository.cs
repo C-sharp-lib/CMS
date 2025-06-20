@@ -19,6 +19,9 @@ public class JobTaskRepository : IJobTaskRepository
     {
         return await _context.JobTasks
             .Include(j => j.Job)
+            .ThenInclude(c => c.Contact)
+            .ThenInclude(cj => cj.CompanyContacts)!
+            .ThenInclude(cj => cj.Company)
             .Include(c => c.Tasks)
             .ToListAsync();
     }
@@ -27,6 +30,9 @@ public class JobTaskRepository : IJobTaskRepository
     {
         var jobTasks =  await _context.JobTasks
             .Include(j => j.Job)
+            .ThenInclude(c => c.Contact)
+            .ThenInclude(cj => cj.CompanyContacts)!
+            .ThenInclude(cj => cj.Company)
             .Include(c => c.Tasks)
             .FirstOrDefaultAsync(j => j.Id == id);
         if (jobTasks == null)
@@ -57,7 +63,7 @@ public class JobTaskRepository : IJobTaskRepository
                 Status = model.Status,
                 Priority = model.Priority,
                 DateCreated = model.DateCreated,
-                AssignedToUser = model.AssignedToUserId
+                AssignedToUserId = model.AssignedToUserId,
             },
             JobId = job.Id,
             Created = model.Created,
@@ -74,7 +80,7 @@ public class JobTaskRepository : IJobTaskRepository
         updateJobTask.Tasks.TaskTitle = model.TaskTitle;
         updateJobTask.Tasks.TaskDescription = model.TaskDescription;
         updateJobTask.Tasks.Priority = model.Priority;
-        updateJobTask.Tasks.AssignedToUser = model.AssignedToUser;
+        updateJobTask.Tasks.AssignedToUserId = model.AssignedToUserId;
         updateJobTask.JobId = model.JobId;
         updateJobTask.Tasks.Status = model.Status;
         updateJobTask.Tasks.DateUpdated = model.DateUpdated;

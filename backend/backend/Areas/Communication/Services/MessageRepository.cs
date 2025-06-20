@@ -16,14 +16,16 @@ public class MessageRepository : IMessageRepository
     public async Task<IEnumerable<Message>> GetAllAsync()
     {
         return await _context.Messages
-            .Include(m => m.MessageUsers)
+            .Include(m => m.Conversation)
+            .Include(m => m.Sender)
             .ToListAsync();
     }
 
     public async Task<Message?> GetByIdAsync(int id)
     {
         return await _context.Messages
-            .Include(m => m.MessageUsers)
+            .Include(m => m.Conversation)
+            .Include(m => m.Sender)
             .FirstOrDefaultAsync(m => m.Id == id);
     }
 

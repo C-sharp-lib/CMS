@@ -1,6 +1,7 @@
 import {Contact} from "./contact";
 import {CompanyTasks, Tasks} from "./tasks";
 import {CompanyNotes} from "./note";
+import {CompanyContacts} from "./company-contacts";
 
 export interface Company {
   id: number;
@@ -16,7 +17,7 @@ export interface Company {
   fax: string;
   description: string;
   dateCreated: Date;
-  contacts?: Contact[];
+  companyContacts: CompanyContacts[];
   tasks?: Tasks[];
   companyNotes?: CompanyNotes[];
   companyTasks?: CompanyTasks[];

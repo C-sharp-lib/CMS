@@ -125,7 +125,6 @@ export class ContactUpdateComponent implements OnInit {
         phoneNumber: contact.phoneNumber,
         email: contact.email,
         jobTitle: contact.jobTitle,
-        companyId: contact.companyId,
         dateUpdated: contact.dateUpdated,
         ownerUserId: contact.ownerUserId,
         imageUrl: contact.imageUrl,
@@ -151,7 +150,6 @@ export class ContactUpdateComponent implements OnInit {
     formData.append('country', formValues.country);
     formData.append('notes', formValues.notes);
     formData.append('ownerUserId', formValues.ownerUserId);
-    formData.append('companyId', formValues.companyId);
     formData.append('dateUpdated', formValues.dateUpdated);
     if(this.selectedFile) {
       formData.append('imageUrl', this.selectedFile); // 🔥 Must match backend param name

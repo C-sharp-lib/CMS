@@ -1,0 +1,6 @@
+<div class="message-thread">
+  <div *ngFor="let message of messages">
+    <strong>{{message.senderId === currentUserId ? 'You' : 'Them'}}</strong>
+    {{message.content}}
+  </div>
+</div>

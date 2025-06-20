@@ -41,4 +41,11 @@ export class ContactService {
       { params: { relativePath } }
     );
   }
+
+  getContactUserImageUrl(relativePath: string): Observable<{ imageUrl: string }> {
+    return this.http.get<{ imageUrl: string }>(
+      `${this.apiUrl}/get-contact-user-image-path`,
+      { params: { relativePath } }
+    );
+  }
 }

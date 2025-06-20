@@ -28,6 +28,10 @@ export class TasksService {
     const url = `${this.jobTasksUrl}/task/${taskId}`;
     return this.http.put<JobTasks>(url, jobTasks);
   }
+  deleteJobTask(id: number): Observable<any> {
+    const url = `${this.jobTasksUrl}/tasks/${id}`;
+    return this.http.delete<JobTasks>(url);
+  }
   /*End Job Tasks*/
 
   /*Campaign Tasks*/

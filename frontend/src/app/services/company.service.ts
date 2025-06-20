@@ -17,4 +17,7 @@ export class CompanyService {
       headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}
     })
   }
+  getCompanyById(id: number) {
+    return this.http.get<Company>(`${this.apiUrl}/${id}`);
+  }
 }

@@ -81,7 +81,7 @@ public class AddJobTaskViewModel
     public DateTime DueDate { get; set; }
     public Status Status { get; set; } 
     public Priority Priority { get; set; } 
-    public User AssignedToUserId { get; set; } 
+    public string AssignedToUserId { get; set; } 
     public DateTime DateCreated { get; set; } = DateTime.Now;
     public DateTime Created { get; set; } = DateTime.Now;
 }
@@ -95,8 +95,6 @@ public class UpdateJobTaskViewModel
     public Status Status { get; set; } 
     public Priority Priority { get; set; } 
     public string AssignedToUserId { get; set; } 
-    [ForeignKey(nameof(AssignedToUserId))]
-    public virtual User AssignedToUser { get; set; } 
     public DateTime DateUpdated { get; set; } = DateTime.Now;
     public DateTime? DateCompleted {get; set;}
     public DateTime Updated { get; set; } = DateTime.Now;

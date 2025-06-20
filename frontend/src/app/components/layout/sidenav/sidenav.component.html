@@ -64,9 +64,6 @@
       <h6 class="mb-5 text-gradient text-primary ubuntu-bold p-2">Guest</h6>
       <hr class="custom-instagram-gradient"/>
     </ng-template>
-    <button class="btn btn-sm btn-outline-primary mb-3" (click)="toggleCollapse()">
-      <i class="bi" [ngClass]="collapsed ? 'bi-arrow-right-square' : 'bi-arrow-left-square'"></i>
-    </button>
 
     <ul class="list-unstyled">
       <li
@@ -75,8 +72,7 @@
         class="mb-2 cursor-pointer d-flex align-items-center text-white"
         [title]="collapsed ? item.label : ''"
       >
-        <i [class]="item.icon"></i>
-        <span *ngIf="!collapsed" class="ms-2 text-white">{{ item.label }}</span>
+        <i [class]="item.icon" class="text-3xl mx-auto"></i>
       </li>
     </ul>
   </div>
@@ -87,11 +83,12 @@
     *ngIf="selectedItem"
     (click)="$event.stopPropagation()"
   >
-    <h5 class="gradient-text-instagram inter-bold">{{ selectedItem.label }}</h5>
+    <h5 class="gradient-text-instagram inter-bold ms-3">{{ selectedItem.label }}</h5>
+    <hr class="custom-instagram-gradient c-p-1 m-0"/>
     <ul class="list-unstyled">
-      <li *ngFor="let child of selectedItem.children" class="mb-2">
+      <li *ngFor="let child of selectedItem?.children" class="side-nav-menu-item">
         <a [routerLink]="child.path" class="text-white text-decoration-none">
-          {{ child.label }}
+          <i [class]="child.icon" class="text-2xl ms-3 me-2"></i> &nbsp; {{ child.label }}
         </a>
       </li>
     </ul>

@@ -8,11 +8,12 @@ import {LeadTasks} from "./lead";
 
 export interface Tasks {
   id: number;
+  taskTitle: string;
   taskDescription: string;
   dueDate: Date;
   status: Status;
   priority: Priority;
-  assignedUserId: string;
+  assignedToUserId: string;
   assignedToUser: User;
   campaignId: number;
   campaign: Campaign;

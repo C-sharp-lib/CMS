@@ -24,9 +24,9 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<Campaign> Campaigns { get; set; }
     public DbSet<Tasks> Tasks { get; set; }
     public DbSet<Company> Companies { get; set; }
+    public DbSet<CompanyContacts> CompanyContacts { get; set; }
     public DbSet<Analytic> Analytics { get; set; }
     public DbSet<Message> Messages { get; set; }
-    public DbSet<MessageUsers> MessageUsers { get; set; }
     public DbSet<Meeting> Meetings { get; set; }
     public DbSet<UserMeeting> UserMeetings { get; set; }
     public DbSet<Note> Notes { get; set; }
@@ -46,6 +46,8 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<Post> Posts { get; set; }
     public DbSet<PostCategory> Categories { get; set; }
     public DbSet<PostCategories> PostCategories { get; set; }
+    public DbSet<Conversation> Conversations { get; set; }
+    public DbSet<ConversationParticipants> ConversationParticipants { get; set; }
     public DbSet<Comment> Comments { get; set; }
     //----------------  Ecommerce Tables  ---------------------//
     public DbSet<Product> Products { get; set; }
@@ -93,10 +95,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
                 .WithOne(x => x.CreatedByUser)
                 .HasForeignKey(x => x.CreatedByUserId)
                 .HasPrincipalKey(u => u.Id);
-            entity.HasMany(x => x.MessageUsers)
-                .WithOne(u => u.From)
-                .HasForeignKey(x => x.FromId)
-                .OnDelete(DeleteBehavior.Restrict);
             entity.HasMany(x => x.UserMeetings)
                 .WithOne(c => c.User)
                 .HasForeignKey(c => c.UserId);
@@ -141,10 +139,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
             entity.HasOne(x => x.OwnerUser)
                 .WithMany(x => x.Contacts)
                 .HasForeignKey(x => x.OwnerUserId);
-            entity.HasOne(x => x.Company)
-                .WithMany(x => x.Contacts)
-                .HasForeignKey(x => x.CompanyId)
-                .OnDelete(DeleteBehavior.Restrict);
             entity.HasMany(x => x.Meetings)
                 .WithOne(x => x.Contact)
                 .HasForeignKey(x => x.ContactId)
@@ -199,7 +193,22 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
                 .OnDelete(DeleteBehavior.Cascade);
             
         });
-        builder.Entity<Company>(entity => { entity.HasKey(e => e.Id); });
+        builder.Entity<Company>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+        });
+        builder.Entity<CompanyContacts>(entity =>
+        {
+            entity.HasKey(e => new { e.Id, e.ContactId, e.CompanyId });
+            entity.HasOne(x => x.Company)
+                .WithMany(x => x.CompanyContacts)
+                .HasForeignKey(x => x.CompanyId)
+                .HasPrincipalKey(c => c.Id);
+            entity.HasOne(x => x.Contact)
+                .WithMany(x => x.CompanyContacts)
+                .HasForeignKey(x => x.ContactId)
+                .HasPrincipalKey(c => c.Id);
+        });
         builder.Entity<Analytic>(entity =>
         {
             entity.HasKey(e => new { e.Id, e.CreatedByUserId });
@@ -211,38 +220,11 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
         builder.Entity<Message>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.HasMany(m => m.MessageUsers)
-                .WithOne(m => m.Message)
-                .HasForeignKey(m => m.MessageId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-        builder.Entity<MessageUsers>(entity =>
-        {
-            entity.HasKey(e => new { e.Id, e.MessageId, e.FromId });
-            entity.HasOne(mu => mu.From)
-                .WithMany(u => u.MessageUsers)
-                .HasForeignKey(mu => mu.FromId)
-                .OnDelete(DeleteBehavior.Restrict);
-            entity.HasMany(mu => mu.Receivers)
+            entity.HasOne(m => m.Sender)
                 .WithMany()
-                .UsingEntity<Dictionary<string, object>>(
-                    "MessageUserReceiver",
-                    j => j
-                        .HasOne<User>()
-                        .WithMany()
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade),
-                    j => j
-                        .HasOne<MessageUsers>()
-                        .WithMany()
-                        .HasForeignKey("MessageUserId")
-                        .HasPrincipalKey(m => m.Id)
-                        .OnDelete(DeleteBehavior.Cascade),
-                    j =>
-                    {
-                        j.HasKey("MessageUserId", "ReceiverId");
-                        j.ToTable("MessageUserReceivers");
-                    });
+                .HasForeignKey(m => m.SenderId)
+                .HasPrincipalKey(m => m.Id)
+                .OnDelete(DeleteBehavior.Cascade);
         });
         builder.Entity<Meeting>(entity =>
         {
@@ -595,6 +577,29 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
                 .WithMany(n => n.CustomerOrders)
                 .HasForeignKey(n => n.CustomerId)
                 .HasPrincipalKey(c => c.Id);
+        });
+        builder.Entity<Conversation>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.HasMany(c => c.Participants)
+                .WithOne(n => n.Conversation)
+                .HasForeignKey(n => n.ConversationId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(m => m.Messages)
+                .WithOne(m => m.Conversation)
+                .HasForeignKey(n => n.ConversationId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+        builder.Entity<ConversationParticipants>(entity =>
+        {
+            entity.HasKey(c => new { c.Id, c.UserId, c.ConversationId });
+            entity.HasOne(c => c.User)
+                .WithMany(c => c.Participants)
+                .HasForeignKey(c => c.UserId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

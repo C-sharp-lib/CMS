@@ -73,23 +73,13 @@
               </div>
 
               <div class="row m-3">
-                <div class="col-12 col-md-3">
-                  <div class="form-group">
-                    <label for="companyId" class="text-gradient text-primary ubuntu-bold">Company</label>
-                    <select id="companyId" formControlName="companyId" class="form-control custom-bg-dark-gradient text-white inter-bold bg-dark border-primary" style="cursor: pointer;">
-                      <div *ngFor="let company of companies">
-                        <option [value]="company?.id">{{company?.name}}</option>
-                      </div>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label for="addressLine1" class="text-gradient text-primary ubuntu-bold">Address Line 1</label>
                     <input id="addressLine1" formControlName="addressLine1" type="text" class="form-control color-background custom-bg-dark-gradient text-white inter-bold border-primary">
                   </div>
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label for="addressLine2" class="text-gradient text-primary ubuntu-bold">Address Line 2</label>
                     <input id="addressLine2" formControlName="addressLine2" type="text" class="form-control color-background custom-bg-dark-gradient text-white inter-bold border-primary">

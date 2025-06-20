@@ -108,7 +108,6 @@ export class ContactCreateComponent implements OnInit {
       country: ['', [Validators.required]],
       imageUrl: [null],
       ownerUserId: [''],
-      companyId: [1],
       dateCreated: [new Date().toISOString()],
     });
   }
@@ -149,7 +148,6 @@ export class ContactCreateComponent implements OnInit {
       formData.append('zipCode', formValues.zipCode);
       formData.append('country', formValues.country);
       formData.append('ownerUserId', formValues.ownerUserId);
-      formData.append('companyId', formValues.companyId);
       formData.append('dateCreated', formValues.dateCreated);
       if(this.selectedFile) {
         formData.append('imageUrl', this.selectedFile); // 🔥 Must match backend param name

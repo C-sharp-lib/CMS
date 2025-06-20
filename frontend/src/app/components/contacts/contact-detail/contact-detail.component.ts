@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {BreadcrumbService, ContactService, JobsService, ToasterService} from "../../../services";
+import {BreadcrumbService, CompanyContactService, ContactService, JobsService, ToasterService} from "../../../services";
 import {ActivatedRoute, Router} from "@angular/router";
 import {environment} from "../../../../environments/environment";
 
@@ -16,9 +16,10 @@ export class ContactDetailComponent implements OnInit {
   editorInstance: any;
   imagePath: string = '';
   contactImageUrl: string  | null = null;
+  companyContacts: any[] = [];
   constructor(private contactService: ContactService, private router: Router,
               private route: ActivatedRoute, private toast: ToasterService, private renderer: Renderer2, private el: ElementRef,
-              private breadcrumbService: BreadcrumbService,) { }
+              private breadcrumbService: BreadcrumbService, private companyContactService: CompanyContactService, private toasterService: ToasterService,) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -38,6 +39,7 @@ export class ContactDetailComponent implements OnInit {
       next: (data) => {
         this.contact = data;
         this.loadContactImage(this.contact);
+        this.loadCompanyContacts(this.contact.id);
         this.isLoading = false;
       },
       error: (err) => {
@@ -59,7 +61,19 @@ export class ContactDetailComponent implements OnInit {
       }
     })
   }
-
+  loadCompanyContacts(contactId: number): void {
+    this.companyContactService.getCompanyContactByContactId(contactId).subscribe({
+      next: (data) => {
+        this.companyContacts = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = err.message;
+        console.error(this.error.toString());
+        this.isLoading = false;
+      }
+    })
+  }
   loadBreadcrumb(){
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.contactService.getContactById(id).subscribe(contact => {

@@ -135,7 +135,6 @@ public static class AppConfiguration
         services.AddScoped<IEmailRepository, EmailRepository>();
         services.AddScoped<ILeadRepository, LeadRepository>();
         services.AddScoped<IMessageRepository, MessageRepository>();
-        services.AddScoped<IMessageUserRepository, MessageUsersRepository>();
         services.AddScoped<IMeetingRepository, MeetingRepository>();
         services.AddScoped<IContactRepository, ContactRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -152,6 +151,7 @@ public static class AppConfiguration
         services.AddScoped<ILeadTaskRepository, LeadTaskRepository>();
         services.AddScoped<ICampaignTaskRepository, CampaignTaskRepository>();
         services.AddScoped<ICompanyTaskRepository, CompanyTaskRepository>();
+        services.AddScoped<ICompanyContactsRepository, CompanyContactsRepository>();
         //-------------  Blog Services   ----------------//
         services.AddScoped<IPostRepository, PostRepository>();
         //-------------  Ecommerce Services   ----------------//

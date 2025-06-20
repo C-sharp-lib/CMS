@@ -99,4 +99,8 @@ export class UsersService {
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
+  getUserBySearch(query: string){
+    return this.http.get<User[]>(`${this.baseUrl}/search?query=${query}`);
+  }
+
 }

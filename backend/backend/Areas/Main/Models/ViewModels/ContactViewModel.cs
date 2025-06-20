@@ -36,40 +36,38 @@ public class AddContactViewModel
     public string? OwnerUserId { get; set; }
     [FromForm]
     public IFormFile? ImageUrl { get; set; }
-    public int? CompanyId { get; set; }
 }
 
 public class UpdateContactViewModel
 {
 
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
     
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
     
-    public string JobTitle { get; set; }
+    public string? JobTitle { get; set; }
     
-    public string Email { get; set; }
+    public string? Email { get; set; }
     
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
     
-    public string AddressLine1 { get; set; }
+    public string? AddressLine1 { get; set; }
     
-    public string AddressLine2 { get; set; }
+    public string? AddressLine2 { get; set; }
     
-    public string City { get; set; }
+    public string? City { get; set; }
     
-    public string State { get; set; }
+    public string? State { get; set; }
     
-    public string ZipCode { get; set; }
+    public string? ZipCode { get; set; }
     
-    public string Country { get; set; }
+    public string? Country { get; set; }
 
-    public string Notes { get; set; }
+    public string? Notes { get; set; }
 
     public DateTime? DateUpdated { get; set; } = DateTime.Now;
     [FromForm]
     public IFormFile? ImageUrl { get; set; }
-    public int? CompanyId { get; set; }
 }
 
 public class AddContactNoteViewModel
@@ -89,7 +87,6 @@ public class UpdateContactNoteViewModel
 
 public class AddContactTasksViewModel
 {
-    public int ContactId { get; set; }
     public string TaskTitle { get; set; }
     public string TaskDescription { get; set; }
     public DateTime DueDate { get; set; }

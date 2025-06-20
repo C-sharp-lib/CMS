@@ -36,6 +36,16 @@ public class UserController : ControllerBase
         _userNoteRepository = userNoteRepository;
         _userTasksRepository = userTasksRepository;
     }
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchUsers(string query)
+    {
+        var results = await _context.Users
+            .Where(u => u.Name.Contains(query))
+            .Select(u => new { u.Id, u.Name })
+            .ToListAsync();
+
+        return Ok(results);
+    }
 
     [HttpGet("current-user")]
     public async Task<ActionResult> GetCurrentUser()

@@ -21,6 +21,9 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {QuillModule} from "ngx-quill";
 import {authGuard} from "./utils/guards/auth.guard";
+import { MessagingComponent } from './components/communication/messaging/messaging.component';
+import { MessageListComponent } from './components/communication/message-list/message-list.component';
+
 
 
 export const routes: Routes = [
@@ -54,7 +57,7 @@ export const routes: Routes = [
       {path:'create', component: fromJobs.JobCreateComponent, data: {breadcrumb: 'Create Job'}},
       {path:':id', component: fromJobs.JobDetailComponent, data: {breadcrumb: 'Job Details'}},
       {path:'update/:id', component: fromJobs.JobUpdateComponent, data: {breadcrumb: 'Update Job'}},
-      {path: 'job/:id', component: fromNotes.JobNoteListComponent, data: {breadcrumb: 'Job Notes'}},
+      {path: 'job/:id/notes', component: fromNotes.JobNoteListComponent, data: {breadcrumb: 'Job Notes'}},
       {path:'notes/create/:id', component: fromNotes.JobNoteCreateComponent, data: {breadcrumb: 'Create Job Note'}},
       {path: 'notes/:id', component: fromNotes.JobNoteDetailComponent, data: {breadcrumb: 'Job Note Details'}},
       {path: 'notes/update/:id', component: fromNotes.JobNoteUpdateComponent, data: {breadcrumb: 'Job Note Update'}},
@@ -68,7 +71,7 @@ export const routes: Routes = [
       {path:'create', component: fromContacts.ContactCreateComponent, data: {breadcrumb: 'Create Contact'}},
       {path:':id', component: fromContacts.ContactDetailComponent, data: {breadcrumb: 'Contact Details'}},
       {path:'update/:id', component: fromContacts.ContactUpdateComponent, data: {breadcrumb: 'Update Contact'}},
-      {path: 'contact/:id', component: fromNotes.ContactNoteListComponent, data: {breadcrumb: 'Contact Notes'}},
+      {path: 'contact/:id/notes', component: fromNotes.ContactNoteListComponent, data: {breadcrumb: 'Contact Notes'}},
       {path:'notes/create/:id', component: fromNotes.ContactNoteCreateComponent, data: {breadcrumb: 'Create Contact Note'}},
       {path: 'notes/:id', component: fromNotes.CampaignNoteDetailComponent, data: {breadcrumb: 'Contact Note Details'}},
       {path: 'notes/update/:id', component: fromNotes.ContactNoteUpdateComponent, data: {breadcrumb: 'Contact Note Update'}},
@@ -132,6 +135,8 @@ export const routes: Routes = [
     ...fromNotes.components,
     ...fromTasks.components,
     ...fromPipes.pipes,
+    MessagingComponent,
+    MessageListComponent,
   ],
   imports: [
     BrowserModule,

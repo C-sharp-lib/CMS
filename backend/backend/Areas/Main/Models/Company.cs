@@ -20,7 +20,7 @@ public class Company
     public string Fax { get; set; }
     public string Description { get; set; }
     public DateTime DateCreated { get; set; } = DateTime.Now;
-    public IEnumerable<Contact>? Contacts { get; set; }
+    public IEnumerable<CompanyContacts>? CompanyContacts { get; set; }
     public IEnumerable<Tasks>? Tasks { get; set; }
     public IEnumerable<CompanyNotes>? CompanyNotes { get; set; }
     public virtual IEnumerable<CompanyTask>? CompanyTasks { get; set; }

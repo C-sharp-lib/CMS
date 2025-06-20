@@ -1,0 +1,48 @@
+<!--<div class="overlay" *ngIf="isVisible">
+  <div class="search-bar">
+    <div class="custom-bg-dark-gradient border-radius-lg d-flex me-2 border-2 border-primary">
+      <input [formControl]="searchControl" (focus)="showResults = true"  (blur)="hideWithDelay()" type="text" id="search-page"  placeholder="Type here...">
+      <button class="btn bg-gradient-primary m-0">Search</button>
+    </div>
+
+    <ul *ngIf="filteredResults.length">
+      <li *ngFor="let item of filteredResults" (click)="goToResult(item)">
+        {{item.title}}
+      </li>
+    </ul>
+    <p *ngIf="!filteredResults.length && searchControl.value">No results found!</p>
+  </div>
+</div>-->
+
+
+<!-- Trigger input -->
+<input type="text" placeholder="Search..." (focus)="openOverlay()" class="form-control form-control-sm color-background custom-bg-dark-gradient ubuntu-bold text-white border-primary bg-dark ps-3" />
+
+<!-- Overlay UI -->
+<div class="overlay" *ngIf="showOverlay">
+  <div class="overlay-content">
+    <div class="custom-bg-dark-gradient border-radius-lg d-flex me-2 border-2 border-primary">
+    <input
+      id="overlayInput"
+      (keydown.escape)="closeOverlay()"
+      autofocus
+      type="text"
+      [formControl]="searchControl"
+      placeholder="Search site..."
+      class="form-control form-control-sm color-background custom-bg-dark-gradient ubuntu-bold text-white border-primary bg-dark ps-3"
+    />
+    </div>
+
+    <ul *ngIf="filteredResults.length">
+      <li *ngFor="let result of filteredResults" (click)="goTo(result.route)">
+
+        <span *ngIf="result.type === 'user'" class="tag">👤 {{ result.title }}</span>
+        <span *ngIf="result.type === 'page'" class="tag">📊 {{ result.title }}</span>
+      </li>
+    </ul>
+
+    <p *ngIf="searchControl.value && !filteredResults.length">No results found.</p>
+  </div>
+
+  <div class="overlay-backdrop" (click)="closeOverlay()"></div>
+</div>

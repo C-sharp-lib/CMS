@@ -4,6 +4,7 @@ import {ContactTasks, Tasks} from "./tasks";
 import {ContactNotes} from "./note";
 import {User} from "./user";
 import {Company} from "./company";
+import {CompanyContacts} from "./company-contacts";
 
 export interface Contact {
   id: number;
@@ -23,11 +24,10 @@ export interface Contact {
   imageUrl?: string;
   ownerUserId?: string;
   ownerUser?: User;
-  companyId?: number;
-  company?: Company;
   jobs?: Job[];
   campaigns?: Campaign[];
   tasks?: Tasks[];
+  companyContacts: CompanyContacts[];
   contactNotes?: ContactNotes[];
   contactTasks?: ContactTasks[];
 }
