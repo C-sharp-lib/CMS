@@ -24,6 +24,7 @@ export class UserUpdateComponent implements OnInit {
   value: string = '';
   userImageUrl: string  | null = null;
   error: string = '';
+
   private onChange = (_: any) => {};
   private onTouched = () => {};
 
@@ -133,6 +134,7 @@ export class UserUpdateComponent implements OnInit {
       }
     });
   }
+
   onSubmit(): void {
     if (this.userForm.invalid) {
       return;

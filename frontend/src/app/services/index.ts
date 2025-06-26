@@ -12,6 +12,7 @@ import {TasksService} from "./tasks.service";
 import {CampaignsService} from "./campaigns.service";
 import {CompanyContactService} from "./company-contact.service";
 import {SearchService} from "./search.service";
+import {CommunicationService} from "./communication.service";
 
 
 export const services: any[] = [
@@ -29,6 +30,7 @@ export const services: any[] = [
   CampaignsService,
   CompanyContactService,
   SearchService,
+  CommunicationService,
 ];
 
 export * from './users.service';
@@ -45,3 +47,4 @@ export * from './tasks.service';
 export * from './campaigns.service';
 export * from './company-contact.service';
 export * from './search.service';
+export * from './communication.service';

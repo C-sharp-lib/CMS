@@ -110,6 +110,12 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
             entity.HasMany(x => x.Reviews)
                 .WithOne(x => x.Reviewer)
                 .HasForeignKey(x => x.ReviewerId);
+            entity.HasMany(p => p.Participants)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId);
+            entity.HasMany(x => x.Messages)
+                .WithOne(x => x.Sender)
+                .HasForeignKey(x => x.SenderId);
         });
         builder.Entity<Role>(entity => { entity.HasKey(e => e.Id); });
         builder.Entity<UserRoles>(entity =>
@@ -219,11 +225,16 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
         });
         builder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.Id);
+            entity.HasKey(e => new {e.Id, e.SenderId, e.ConversationId});
             entity.HasOne(m => m.Sender)
-                .WithMany()
+                .WithMany(m => m.Messages)
                 .HasForeignKey(m => m.SenderId)
                 .HasPrincipalKey(m => m.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(m => m.Conversation)
+                .WithMany(m => m.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .HasPrincipalKey(c => c.Id)
                 .OnDelete(DeleteBehavior.Cascade);
         });
         builder.Entity<Meeting>(entity =>
@@ -598,6 +609,11 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
             entity.HasOne(c => c.User)
                 .WithMany(c => c.Participants)
                 .HasForeignKey(c => c.UserId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(x => x.Conversation)
+                .WithMany(c => c.Participants)
+                .HasForeignKey(c => c.ConversationId)
                 .HasPrincipalKey(c => c.Id)
                 .OnDelete(DeleteBehavior.Cascade);
         });

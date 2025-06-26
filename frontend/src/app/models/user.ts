@@ -4,6 +4,7 @@ import {Contact} from "./contact";
 import {Campaign} from "./campaign";
 import {UserNotes} from "./note";
 import {Tasks, UserTasks} from "./tasks";
+import {ConversationParticipant, Message} from "./communication";
 
 export interface User {
   id?: string;
@@ -28,4 +29,6 @@ export interface User {
   assignedJobs?: Job[];
   contacts?: Contact[];
   campaigns?: Campaign[];
+  participants?: ConversationParticipant[];
+  messages?: Message[];
 }

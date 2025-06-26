@@ -10,11 +10,13 @@
     <div class="collapse navbar-collapse" id="navigation">
       <ul class="navbar-nav navbar-nav-hover ms-auto">
         <div class="row">
+
           <div class="col-auto m-auto">
             <a class="text-white cursor-pointer">
               <i class="fa fa-cog fixed-plugin-button-nav"></i>
             </a>
           </div>
+
           <div class="col-auto m-auto">
             <div class="dropdown">
               <a class="text-white cursor-pointer" type="button" id="dropdownMenuAccount" data-bs-toggle="dropdown" aria-expanded="false">
@@ -41,7 +43,10 @@
               </ul>
             </div>
           </div>
-          <div class="col-auto">
+          <div class="col-auto mt-2">
+            <a routerLink="/communication/user/{{getCurrentUserId()}}" class="btn custom-bg-dark-gradient cursor-pointer"><span class="gradient-text-rainbow-blue ubuntu-bold"><i class="fa-solid fa-comment-alt"></i> &nbsp; Messages</span></a>
+          </div>
+          <div class="col-auto mt-2">
             <app-search-bar></app-search-bar>
           </div>
         </div>

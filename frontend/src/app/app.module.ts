@@ -13,6 +13,7 @@ import * as fromCampaigns from './components/campaigns/index';
 import * as fromCompanies from './components/company/index';
 import * as fromNotes from './components/notes/index';
 import * as fromTasks from './components/tasks/index';
+import * as fromMessages from './components/communication/index';
 import * as fromServices from './services/index';
 import * as fromPipes from './utils/pipes/index';
 import * as fromInterceptors from './utils/interceptors/index';
@@ -21,8 +22,6 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {QuillModule} from "ngx-quill";
 import {authGuard} from "./utils/guards/auth.guard";
-import { MessagingComponent } from './components/communication/messaging/messaging.component';
-import { MessageListComponent } from './components/communication/message-list/message-list.component';
 
 
 
@@ -120,6 +119,10 @@ export const routes: Routes = [
       {path: 'tasks/:id', component: fromTasks.CompanyTaskDetailComponent},
       {path: 'tasks/update/:id', component: fromTasks.CompanyTaskUpdateComponent},
     ]},
+  {path: 'communication', canActivate: [authGuard], children: [
+    {path: 'user/:id', component: fromMessages.MessagingComponent},
+      {path: 'create', component: fromMessages.MessageCreateComponent},
+    ]}
 ];
 @NgModule({
   declarations: [
@@ -134,9 +137,8 @@ export const routes: Routes = [
     ...fromCompanies.components,
     ...fromNotes.components,
     ...fromTasks.components,
+    ...fromMessages.components,
     ...fromPipes.pipes,
-    MessagingComponent,
-    MessageListComponent,
   ],
   imports: [
     BrowserModule,

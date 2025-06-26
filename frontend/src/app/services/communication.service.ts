@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Conversation, Message} from "../models/communication";
+import {Conversation, ConversationParticipant, Message} from "../models/communication";
 import {environment} from "../../environments/environment";
 
 @Injectable({
@@ -13,15 +13,42 @@ export class CommunicationService {
   constructor(private http: HttpClient) {
   }
 
-  getUserConversations(userId: string): Observable<Conversation[]> {
-    return this.http.get<Conversation[]>(`${this.apiUrl}/user/${userId}`);
+  getUserConversations(userId: string): Observable<ConversationParticipant[]> {
+    return this.http.get<ConversationParticipant[]>(`${this.apiUrl}/user/${userId}`);
   }
 
   getMessages(conversationId: number): Observable<Message[]> {
     return this.http.get<Message[]>(`${this.apiUrl}/${conversationId}/messages`);
   }
 
-  sendMessage(conversationId: number, message: Omit<Message, 'sentAt'>): Observable<Message> {
+  sendMessage(conversationId: number, message: { content: string, senderId: string }): Observable<Message> {
     return this.http.post<Message>(`${this.apiUrl}/${conversationId}/messages`, message);
+  }
+  createConversation(data: { title?: string, userIds: string[] }): Observable<Conversation> {
+    return this.http.post<Conversation>(`${this.apiUrl}`, data);
+  }
+  getParticipantImageUrl(relativePath: string): Observable<{ imageUrl: string }> {
+    return this.http.get<{ imageUrl: string }>(
+      `${this.apiUrl}/get-user-image-path`,
+      { params: { relativePath } }
+    );
+  }
+  getConversationCount(userId){
+    return this.http.get<number>(`${this.apiUrl}/conversations/${userId}/count`);
+  }
+  getMessageCount(conversationId: number){
+    return this.http.get<number>(`${this.apiUrl}/conversation/${conversationId}/messages/count`);
+  }
+  getConversationParticipantCount(conversationId: number){
+    return this.http.get<number>(`${this.apiUrl}/conversation/${conversationId}/conversation-participants/count`);
+  }
+  deleteConversation(conversationId: number){
+    return this.http.delete<void>(`${this.apiUrl}/conversation/${conversationId}/delete-conversation`);
+  }
+  deleteMessage(conversationId: number, userId: string, messageId: number){
+    return this.http.delete<void>(`${this.apiUrl}/${conversationId}/conversations/${userId}/conversation/${conversationId}/delete-message/${messageId}`);
+  }
+  deleteConversationParticipant(conversationId: number, conversationParticipantId: number){
+    return this.http.delete<void>(`${this.apiUrl}/conversation/${conversationId}/participant/${conversationParticipantId}/delete`);
   }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -45,4 +46,5 @@ public class User : IdentityUser
     public IEnumerable<Post>? Posts { get; set; }
     public IEnumerable<Comment>? Comments { get; set; }
     public IEnumerable<ConversationParticipants>? Participants { get; set; }
+    public IEnumerable<Message>? Messages { get; set; }
  }

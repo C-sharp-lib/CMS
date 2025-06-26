@@ -9,6 +9,6 @@ public class Conversation
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public string Title { get; set; }
-    public IEnumerable<ConversationParticipants> Participants { get; set; }
-    public IEnumerable<Message> Messages { get; set; }
+    public List<ConversationParticipants> Participants { get; set; }
+    public List<Message> Messages { get; set; }
 }

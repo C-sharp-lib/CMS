@@ -102,7 +102,9 @@ public static class AppConfiguration
             options.LogoutPath = "/Identity/Logout";
             options.SlidingExpiration = true;
             options.AccessDeniedPath = "/Identity/AccessDenied";
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+            options.Cookie.Expiration = TimeSpan.FromMinutes(30);
+            options.Cookie.MaxAge = TimeSpan.FromMinutes(31);
             options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
         });
         services.AddCors(options =>
@@ -135,6 +137,7 @@ public static class AppConfiguration
         services.AddScoped<IEmailRepository, EmailRepository>();
         services.AddScoped<ILeadRepository, LeadRepository>();
         services.AddScoped<IMessageRepository, MessageRepository>();
+        services.AddScoped<IConversationRepository, ConversationRepository>();
         services.AddScoped<IMeetingRepository, MeetingRepository>();
         services.AddScoped<IContactRepository, ContactRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();

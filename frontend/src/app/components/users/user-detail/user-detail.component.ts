@@ -15,6 +15,10 @@ export class UserDetailComponent implements OnInit {
   userImageUrl: string  | null = null;
   error: string = '';
   editorInstance: any;
+  imageWidth: number | null = null;
+  imageHeight: number | null = null;
+  maxDisplayWidth: number | null = null;
+  maxDisplayHeight: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -62,6 +66,19 @@ export class UserDetailComponent implements OnInit {
         console.error(err);
       }
     });
+  }
+  onImageLoad(event: Event) {
+    const img = event.target as HTMLImageElement;
+    const aspRatio = img.naturalWidth/img.naturalHeight;
+    this.maxDisplayWidth = 400;
+    this.maxDisplayHeight = 400;
+    if(img.naturalWidth > img.naturalHeight) {
+      this.imageWidth = this.maxDisplayWidth;
+      this.imageHeight = this.maxDisplayWidth / aspRatio;
+    } else {
+      this.imageHeight = this.maxDisplayHeight;
+      this.imageWidth = this.maxDisplayHeight / aspRatio;
+    }
   }
 
   loadBreadcrumb(): void {
