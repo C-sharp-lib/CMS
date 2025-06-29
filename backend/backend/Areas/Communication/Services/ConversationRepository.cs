@@ -25,7 +25,9 @@ public class ConversationRepository : IConversationRepository
     {
         return await _context.Conversations
             .Include(c => c.Participants)
+            .ThenInclude(p => p.User)
             .Include(c => c.Messages)
+            .ThenInclude(m => m.Sender)
             .Where(c => c.Participants.Any(p => p.UserId == userId))
             .ToListAsync();
     }
@@ -155,33 +157,30 @@ public class ConversationRepository : IConversationRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<long> CountMessagesAsync(int conversationId)
+    public async Task<int> CountMessagesAsync(int conversationId)
     {
         var conversation = await GetConversationByIdAsync(conversationId);
         var messageCount = await _context.Messages
             .Where(m => m.ConversationId == conversation.Id)
             .CountAsync();
-        if(!messageCount.Equals(0)) return 0;
         return messageCount;
     }
 
-    public async Task<long> CountConversationParticipantsAsync(int conversationId)
+    public async Task<int> CountConversationParticipantsAsync(int conversationId)
     {
         var conversation = await GetConversationByIdAsync(conversationId);
         var participantCount = await _context.ConversationParticipants
             .Where(p => p.ConversationId == conversation.Id)
             .CountAsync();
-        if(!participantCount.Equals(0)) return 0;
         return participantCount;
     }
 
-    public async Task<long> CountConversationsAsync(string userId)
+    public async Task<int> CountConversationsAsync(string userId)
     {
         var user = await _userRepository.GetUserByIdAsync(userId);
         var conversations = await _context.Conversations
             .Where(c => c.Participants.Any(p => p.UserId == user.Id))
             .CountAsync();
-        if(!conversations.Equals(0)) return 0;
         return conversations;
     }
 }

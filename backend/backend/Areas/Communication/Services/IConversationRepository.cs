@@ -16,7 +16,7 @@ public interface IConversationRepository
     Task DeleteConversationAsync(int conversationId);
     Task DeleteMessagesAsync(int conversationId, string userId, int messageId);
     Task DeleteConversationParticipantsAsync(int conversationId, int conversationParticipantId);
-    Task<long> CountConversationParticipantsAsync(int conversationId);
-    Task<long> CountMessagesAsync(int conversationId);
-    Task<long> CountConversationsAsync(string userId);
+    Task<int> CountConversationParticipantsAsync(int conversationId);
+    Task<int> CountMessagesAsync(int conversationId);
+    Task<int> CountConversationsAsync(string userId);
 }

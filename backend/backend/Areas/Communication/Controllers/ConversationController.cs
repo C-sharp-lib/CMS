@@ -21,6 +21,13 @@ public class ConversationController : ControllerBase
         _logger = logger;
     }
 
+    [HttpGet("conversation/{conversationId}")]
+    public async Task<ActionResult<Conversation>> GetConversation(int conversationId)
+    {
+        var conversation = await _conversationRepository.GetConversationByIdAsync(conversationId);
+        return Ok(conversation);
+    }
+
     [HttpGet("conversation-participants/{id}")]
     public async Task<ActionResult<List<ConversationParticipants>>> GetUserConversationParticipants(int id)
     {
@@ -38,7 +45,7 @@ public class ConversationController : ControllerBase
         return Ok(conversations);
     }
 
-    [HttpGet("{conversationId}/messages")]
+    [HttpGet("conversation/{conversationId}/messages")]
     public async Task<ActionResult<IEnumerable<Message>>> GetMessages(int conversationId)
     {
         var messages = await _conversationRepository.GetAllMessagesByConversationIdAsync(conversationId);
@@ -64,7 +71,7 @@ public class ConversationController : ControllerBase
         return Ok(new { imageUrl = fullImageUrl });
     }
 
-    [HttpPost("{conversationId}/messages")]
+    [HttpPost("conversation/{conversationId}/messages")]
     public async Task<ActionResult> SendMessage(int conversationId, [FromBody] AddMessageViewModel message)
     {
         if (!ModelState.IsValid)
@@ -138,8 +145,8 @@ public class ConversationController : ControllerBase
         return Ok(await _conversationRepository.CountConversationParticipantsAsync(conversationId));
     }
 
-    [HttpGet("conversations/{userId}/count")]
-    public async Task<ActionResult<long>> GetConversationCount(string userId)
+    [HttpGet("{userId}/conversations/count")]
+    public async Task<ActionResult<int>> GetConversationCount(string userId)
     {
         return Ok(await _conversationRepository.CountConversationsAsync(userId));
     }

@@ -9,15 +9,40 @@
                  [height]="imageHeight"
                  [width]="imageWidth"
                  [style]="{'width':'imageWidth', 'height': 'imageHeight', 'max-width':'maxDisplayWidth', 'max-height':'maxDisplayHeight'}"
-                 class="mx-auto d-block rounded-circle">
+                 class="">
           </div>
         </div>
       </div>
       <div class="col-12 col-md-5">
         <div class="card shadow-lg custom-bg-dark-gradient">
           <div class="card-body p-3">
-            <h3 class="text-gradient text-primary ubuntu-bold">Description</h3>
-            <div *ngIf="user?.description" [innerHTML]="user?.description | safeHtml"></div>
+            <div class="row">
+              <div class="col-12">
+                <h3 class="text-gradient text-primary ubuntu-bold">Description</h3>
+                <div *ngIf="user?.description ?? 'There is no description set up yet'" [innerHTML]="user?.description ?? 'There is no description set up yet' | safeHtml"></div>
+              </div>
+            </div>
+            <hr class="horizontal custom-rainbow-blue-gradient">
+            <div class="row">
+              <div class="col-12">
+                <div>
+                  <p>
+                    <button type="button" class="btn custom-violet-gradient d-block btn-block w-100 text-lg p-2" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                      <span class="ubuntu-bold text-white">Conversations</span>
+                    </button>
+                  </p>
+                  <div class="collapse" id="collapseExample">
+                    <div class="card card-body custom-bg-dark-gradient">
+                      <div *ngFor="let convo of conversations" class="custom-bg-dark-gradient">
+                        <div class="p-2 mt-1 border-radius-sm custom-bg-dark">
+                          <h4 class="ubuntu-bold " style="color: dodgerblue;"><a routerLink="/communication/user/{{user?.id}}" style="color: dodgerblue;">{{convo?.title}}</a></h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -11,19 +11,26 @@ import {CommunicationService} from "../../../services";
 })
 export class MessagingComponent implements OnInit {
   isLoading: boolean = false;
+  user: any;
+  userPhotos: string[] = [];
   conversations: Conversation[] = [];
-  conversationParticipants: ConversationParticipant[] = [];
   messages: Message[] = [];
   error: string = '';
   userId: string | null = null;
   userImage: string | null = null;
-  selectedConversation: Conversation | null = null;
   theContent = '';
+  selectedConversation: Conversation | null = null;
   constructor(private userService: UsersService, private router: Router, private communicationService: CommunicationService,
               private toast: ToasterService, private route: ActivatedRoute, private renderer: Renderer2, private el: ElementRef) { }
   ngOnInit() {
     this.userId = this.getCurrentUserId();
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!this.userId) {
+      this.router.navigate(['/account']);
+      return;
+    }
     this.fetchConversations(this.userId);
+    this.loadConversation(id);
 
   }
   getCurrentUserId(): string {
@@ -43,38 +50,56 @@ export class MessagingComponent implements OnInit {
 
   fetchConversations(userId: string) {
     this.communicationService.getUserConversations(userId).subscribe({
-      next: (participants) => {
-       this.conversationParticipants = participants;
-       console.log(participants.length);
-       this.conversationParticipants.forEach(user => {
-         this.userImage = user.user.imageUrl;
-         const conversation = user.conversation;
-         console.log(conversation);
-         const ps = user.conversation.participants;
-         console.log(ps);
-         if(user?.user?.imageUrl) {
-           const relativePath = `Uploads/User/${this.userImage}`;
-           this.loadUserPhoto(relativePath);
-         }
-       })
-      },
-      error: (err) => {
-        console.error('Failed to fetch conversations:', err);
-      }
-    });
-  }
+      next: (convos) => {
+        this.conversations = convos.map(convo => {
+          const loadedImages = new Set<string>();
+          const userPhotos: string[] = [];
 
-  loadUserPhoto(relativePath: string) {
-    this.communicationService.getParticipantImageUrl(relativePath).subscribe({
-      next: (res) => {
-        this.userImage = res.imageUrl;
+          convo.participants.forEach(participant => {
+            const imageUrl = participant.user?.imageUrl;
+
+            if (imageUrl && !loadedImages.has(imageUrl)) {
+              loadedImages.add(imageUrl);
+              const relativePath = `http://localhost:5224/Uploads/User/${imageUrl}`;
+              userPhotos.push(relativePath);
+              this.userPhotos = userPhotos;
+            }
+          });
+
+          // Attach photos to the conversation object
+          return {
+            ...convo,
+            userPhotos
+          };
+        });
       },
       error: (err) => {
         this.error = err.message;
-        console.error('Failed to load user photo:', this.error);
+        console.error('Failed to fetch conversations:', this.error);
       }
     });
   }
+  loadConversation(convoId: number): void {
+    this.communicationService.getConversationById(convoId).subscribe({
+      next: (convo) => {
+        this.selectedConversation = convo;
+      },
+      error: (err) => {
+        this.error = err.message;
+        console.error('Failed to load conversation:', this.error);
+      }
+    });
+  }
+/*  loadUserPhoto(relativePath: string) {
+   this.userService.getUserImageUrl(relativePath).subscribe({
+     next: (res) => {
+       this.userImage = res.imageUrl;
+     },
+     error: (err) => {
+       console.error('Failed to load user photo:', err.message);
+     }
+   })
+  }*/
 
   selectConversation(convo: Conversation) {
     this.selectedConversation = convo;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import {Conversation, ConversationParticipant, Message} from "../models/communication";
 import {environment} from "../../environments/environment";
 
@@ -9,20 +9,26 @@ import {environment} from "../../environments/environment";
 })
 export class CommunicationService {
   private apiUrl = `${environment.apiUrl}/Communication/Conversation`;
-
+  private readonly BLOB_RESPONSE = { responseType: 'blob' as const };
   constructor(private http: HttpClient) {
   }
 
-  getUserConversations(userId: string): Observable<ConversationParticipant[]> {
-    return this.http.get<ConversationParticipant[]>(`${this.apiUrl}/user/${userId}`);
+  getUserConversations(userId: string): Observable<Conversation[]> {
+    return this.http.get<Conversation[]>(`${this.apiUrl}/conversations/${userId}`);
+  }
+  getConversationById(conversationId: number): Observable<Conversation> {
+    return this.http.get<Conversation>(`${this.apiUrl}/conversation/${conversationId}`);
+  }
+  getConversationParticipants(conversationId: number): Observable<ConversationParticipant[]> {
+    return this.http.get<ConversationParticipant[]>(`${this.apiUrl}/conversation-participants/${conversationId}`);
   }
 
   getMessages(conversationId: number): Observable<Message[]> {
-    return this.http.get<Message[]>(`${this.apiUrl}/${conversationId}/messages`);
+    return this.http.get<Message[]>(`${this.apiUrl}/conversation/${conversationId}/messages`);
   }
 
   sendMessage(conversationId: number, message: { content: string, senderId: string }): Observable<Message> {
-    return this.http.post<Message>(`${this.apiUrl}/${conversationId}/messages`, message);
+    return this.http.post<Message>(`${this.apiUrl}/conversation/${conversationId}/messages`, message);
   }
   createConversation(data: { title?: string, userIds: string[] }): Observable<Conversation> {
     return this.http.post<Conversation>(`${this.apiUrl}`, data);
@@ -33,7 +39,7 @@ export class CommunicationService {
       { params: { relativePath } }
     );
   }
-  getConversationCount(userId){
+  getConversationCount(userId: string){
     return this.http.get<number>(`${this.apiUrl}/conversations/${userId}/count`);
   }
   getMessageCount(conversationId: number){

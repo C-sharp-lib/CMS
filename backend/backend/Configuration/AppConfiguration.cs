@@ -24,8 +24,13 @@ public static class AppConfiguration
     public static IServiceCollection AddAppConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        services.AddDbContext<ApplicationDbContext>(options =>
+        /*services.AddDbContext<ApplicationDbContext>(options =>
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));;
+            */
+        services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseSqlServer(connectionString);
+        });
         
         services.AddDistributedMemoryCache();
         Log.Logger = new LoggerConfiguration()
@@ -42,13 +47,6 @@ public static class AppConfiguration
             .WriteTo.Console()
             .WriteTo.File("/Areas/Utility/Logs/ApplicationLogs.txt")
             .CreateLogger();
-       
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.MySQL(connectionString: connectionString, tableName: "Logs")
-            .CreateLogger();
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-
 
                 services.AddIdentityCore<User>(options =>
             {

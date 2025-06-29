@@ -21,15 +21,18 @@
                 <input type="text" placeholder="search" />
                 <i class="fa fa-search"></i>
               </div>
-              <div id="conversations" *ngFor="let p of conversationParticipants">
+              <div id="conversations" *ngFor="let convo of conversations">
               <ul class="list">
-                <li class="clearfix">
-                    <img *ngIf="userImage" [src]="userImage" alt="avatar" class="avatar" width="70" height="70" />
-                  <div class="about" >
-                    <div class="name">{{p.user.userName}}</div>
-                    <div class="status">
-                      <i class="fa fa-circle online"></i> online
-                    </div>
+                <h4>{{convo.title}}</h4>
+
+                <li class="participants-list list-unstyled d-flex align-items-center mb-2">
+                  <div class="avatars" *ngFor="let photo of userPhotos">
+                      <img *ngIf="photo" [src]="photo" alt="Users photo" class="avatar-sm rounded-circle user-avatar-photo-conversations" />
+                  </div>
+                  <div class="about user-names ms-3">
+                    <span *ngFor="let p of convo.participants; let last = last">
+                      <span>{{p.user.userName}}</span><span *ngIf="!last">, </span>
+                    </span>
                   </div>
                 </li>
               </ul>
