@@ -117,6 +117,9 @@ export const routes: Routes = [
   {path: 'blackboard', canActivate: [authGuard], children: [
       {path: '', component: fromBlackboard.HomeComponent},
       {path: 'about', component: fromBlackboard.AboutComponent},
+      {path: 'admin', children: [
+          {path: '', component: fromBlackboard.AdminDashboardComponent}
+        ]},
       {path: 'schedules', children: [
           {path: '', component: fromBlackboard.ScheduleListComponent},
           {path: ':id', component: fromBlackboard.ScheduleDetailComponent},

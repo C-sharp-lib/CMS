@@ -25,7 +25,6 @@ import * as fromMessages from "./components/communication";
 import * as fromPipes from "./utils/pipes";
 
 
-
 @NgModule({
   declarations: [
     AppComponent,

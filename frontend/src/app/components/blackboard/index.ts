@@ -26,6 +26,23 @@ import {ScheduleDetailComponent} from "./pages/schedule/schedule-detail/schedule
 import {ScheduleCreateComponent} from "./pages/schedule/schedule-create/schedule-create.component";
 import {ScheduleUpdateComponent} from "./pages/schedule/schedule-update/schedule-update.component";
 import {ContactComponent} from "./pages/contact/contact.component";
+import {SyllabusListComponent} from "./course/syllabus/syllabus-list/syllabus-list.component";
+import {SyllabusDetailComponent} from "./course/syllabus/syllabus-detail/syllabus-detail.component";
+import {SyllabusCreateComponent} from "./course/syllabus/syllabus-create/syllabus-create.component";
+import {SyllabusUpdateComponent} from "./course/syllabus/syllabus-update/syllabus-update.component";
+import {AdminDashboardComponent} from "./admin/admin-dashboard/admin-dashboard.component";
+import {AdminTeacherListComponent} from "./admin/teachers/admin-teacher-list/admin-teacher-list.component";
+import {AdminTeacherDetailComponent} from "./admin/teachers/admin-teacher-detail/admin-teacher-detail.component";
+import {AdminTeacherCreateComponent} from "./admin/teachers/admin-teacher-create/admin-teacher-create.component";
+import {AdminTeacherUpdateComponent} from "./admin/teachers/admin-teacher-update/admin-teacher-update.component";
+import {AdminStudentListComponent} from "./admin/students/admin-student-list/admin-student-list.component";
+import {AdminStudentDetailComponent} from "./admin/students/admin-student-detail/admin-student-detail.component";
+import {AdminStudentCreateComponent} from "./admin/students/admin-student-create/admin-student-create.component";
+import {AdminStudentUpdateComponent} from "./admin/students/admin-student-update/admin-student-update.component";
+import {AdminCourseListComponent} from "./admin/courses/admin-course-list/admin-course-list.component";
+import {AdminCourseDetailComponent} from "./admin/courses/admin-course-detail/admin-course-detail.component";
+import {AdminCourseCreateComponent} from "./admin/courses/admin-course-create/admin-course-create.component";
+import {AdminCourseUpdateComponent} from "./admin/courses/admin-course-update/admin-course-update.component";
 
 export const components: any[] = [
   TeacherListComponent,
@@ -56,6 +73,23 @@ export const components: any[] = [
   ScheduleCreateComponent,
   ScheduleUpdateComponent,
   ContactComponent,
+  SyllabusListComponent,
+  SyllabusDetailComponent,
+  SyllabusCreateComponent,
+  SyllabusUpdateComponent,
+  AdminDashboardComponent,
+  AdminTeacherListComponent,
+  AdminTeacherDetailComponent,
+  AdminTeacherCreateComponent,
+  AdminTeacherUpdateComponent,
+  AdminStudentListComponent,
+  AdminStudentDetailComponent,
+  AdminStudentCreateComponent,
+  AdminStudentUpdateComponent,
+  AdminCourseListComponent,
+  AdminCourseDetailComponent,
+  AdminCourseCreateComponent,
+  AdminCourseUpdateComponent,
 ];
 
 export * from './teacher/teacher-list/teacher-list.component';
@@ -86,3 +120,20 @@ export * from './pages/schedule/schedule-list/schedule-list.component';
 export * from './pages/schedule/schedule-detail/schedule-detail.component';
 export * from './pages/schedule/schedule-create/schedule-create.component';
 export * from './pages/schedule/schedule-update/schedule-update.component';
+export * from './course/syllabus/syllabus-list/syllabus-list.component';
+export * from './course/syllabus/syllabus-detail/syllabus-detail.component';
+export * from './course/syllabus/syllabus-create/syllabus-create.component';
+export * from './course/syllabus/syllabus-update/syllabus-update.component';
+export * from './admin/admin-dashboard/admin-dashboard.component';
+export * from './admin/teachers/admin-teacher-list/admin-teacher-list.component';
+export * from './admin/teachers/admin-teacher-detail/admin-teacher-detail.component';
+export * from './admin/teachers/admin-teacher-create/admin-teacher-create.component';
+export * from './admin/teachers/admin-teacher-update/admin-teacher-update.component';
+export * from './admin/students/admin-student-list/admin-student-list.component';
+export * from './admin/students/admin-student-detail/admin-student-detail.component';
+export * from './admin/students/admin-student-create/admin-student-create.component';
+export * from './admin/students/admin-student-update/admin-student-update.component';
+export * from './admin/courses/admin-course-list/admin-course-list.component';
+export * from './admin/courses/admin-course-detail/admin-course-detail.component';
+export * from './admin/courses/admin-course-create/admin-course-create.component';
+export * from './admin/courses/admin-course-update/admin-course-update.component';
