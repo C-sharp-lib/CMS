@@ -1,3 +1,4 @@
+using backend.Areas.BlackBoard.Models;
 using backend.Areas.Blog.Models;
 using backend.Areas.Communication.Models;
 using backend.Areas.Ecommerce.Models;
@@ -64,6 +65,23 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<Cart> Carts { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<WishListItem> WishListItems { get; set; }
+    
+    public DbSet<Teacher> Teachers { get; set; }
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Course> Courses { get; set; }
+    public DbSet<Syllabus> Syllabus { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<Choice> Choices { get; set; }
+    public DbSet<Quiz> Quizzes { get; set; }
+    public DbSet<Exam> Exams { get; set; }
+    public DbSet<Assignment> Assignments { get; set; }
+    public DbSet<Module> Modules { get; set; }
+    public DbSet<Project> Project { get; set; }
+    public DbSet<StudentCourse> StudentCourses { get; set; }
+    public DbSet<TeacherStudents> TeacherStudents { get; set; }
+    public DbSet<BbRoles> BbRole { get; set; }
+    public DbSet<BbTandSRoles> BbTandSRole { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -669,5 +687,287 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
                 .HasPrincipalKey(c => c.Id)
                 .OnDelete(DeleteBehavior.NoAction);
         });
+
+        builder.Entity<StudentCourse>(entity =>
+        {
+            entity.HasKey(c => new { c.Id, c.StudentId, c.CourseId });
+            entity.HasOne(c => c.Student)
+                .WithMany(cx => cx.StudentCourses)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Course)
+                .WithMany(c => c.StudentCourses)
+                .HasForeignKey(c => c.CourseId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<TeacherStudents>(entity =>
+        {
+            entity.HasKey(c => new { c.Id, c.StudentId, c.TeacherId });
+            entity.HasOne(x => x.Student)
+                .WithMany(x => x.Teachers)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(x => x.Teacher)
+                .WithMany(x => x.Students)
+                .HasForeignKey(c => c.TeacherId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Teacher>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.HasMany(c => c.Students)
+                .WithOne(s => s.Teacher)
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(v => v.Courses)
+                .WithOne(c => c.Teacher)
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(v => v.Exams)
+                .WithOne(c => c.Teacher)
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(v => v.Quizzes)
+                .WithOne(c => c.Teacher)
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(v => v.Assignments)
+                .WithOne(c => c.Teacher)
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(v => v.Projects)
+                .WithOne(c => c.Teacher)
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+                builder.Entity<Student>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.HasMany(c => c.StudentCourses)
+                .WithOne(c => c.Student)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(p => p.Projects)
+                .WithOne(p => p.Student)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(e => e.Exams)
+                .WithOne(e => e.Student)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(e => e.Assignments)
+                .WithOne(e => e.Student)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(p => p.Teachers)
+                .WithOne(e => e.Student)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(e => e.Quizzes)
+                .WithOne(e => e.Student)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<BbRoles>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+        });
+        builder.Entity<BbTandSRoles>(entity =>
+        {
+            entity.HasKey(c => new {c.Id, c.RoleId, c.TeacherId, c.StudentId});
+            entity.HasOne(c => c.Student)
+                .WithMany(c => c.Roles)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Teacher)
+                .WithMany(c => c.Roles)
+                .HasForeignKey(c => c.TeacherId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Role)
+                .WithMany(c => c.BbUserRoles)
+                .HasForeignKey(c => c.RoleId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+   
+        builder.Entity<Course>(entity =>
+        {
+            entity.HasKey(c => new {c.Id, c.TeacherId, c.SyllabusId});
+            entity.HasOne(c => c.Teacher)
+                .WithMany(c => c.Courses)
+                .HasForeignKey(c => c.TeacherId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Syllabus)
+                .WithOne(c => c.Course)
+                .HasForeignKey<Course>(c => c.SyllabusId)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(c => c.Modules)
+                .WithOne(c => c.Course)
+                .HasForeignKey(c => c.CourseId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(x => x.StudentCourses)
+                .WithOne(c => c.Course)
+                .HasForeignKey(c => c.CourseId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Syllabus>(entity =>
+        {
+            entity.HasKey(c => new { c.Id, c.CourseId });
+            entity.HasOne(c => c.Course)
+                .WithOne(c => c.Syllabus)
+                .HasForeignKey<Syllabus>(c => c.CourseId)
+                .HasPrincipalKey<Course>(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Exam>(entity =>
+        {
+            entity.HasKey(c => new { c.Id, c.StudentId, c.TeacherId, c.ModuleId });
+            entity.HasOne(c => c.Student)
+                .WithMany(s => s.Exams)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Teacher)
+                .WithMany(c => c.Exams)
+                .HasForeignKey(c => c.TeacherId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Module)
+                .WithMany(c => c.Exams)
+                .HasForeignKey(c => c.ModuleId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(c => c.Questions)
+                .WithOne(c => c.Exam)
+                .HasForeignKey(c => c.ExamId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Quiz>(entity =>
+        {
+            entity.HasKey(c => new {c.Id, c.StudentId, c.TeacherId, c.ModuleId});
+            entity.HasOne(c => c.Student)
+                .WithMany(s => s.Quizzes)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Teacher)
+                .WithMany(c => c.Quizzes)
+                .HasForeignKey(c => c.TeacherId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Module)
+                .WithMany(c => c.Quizzes)
+                .HasForeignKey(c => c.ModuleId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(c => c.Questions)
+                .WithOne(c => c.Quiz)
+                .HasForeignKey(c => c.QuizId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Assignment>(entity =>
+        {
+            entity.HasKey(c => new { c.Id, c.StudentId, c.TeacherId, c.ModuleId });
+            entity.HasOne(c => c.Student)
+                .WithMany(s => s.Assignments)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Teacher)
+                .WithMany(c => c.Assignments)
+                .HasForeignKey(c => c.TeacherId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Module)
+                .WithMany(c => c.Assignments)
+                .HasForeignKey(c => c.ModuleId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(c => c.Questions)
+                .WithOne(c => c.Assignment)
+                .HasForeignKey(c => c.AssignmentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Project>(entity =>
+        {
+            entity.HasKey(c => new {c.Id, c.StudentId, c.TeacherId, c.ModuleId });
+            entity.HasOne(c => c.Student)
+                .WithMany(s => s.Projects)
+                .HasForeignKey(c => c.StudentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Teacher)
+                .WithMany(c => c.Projects)
+                .HasForeignKey(c => c.TeacherId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Module)
+                .WithMany(c => c.Projects)
+                .HasForeignKey(c => c.ModuleId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(c => c.Questions)
+                .WithOne(c => c.Project)
+                .HasForeignKey(c => c.ProjectId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Question>(entity =>
+        {
+            entity.HasKey(c => new { c.Id, c.ExamId, c.QuizId, c.AssignmentId, c.ProjectId });
+            entity.HasOne(c => c.Exam)
+                .WithMany(c => c.Questions)
+                .HasForeignKey(c => c.ExamId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Quiz)
+                .WithMany(c => c.Questions)
+                .HasForeignKey(c => c.QuizId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Assignment)
+                .WithMany(c => c.Questions)
+                .HasForeignKey(c => c.AssignmentId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(c => c.Project)
+                .WithMany(c => c.Questions)
+                .HasForeignKey(c => c.ProjectId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasMany(v => v.Choices)
+                .WithOne(c => c.Question)
+                .HasForeignKey(c => c.QuestionId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Choice>(entity =>
+        {
+            entity.HasKey(c => new {c.Id, c.QuestionId});
+            entity.HasOne(c => c.Question)
+                .WithMany(c => c.Choices)
+                .HasForeignKey(c => c.QuestionId)
+                .HasPrincipalKey(c => c.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
     }
 }

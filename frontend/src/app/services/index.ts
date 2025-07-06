@@ -13,6 +13,11 @@ import {CampaignsService} from "./campaigns.service";
 import {CompanyContactService} from "./company-contact.service";
 import {SearchService} from "./search.service";
 import {CommunicationService} from "./communication.service";
+import {RoleService} from "./role.service";
+import {BlackboardService} from "./blackboard.service";
+import {TeacherService} from "./teacher.service";
+import {StudentService} from "./student.service";
+import {CourseService} from "./course.service";
 
 
 export const services: any[] = [
@@ -31,6 +36,11 @@ export const services: any[] = [
   CompanyContactService,
   SearchService,
   CommunicationService,
+  RoleService,
+  BlackboardService,
+  TeacherService,
+  StudentService,
+  CourseService,
 ];
 
 export * from './users.service';
@@ -48,3 +58,8 @@ export * from './campaigns.service';
 export * from './company-contact.service';
 export * from './search.service';
 export * from './communication.service';
+export * from './role.service';
+export * from './blackboard.service';
+export * from './teacher.service';
+export * from './student.service';
+export * from './course.service';

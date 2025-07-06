@@ -1,0 +1,37 @@
+<section id="role-list-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+        <div class="card shadow-xl rounded-3 custom-bg-dark-gradient border-primary">
+          <div class="card-header">
+            <h1 class="ubuntu-bold gradient-text-rainbow-blue">Roles</h1>
+          </div>
+          <div class="card-body p-3">
+            <table class="table table-hover table-striped table-borderless">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let role of roles">
+                  <td>{{role.id}}</td>
+                  <td>{{role.name}}</td>
+                  <td>{{role.description}}</td>
+                  <td>
+                    <a routerLink="roles/{{role.id}}" class="btn btn-sm bg-gradient-info table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Role"><i class="fa-solid fa-address-card"></i></a>
+                    <a routerLink="roles/update/{{role.id}}" class="btn btn-sm bg-gradient-warning table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update Role"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="#" (click)="deleteRole(role.id, $event)" class="btn btn-sm bg-gradient-danger table-action-btn px-2 py-1 me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete Role"><i class="fa-solid fa-trash"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

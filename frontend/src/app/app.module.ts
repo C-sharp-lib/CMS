@@ -18,10 +18,13 @@ import * as fromPages from "./components/pages";
 import * as fromContacts from "./components/contacts";
 import * as fromCampaigns from "./components/campaigns";
 import * as fromCompanies from "./components/company";
+import * as fromBlackboard from "./components/blackboard";
 import * as fromNotes from "./components/notes";
 import * as fromTasks from "./components/tasks";
 import * as fromMessages from "./components/communication";
 import * as fromPipes from "./utils/pipes";
+
+
 
 @NgModule({
   declarations: [
@@ -34,6 +37,7 @@ import * as fromPipes from "./utils/pipes";
     ...fromContacts.components,
     ...fromCampaigns.components,
     ...fromCompanies.components,
+    ...fromBlackboard.components,
     ...fromNotes.components,
     ...fromTasks.components,
     ...fromMessages.components,

@@ -35,7 +35,9 @@
                     <div class="card card-body custom-bg-dark-gradient">
                       <div *ngFor="let convo of conversations" class="custom-bg-dark-gradient">
                         <div class="p-2 mt-1 border-radius-sm custom-bg-dark">
-                          <h4 class="ubuntu-bold " style="color: dodgerblue;"><a routerLink="/communication/user/{{user?.id}}" style="color: dodgerblue;">{{convo?.title}}</a></h4>
+                          <h4 class="ubuntu-bold " style="color: dodgerblue;">
+                            <a routerLink="/communication/user/{{user?.id}}" style="color: dodgerblue;">{{convo?.title}}</a>
+                          </h4>
                         </div>
                       </div>
                     </div>

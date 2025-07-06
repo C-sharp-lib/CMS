@@ -82,4 +82,17 @@ public class RoleController : ControllerBase
         var role = await _roleRepository.CreateRoleAsync(model);
         return Ok(role);
     }
+
+    [HttpDelete("delete-role/{roleId}")]
+    public async Task<ActionResult> DeleteRole(string roleId)
+    {
+        var role = await _roleManager.FindByIdAsync(roleId);
+        if (role == null)
+        {
+            return NotFound("Role doesn't exist.");
+        }
+        _context.Roles.Remove(role);
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
 }

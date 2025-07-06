@@ -35,6 +35,8 @@
 </ItemGroup>
 
 <ItemGroup>
+    <Folder Include="Areas\BlackBoard\Configuration\" />
+    <Folder Include="Areas\BlackBoard\Models\Enums\" />
     <Folder Include="Areas\Utility\Models\ViewModels\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="Models\ViewModels\" />

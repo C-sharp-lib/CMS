@@ -10,7 +10,7 @@ import * as fromContacts from "./components/contacts";
 import * as fromCampaigns from "./components/campaigns";
 import * as fromCompanies from "./components/company";
 import * as fromMessages from "./components/communication";
-
+import * as fromBlackboard from "./components/blackboard";
 
 export const routes: Routes = [
   {path: '', children: [
@@ -29,6 +29,10 @@ export const routes: Routes = [
       {path: '', component: fromUsers.UserListComponent},
       {path: ':id', component: fromUsers.UserDetailComponent},
       {path: 'update/:id', component: fromUsers.UserUpdateComponent},
+      {path: 'roles', component: fromUsers.RoleListComponent},
+      {path: 'roles/:id', component: fromUsers.RoleDetailComponent},
+      {path: 'roles/update/:id', component: fromUsers.RoleUpdateComponent},
+      {path: 'roles/create', component: fromUsers.RoleCreateComponent},
       {path: 'user/:id/notes', component: fromNotes.UserNoteListComponent},
       {path:'notes/create/:id', component: fromNotes.UserNoteCreateComponent},
       {path: 'notes/:id', component: fromNotes.UserNoteDetailComponent},
@@ -109,6 +113,47 @@ export const routes: Routes = [
   {path: 'communication', canActivate: [authGuard], children: [
       {path: 'user/:id', component: fromMessages.MessagingComponent},
       {path: 'create', component: fromMessages.MessageCreateComponent},
+    ]},
+  {path: 'blackboard', canActivate: [authGuard], children: [
+      {path: '', component: fromBlackboard.HomeComponent},
+      {path: 'about', component: fromBlackboard.AboutComponent},
+      {path: 'schedules', children: [
+          {path: '', component: fromBlackboard.ScheduleListComponent},
+          {path: ':id', component: fromBlackboard.ScheduleDetailComponent},
+          {path: 'create', component: fromBlackboard.ScheduleCreateComponent},
+          {path: 'update/:id', component: fromBlackboard.ScheduleUpdateComponent},
+        ]},
+      {path: 'teachers', children: [
+          {path: '', component: fromBlackboard.TeacherListComponent},
+          {path: ':id', component: fromBlackboard.TeacherDetailComponent},
+          {path: 'create', component: fromBlackboard.TeacherCreateComponent},
+          {path: 'update/:id/', component: fromBlackboard.TeacherUpdateComponent},
+        ]},
+      {path: 'students', children: [
+          {path: '', component: fromBlackboard.StudentListComponent},
+          {path: ':id', component: fromBlackboard.StudentDetailComponent},
+          {path: 'create', component: fromBlackboard.StudentCreateComponent},
+          {path: 'update/:id', component: fromBlackboard.StudentDetailComponent},
+        ]},
+      {path: 'courses', children: [
+          {path: '', component: fromBlackboard.CourseListComponent},
+          {path: ':id', component: fromBlackboard.CourseDetailComponent},
+          {path: 'create', component: fromBlackboard.CourseCreateComponent},
+          {path: 'update/:id', component: fromBlackboard.CourseUpdateComponent},
+          {path: 'modules', children: [
+              {path: '', component: fromBlackboard.ModuleListComponent},
+              {path: ':id', component: fromBlackboard.ModuleDetailComponent},
+              {path: 'create', component: fromBlackboard.ModuleCreateComponent},
+              {path: 'update/:id', component: fromBlackboard.ModuleUpdateComponent},
+              {path: 'assignments', children: [
+                  {path: '', component: fromBlackboard.AssignmentListComponent},
+                  {path: ':id', component: fromBlackboard.AssignmentDetailComponent},
+                  {path: 'create', component: fromBlackboard.AssignmentCreateComponent},
+                  {path: 'update/:id', component: fromBlackboard.AssignmentUpdateComponent},
+                ]}
+            ]}
+        ]}
+
     ]}
 ];
 
